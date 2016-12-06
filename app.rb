@@ -81,7 +81,7 @@ get "/oauth" do
   puts "All good till here too!"
   
   if code 
-    response = HTTParty.post slack_oauth_request, body: {client_id: "112537648629.113466470791", client_secret: 81771576a0d9b109ae5bffd6f3c1726e, code: code}
+    response = HTTParty.post slack_oauth_request, body: {client_id: ENV['SLACK_CLIENT_ID'], client_secret: ENV['SLACK_CLIENT_SECRET'], code: code}
     
     puts response.to_s
     
