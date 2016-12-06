@@ -5,15 +5,10 @@ module Sinatra
     # =>   A LIST OF ACTIONS
     # ------------------------------------------------------------------------
 
-    @@course_bot_commands = [
-      { message: "*queue status* - Shows the current queue for office hours", is_admin: false },
-      { message: "*queue me [message]* - Adds you to the queue for office hours. _Optional_ Include a message with what help you're looking for", is_admin: false },
-      { message: "*queue remove* - Removes you from the queue for office hours", is_admin: false },
-      { message: "*queue status* - Gets the list of who's next in the ofifce hour queue", is_admin: false },
-      { message: "*queue next* - Plucks the next person from the office hours queue and lets them know you're ready for them", is_admin: true },
-      { message: "*queue clear* - Trashes the office hours queue", is_admin: true },
-      { message: "*help* - Shows help information", is_admin: false },
-      { message: "*hi* - Say hello", is_admin: false }
+    @@jude_bot_commands = [
+      { message: "*add* - Helps add an assignment to your calendar", is_admin: false },
+      { message: "*help* - Provides help on different features", is_admin: false },
+      { message: "*about* - Tells you the story of Jude", is_admin: false }
     ]
     
     # ------------------------------------------------------------------------
@@ -31,39 +26,30 @@ module Sinatra
         
       # Hi Commands
       if ["hi", "hey", "hello"].any? { |w| event.formatted_text.starts_with? w }
-        client.chat_postMessage(channel: event.channel, text: "Hi I'm CourseBot. I'm here to help.", as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "Hi I'm Jude. I was created to help you with your assignments. What do you want to add today?", as_user: true)
 
         # Handle the Help commands
       elsif event.formatted_text.include? "help"
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
 
       elsif event.formatted_text.starts_with? "thank"
-        client.chat_postMessage(channel: event.channel, text: "You're very welcome.", as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
-      elsif event.formatted_text.starts_with? "queue me" or event.formatted_text.starts_with? "q me"
-        add_user_to_office_hours_queue client, event
-      elsif event.formatted_text.starts_with? "queue add" or event.formatted_text.starts_with? "q add"
-        add_user_to_office_hours_queue client, event
+      elsif event.formatted_text.starts_with? "add"
         
-      elsif event.formatted_text.starts_with? "queue remove" or event.formatted_text.starts_with? "q remove"
-        remove_user_from_office_hours_queue client, event
-
-      elsif event.formatted_text.starts_with? "queue status" or event.formatted_text.starts_with? "q status"
-        get_office_hours_queue_status client, event
-
-      elsif event.formatted_text.starts_with? "queue status" or event.formatted_text.starts_with? "q status"
-        get_office_hours_queue_status client, event
-
-      elsif is_admin and (event.formatted_text.starts_with? "queue next" or event.formatted_text.starts_with? "q next")
-        office_hours_next_in_queue client, event
-        
-      elsif is_admin and (event.formatted_text.starts_with? "queue clear" or event.formatted_text.starts_with? "q clear")
-        office_hours_clear_queue client, event
                              
       else
         # ERROR Commands
         # not understood or an error
-        client.chat_postMessage(channel: event.channel, text: "I didn't get that. If you're stuck, type `help` to find my commands.", as_user: true)
+        error_counter += 1
+
+        if error_counter (1..5)
+          client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright If you're stuck, type `help` to find my commands.", as_user: true)
+        elsif error_counter (6..10)
+          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seems to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
+        else  
+          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You aren't normally like this. Please be nice or type `help` to find my commands.", as_user: true)
+        end
         
       end
       
@@ -75,10 +61,10 @@ module Sinatra
     
     def get_commands_message is_admin = false
       
-        message = "*CourseBot* - This bot helps you manage this course\n"
+        message = "*JudeBot* - This bot helps you add assignments to your calendar.\n"
         message += "*Commands:* \n"
       
-        @@course_bot_commands.each do |c|
+        @@jude_bot_commands.each do |c|
           if c[:is_admin] == false or (c[:is_admin] == true and is_admin)
             message += c[:message] + "\n"
           end
