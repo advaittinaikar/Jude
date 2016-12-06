@@ -74,7 +74,11 @@ get "/oauth" do
   
   code = params[ :code ]
   
+  puts "All good till here"
+
   slack_oauth_request = "https://slack.com/api/oauth.access"
+
+  puts "All good till here too!"
   
   if code 
     response = HTTParty.post slack_oauth_request, body: {client_id: ENV['SLACK_CLIENT_ID'], client_secret: ENV['SLACK_CLIENT_SECRET'], code: code}
