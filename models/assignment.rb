@@ -1,7 +1,7 @@
 class Assignment < ActiveRecord::Base
   
   #has_many :tasks, dependent: :destroy
-  belongs_to :team
+  has_many :courses
     
   validates_presence_of :course_name
   validates_presence_of :description
