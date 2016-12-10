@@ -38,7 +38,7 @@ helpers Sinatra::CommandsHelper
 enable :sessions
 
 #error counter
-error_counter = 0
+@@error_counter = 0
 
 # ----------------------------------------------------------------------
 #     ROUTES, END POINTS AND ACTIONS

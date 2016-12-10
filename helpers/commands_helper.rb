@@ -38,14 +38,14 @@ module Sinatra
       else
         # ERROR Commands
         # not understood or an error
-        error_counter += 1
+        @@error_counter += 1
 
-        if error_counter (1..5)
-          client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
-        elsif error_counter (6..10)
+        if @@error_counter > 10
+          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You aren't normally like this. Please be nice or type `help` to find my commands.", as_user: true)
+        elsif @@error_counter > 6 and @@error_counter <= 10
           client.chat_postMessage(channel: event.channel, text: "Hmmm, you seems to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else  
-          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You aren't normally like this. Please be nice or type `help` to find my commands.", as_user: true)
+          client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
         end
         
       end
