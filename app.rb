@@ -106,7 +106,7 @@ get "/oauth" do
     # wouldn't it be useful if we could store this? 
     # we can... 
     
-    user = User.find_or_create_by( user_id: user_id, user_name: user_name, channel_name )
+    team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
     team.access_token = access_token
     team.team_name = team_name
     team.raw_json = response.to_s
