@@ -38,6 +38,8 @@ module Sinatra
       else
         # ERROR Commands
         # not understood or an error
+        puts "Error Counter #{ @@error_counter }"
+
         @@error_counter += 1
 
         if @@error_counter > 10
