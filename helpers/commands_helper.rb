@@ -35,7 +35,7 @@ module Sinatra
       elsif event.formatted_text.starts_with? "thank"
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
-      elsif event.formatted_text.starts_with? "add"
+      #elsif event.formatted_text.starts_with? "add"
         
                              
       else
