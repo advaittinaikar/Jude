@@ -10,6 +10,8 @@ module Sinatra
       { message: "*help* - Provides help on different features", is_admin: false },
       { message: "*about* - Tells you the story of Jude", is_admin: false }
     ]
+
+    @@error_counter = 0
     
     # ------------------------------------------------------------------------
     # =>   MAPS THE CURRENT EVENT TO AN ACTION
@@ -36,10 +38,13 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
         
       else
+        client.chat_postMessage(channel: event.channel, text: "I didn't get that", as_user: true)
+
+
         # ERROR Commands
         # not understood or an error
         puts "Error Counter #{ @@error_counter }"
-
+        
         @@error_counter += 1
 
         if @@error_counter > 10
