@@ -36,10 +36,12 @@ module Sinatra
 
       elsif event.formatted_text.starts_with? "thank"
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
-        
-      else
-        client.chat_postMessage(channel: event.channel, text: "I didn't get that", as_user: true)
+      
+      elsif event.formatted_text == "show"
+        events_message = get_upcoming_events calendar_service
+        client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
 
+      else
 
         # ERROR Commands
         # not understood or an error
@@ -78,7 +80,6 @@ module Sinatra
 
     end
 
-
     # ------------------------------------------------------------------------
     # =>   GETS USEFUL INFO FROM SLACK
     # ------------------------------------------------------------------------
@@ -93,6 +94,22 @@ module Sinatra
       # calls users_info on slack
       info = client.users_info(user: event.user_id ) 
       info['user']['is_admin'] || info['user']['is_owner']
+    end
+
+    def get_upcoming_events service
+      response = service.list_events('primary',
+                               max_results: 10,
+                               single_events: true,
+                               order_by: 'startTime',
+                               time_min: Time.now.iso8601)
+
+      message="Your upcoming 10 events are:"
+
+      respond.items.each do |event|
+        message+="\n#{event.summary} on #{event.start.date}"
+      end
+
+      return message   
     end
   
   end
