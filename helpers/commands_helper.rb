@@ -117,7 +117,7 @@ module Sinatra
 
     def message_add_event
       
-      {
+      [
     "attachments": [
         {
             "text": "What would you like to add?",
@@ -147,7 +147,7 @@ module Sinatra
                 ]
             }
         ]
-      }.to_json
+      ].to_json
     
     end
   
