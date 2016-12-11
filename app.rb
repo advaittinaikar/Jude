@@ -221,6 +221,7 @@ post '/interactive-buttons' do
   action_value = json_request['actions'].first["value"]
   channel = json_request['channel']['id']
   team_id = json_request['team']['id']
+  time_stamp = json_request['message_ts']
   
   # puts "Action: " + call_back.to_s
   # puts "Call Back: " + action_name.to_s
@@ -247,7 +248,7 @@ post '/interactive-buttons' do
 
         message += "Let's add an assignment!"
         puts 'replace message'
-        client.chat_postMessage(channel: channel, text: message, attachments: interactive_course_assignment, as_user: true)
+        client.chat_update(channel: channel, ts: time_stamp, text: message, attachments: interactive_course_assignment, as_user: true)
 
       elsif action_name == "show today"
 
@@ -265,7 +266,7 @@ post '/interactive-buttons' do
   elsif call_back == "course_assignment"
     message = "You're adding an assignment for #{action_name}!"
 
-    client.chat_postMessage(channel: channel, text: "Please type your assignment details in <= 140 chars", as_user: true)
+    client.chat_update(channel: channel, text: "Please type your assignment details in <= 140 chars", as_user: true)
 
   end
 
