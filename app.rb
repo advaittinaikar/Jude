@@ -242,15 +242,18 @@ post '/interactive-buttons' do
     
       if action_name == "add"
         replace_message += "Let's add an assignment!"
+        puts 'replace message'
         client.chat_postMessage(channel: channel, text: replace_message, replace_original: true, as_user: true)
       else
         200
+        puts 
+        client.chat_postMessage(channel: channel, text: replace_message, replace_original: true, as_user: true)
       end
 
   # elsif call_back == "add jude"
 
 
-  end 
+  end
 
 end
 
