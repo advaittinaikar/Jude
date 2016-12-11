@@ -229,6 +229,7 @@ post '/interactive-buttons' do
   # puts "channel : " + channel.to_s
   
   team = Team.find_by( team_id: team_id )
+  puts team
   
   if team.nil?
     client.chat_postMessage(channel: channel, text:"You don't have Jude installed. Click the below link to install: http://agile-stream-68169.herokuapp.com/", unfurl_links: true)
@@ -256,7 +257,7 @@ post '/interactive-buttons' do
 
       elsif action_name == "show next"
 
-        client.chat_postMessage(channel: channel, text: "Showing next 10 events.", as_user: true) 
+        client.chat_postMessage(channel: channel, text: "Showing next 10 events..", as_user: true) 
       
       else
         200
@@ -313,7 +314,7 @@ private
 
 def respond_to_slack_event json
   
-  # find the team 
+  # find the team
   team_id = json['team_id']
   api_app_id = json['api_app_id']
   event = json['event']

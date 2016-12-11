@@ -199,31 +199,51 @@ module Sinatra
     end
 
     def interactive_assignment_course
-      [
+      json_response = [
         {
           "text": "Which course is the assignment for?",
           "callback_id": "course_assignment",
           "fallback": "Type your course number",
           "actions":[
-            {
-              "name": "dfe",
-              "text": "Design for environment",
-              "type": "button"
-            },
-            {
-              "name": "vp",
-              "text": "Visual processes",
-              "type": "button"
-            },
-            {
-              "name": "pop",
-              "text": "Programming for Online Prototypes",
-              "type": "button"
-            }
+            # {
+            #   "name": "dfe",
+            #   "text": "Design for environment",
+            #   "type": "button"
+            # },
+            # {
+            #   "name": "vp",
+            #   "text": "Visual processes",
+            #   "type": "button"
+            # },
+            # {
+            #   "name": "pop",
+            #   "text": "Programming for Online Prototypes",
+            #   "type": "button"
+            # }
           ]
 
         }
       ].to_json
+
+      #Adding course details from the database
+      course_details = Course.all
+
+      course_details.each do |course|
+
+        puts course
+
+        action = {}
+        action.name = course.short_name
+        action.text = course.course_name
+        
+        json_response.first.actions.push(
+        action)
+
+      end
+
+      json_response=json_response.to_json
+
+      return json_response
 
     end
 
