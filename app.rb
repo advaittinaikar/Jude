@@ -222,17 +222,15 @@ post '/interactive-buttons' do
   
   client = team.get_client
   
-  if call_back == "assignment"
-      replace_message = "Thanks we're going to add your assignment now."
+  if call_back == "add_event_button"
+      replace_message = "Thanks for that."
     
-      # if action_name == "this_is_a_button"
-      #   replace_message += "Yay! You have created a button that successfully displays what you wanted it to!"
-        client.chat_postMessage(channel: channel, text: "Your button worked! I'm the text you wanted to display on clicking the button!", as_user: true)
-        
-      # else
-      #   200
-    
-      # end
+      if action_name == "assignment"
+        replace_message += "Let's add an assignment!"
+        client.chat_postMessage(channel: channel, text: "Your button worked! I'm the text you wanted to display on clicking the button!", as_user: true)        
+      else
+        200
+      end
   end 
 
 end
