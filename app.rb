@@ -4,11 +4,11 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-require 'google/apis/calendar_v3'
-require 'googleauth'
-require 'googleauth/stores/file_token_store'
+# require 'google/apis/calendar_v3'
+# require 'googleauth'
+# require 'googleauth/stores/file_token_store'
 
-require 'fileutils'
+# require 'fileutils'
 
 require 'haml'
 require 'json'
@@ -43,14 +43,14 @@ helpers Sinatra::CommandsHelper
 # enable sessions for this project
 enable :sessions
 
-OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
+# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+# CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
-# Initialize the calendar API
-calendar_service = Google::Apis::CalendarV3::CalendarService.new
-calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
-calendar_service.authorization = authorize_calendar
+# # Initialize the calendar API
+# calendar_service = Google::Apis::CalendarV3::CalendarService.new
+# calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
+# calendar_service.authorization = authorize_calendar
 
 # ----------------------------------------------------------------------
 #     ROUTES, END POINTS AND ACTIONS
@@ -346,8 +346,7 @@ def authorize_calendar
   if credentials.nil?
     url = authorizer.get_authorization_url(
       base_url: OOB_URI)
-    puts "Open the following URL in the browser and enter the " +
-         "resulting code after authorization"
+    puts "Open the following URL in the browser and enter the resulting code after authorization."
     puts url
     code = gets
     credentials = authorizer.get_and_store_credentials_from_code(
