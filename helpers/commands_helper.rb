@@ -27,8 +27,9 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
         
       # Hi Commands
-      if ["hi", "hey", "hello"].any? { |w| event.formatted_text.starts_with? w }
-        client.chat_postMessage(channel: event.channel, text: "Hi I'm Jude. I was created to help you with your assignments. What do you want to add today?", as_user: true)
+      if ["hi","hello","hey","heyy"].any? { |w| event.formatted_text.starts_with? w }
+      message = interactive_greeting
+        client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments:message, as_user:true)
 
         # Handle the Help commands
       elsif event.formatted_text.include? "help"
@@ -148,6 +149,38 @@ module Sinatra
             }
        
       ].to_json
+
+    end
+
+    def interactive_greeting
+
+      [
+        {
+        "text" : "What would you like to do today?",
+        "callback_id" : "to-do",
+        "attachment_type": "default",
+        "actions" :[
+          {
+            "name":  "add",
+            "text":  "Add assignment",
+            "type":  "button",
+            "value" : "add"
+            },
+          {
+            "name":  "show today",
+            "text":  "Show Today's schedule",
+            "type":  "button",
+            "value" : "show-today"
+            },
+          {
+            "name":  "show next",
+            "text":  "Show Next 10 events",
+            "type":  "button",
+            "value" : "show-next"
+            }  
+        ]
+      }
+      ]
 
     end
   

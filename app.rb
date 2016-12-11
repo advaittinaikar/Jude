@@ -137,6 +137,8 @@ end
 #     OUTGOING WEBHOOK
 # ----------------------------------------------------------------------
 
+# ANY EVENT: Endpoint for an event subscription
+
 post "/events" do
   request.body.rewind
   raw_body = request.body.read
@@ -162,27 +164,36 @@ post "/events" do
   
 end
 
-# This will look a lot like this: 
+# JSON Payload:
 # {
-#   "token": "9GCx7G3WrHix7EJsP818YOVB",
-#   "team_id": "T2QJ6HA0Z",
-#   "api_app_id": "A36PS6J72",
-#   "event": {
-#     "type": "message",
-#     "user": "U2QHR0F7W",
-#     "text": "g ddf;gkl;d fkg;ldfkg df",
-#     "ts": "1480296595.000007",
-#     "channel": "D37HZB04D",
-#     "event_ts": "1480296595.000007"
+#   "actions": [
+#     {
+#       "name": "recommend",
+#       "value": "yes"
+#     }
+#   ],
+#   "callback_id": "comic_1234_xyz",
+#   "team": {
+#     "id": "T47563693",
+#     "domain": "watermelonsugar"
 #   },
-#   "type": "event_callback",
-#   "authed_users": [
-#     "U37HMQRS8"
-#   ]
+#   "channel": {
+#     "id": "C065W1189",
+#     "name": "forgotten-works"
+#   },
+#   "user": {
+#     "id": "U045VRZFT",
+#     "name": "brautigan"
+#   },
+#   "action_ts": "1458170917.164398",
+#   "message_ts": "1458170866.000004",
+#   "attachment_id": "1",
+#   "token": "xAB3yVzGS4BQ3O9FACTa8Ho4",
+#   "original_message": "{\"text\":\"New comic book alert!\",\"attachments\":[{\"title\":\"The Further Adventures of Slackbot\",\"fields\":[{\"title\":\"Volume\",\"value\":\"1\",\"short\":true},{\"title\":\"Issue\",\"value\":\"3\",\"short\":true}],\"author_name\":\"Stanford S. Strickland\",\"author_icon\":\"https://api.slack.comhttps://a.slack-edge.com/bfaba/img/api/homepage_custom_integrations-2x.png\",\"image_url\":\"http://i.imgur.com/OJkaVOI.jpg?1\"},{\"title\":\"Synopsis\",\"text\":\"After @episod pushed exciting changes to a devious new branch back in Issue 1, Slackbot notifies @don about an unexpected deploy...\"},{\"fallback\":\"Would you recommend it to customers?\",\"title\":\"Would you recommend it to customers?\",\"callback_id\":\"comic_1234_xyz\",\"color\":\"#3AA3E3\",\"attachment_type\":\"default\",\"actions\":[{\"name\":\"recommend\",\"text\":\"Recommend\",\"type\":\"button\",\"value\":\"recommend\"},{\"name\":\"no\",\"text\":\"No\",\"type\":\"button\",\"value\":\"bad\"}]}]}",
+#   "response_url": "https://hooks.slack.com/actions/T47563693/6204672533/x7ZLaiVMoECAW50Gw1ZYAXEM"
 # }
 
-# TO TEST THIS LOCALLY USE THIS ... 
-# DON"T INCLUDE IT IN DEVELOPMENT"
+# ANY EVENT: Endpoint for an interactive message interaction. Control center for all button interactions.
 
 post '/interactive-buttons' do
 
@@ -191,10 +202,10 @@ post '/interactive-buttons' do
   request.body.rewind
   raw_body = request.body.read
 
-  puts "Params: " + params.to_s
+  # puts "Params: " + params.to_s
   
   json_request = JSON.parse( params["payload"] )
-  puts "JSON = " + json_request.to_s
+  # puts "JSON = " + json_request.to_s
   puts "checking token"
 
   if json_request['token'] != ENV['SLACK_VERIFICATION_TOKEN']
@@ -209,25 +220,29 @@ post '/interactive-buttons' do
   channel = json_request['channel']['id']
   team_id = json_request['team']['id']
   
-  puts "Action: " + call_back.to_s
-  puts "Call Back: " + action_name.to_s
-  puts "team_id : " + team_id.to_s
-  puts "channel : " + channel.to_s
+  # puts "Action: " + call_back.to_s
+  # puts "Call Back: " + action_name.to_s
+  # puts "team_id : " + team_id.to_s
+  # puts "channel : " + channel.to_s
   
   team = Team.find_by( team_id: team_id )
+  event = Event.find_by (team_id: team_id)
   
-  return if team.nil?
+  if team.nil?
+    client.chat_postMessage(channel: channel, text:"You don't seem to have integrated Jude in Slack. Click the below link to do so: http://agile-stream-68169.herokuapp.com/")
+    return
+  end
   
-  puts "team found :" 
+  puts "team found"
   
   client = team.get_client
   
-  if call_back == "add_event_button"
+  if call_back == "to-do"
       replace_message = "Thanks for that."
     
-      if action_name == "assignment"
+      if action_name == "add"
         replace_message += "Let's add an assignment!"
-        client.chat_postMessage(channel: channel, text: "Your button worked! I'm the text you wanted to display on clicking the button!", as_user: true)        
+        client.chat_postMessage(channel: channel, text: replace_message, replace_original: true, as_user: true)
       else
         200
       end
@@ -242,107 +257,18 @@ post '/calendar_events' do
 
 end
 
-post "/test_event" do
-
-  if params['token'] != ENV['SLACK_VERIFICATION_TOKEN']
-      halt 403, 'Incorrect slack token'
-  end
-  
-  team = Team.find_by( team_id: params[:team_id] )
-  
-  # didn't find a match... this is junk! 
-  return if team.nil?
-  
-  # see if the event user is the bot user 
-  # if so we shoud ignore the event
-  return if team.bot_user_id == params[:event_user]
-  
-  event = Event.create( team_id: params[:team_id], type_name: params[:event_type], user_id: params[:event_user], text: params[:event_text], channel: params[:event_channel ], timestamp: Time.at(params[:event_ts].to_f) )
-  event.team = team 
-  event.save
-  
-  client = team.get_client
-  
-  content_type :json
-  return event_to_action client, event 
-  
-end
-
-
-# ----------------------------------------------------------------------
-#     INTERACTIVE MESSAGES
-# ----------------------------------------------------------------------
-
-post "/message_actions" do 
-  
-end
-
-# ----------------------------------------------------------------------
-#     SLASH COMMANDS
-# ----------------------------------------------------------------------
-
-# TEST LOCALLY LIKE THIS:
-# curl -X POST http://127.0.0.1:9393/queue_status -F token=9GCx7G3WrHix7EJsP818YOVB -F team_id=T2QJ6HA0Z 
-
-post "/queue_status" do
-  
-  
-  # check it's valid
-  if ENV['SLACK_VERIFICATION_TOKEN'] == params[:token]
-    
-    team_id = params[:team_id]
-    channel_name = params[:channel_name]
-    user_name = params[:user_name]
-    text = params[:text]
-    
-    current_queue = OfficeHoursQueue.where( team_id: team_id ) 
-    attachments = []
-  
-    if current_queue.empty?
-      message = "There's no one in the queue. Type `queue me` to add."
-    else
-      message = "There's #{ current_queue.length } people in the queue. Here's the next few:"
-      current_queue.limit(3).each_with_index do |q, index|
-        attachments << get_queue_attachment_for( q )
-      end
-    end
-
-    # specify the return type as 
-    # json
-    content_type :json
-    {text: message, attachments: attachments, response_type: "ephemeral" }.to_json
-    
-    
-  else
-    content_type :json
-    {text: "Invalid Request", response_type: "ephemeral" }.to_json
-
-  end
-  
-end
-
-post "/attendance" do
-  
-  
-end
-
 # ----------------------------------------------------------------------
 #     ERRORS
 # ----------------------------------------------------------------------
 
-error 401 do 
+error 401 do
   "Invalid response or malformed request"
 end
 
-
-# ----------------------------------------------------------------------
 #   METHODS
-#   Add any custom methods below
-# ----------------------------------------------------------------------
 
 private
-
-# for example 
+ 
 def respond_to_slack_event json
   
   # find the team 
@@ -365,15 +291,16 @@ def respond_to_slack_event json
   return if team.bot_user_id == event_user
   
   event = Event.create( team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel , timestamp: Time.at(event_ts.to_f) )
-  event.team = team 
+  event.team = team
   event.save
   
   client = team.get_client
   
-  event_to_action client, event 
+  event_to_action client, event
   
 end
 
+#Oauth for Calendar API
 def authorize_calendar
   FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
