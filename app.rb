@@ -226,14 +226,14 @@ post '/interactive-buttons' do
   # puts "team_id : " + team_id.to_s
   # puts "channel : " + channel.to_s
   
-  team = Team.find_by(team_id:team_id)
+  team = Team.find_by( team_id: team_id )
   
   if team.nil?
     client.chat_postMessage(channel: channel, text:"You don't seem to have integrated Jude in Slack. Click the below link to do so: http://agile-stream-68169.herokuapp.com/")
     return
   end
   
-  puts "team found"
+  puts "team found!"
   
   client = team.get_client
   
@@ -261,9 +261,7 @@ post '/calendar_events' do
 
 end
 
-# ----------------------------------------------------------------------
 #     ERRORS
-# ----------------------------------------------------------------------
 
 error 401 do
   "Invalid response or malformed request"
@@ -273,23 +271,23 @@ end
 
 private
  
-def add_jude
-  [
-    {
-      "text" : "Add Jude to Slack"
-      "callback_id" : "add jude"
-      "fallback" : "Add Jude via Button"
-      "actions" :
-      [
-        {
-            "name":  "add-jude",
-            "text":  "Add Jude to Slack",
-            "type":  "button"
-            }
-      ]
-        }    
-  ].to_json
-end
+# def add_jude
+#   [
+#     {
+#       "text" : "Add Jude to Slack",
+#       "callback_id" : "add jude",
+#       "fallback" : "Add Jude via Button",
+#       "actions" :
+#       [
+#         {
+#             "name":  "add-jude",
+#             "text":  "Add Jude to Slack",
+#             "type":  "button"
+#             }
+#       ]
+#         }    
+#   ].to_json
+# end
 
 def respond_to_slack_event json
   
