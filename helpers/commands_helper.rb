@@ -168,7 +168,7 @@ module Sinatra
               "name":  "show today",
               "text":  "Show Today's schedule",
               "type":  "button",
-              "value" : "show-today"
+              "value": "show-today"
               },
             {
               "name":  "show next",
