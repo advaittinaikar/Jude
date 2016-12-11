@@ -33,7 +33,7 @@ Dir["./helpers/*.rb"].each {|file| require file }
 helpers Sinatra::CommandsHelper
 
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
-@@assignment_record = ""
+$assignment_record = ""
 
 # enable sessions for this project
 enable :sessions
@@ -244,7 +244,7 @@ post '/interactive-buttons' do
     
       if action_name == "add"
 
-        @@assignment_record=""
+        $assignment_record=""
 
         message += "Let's add an assignment!"
         puts 'replace message'
@@ -266,8 +266,8 @@ post '/interactive-buttons' do
   elsif call_back == "course_assignment"
 
     message = "You're adding an assignment for #{action_name}!"
-    @@assignment_record = "For #{action_name}: "
-    client.chat_postMessage(channel: channel, text: message, attachments: {"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}, as_user: true)
+    $assignment_record = "For #{action_name}: "
+    client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
 
   else
     200
