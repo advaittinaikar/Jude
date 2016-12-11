@@ -4,9 +4,9 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-require 'google/apis/calendar_v3'
-require 'googleauth'
-require 'googleauth/stores/file_token_store'
+# require 'google/apis/calendar_v3'
+# require 'googleauth'
+# require 'googleauth/stores/file_token_store'
 
 require 'fileutils'
 
@@ -36,14 +36,14 @@ helpers Sinatra::CommandsHelper
 # enable sessions for this project
 enable :sessions
 
-OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
+# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+# CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
-# # Initialize the calendar API
-calendar_service = Google::Apis::CalendarV3::CalendarService.new
-calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
-calendar_service.authorization = authorize_calendar
+# # # Initialize the calendar API
+# calendar_service = Google::Apis::CalendarV3::CalendarService.new
+# calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
+# calendar_service.authorization = authorize_calendar
 
 # ----------------------------------------------------------------------
 #     ROUTES, END POINTS AND ACTIONS
@@ -132,8 +132,6 @@ end
 
 # If successful this will give us something like this:
 # {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
-
-
 
 # ----------------------------------------------------------------------
 #     OUTGOING WEBHOOK
@@ -277,11 +275,9 @@ post "/attendance" do
   
 end
 
-
 # ----------------------------------------------------------------------
 #     ERRORS
 # ----------------------------------------------------------------------
-
 
 error 401 do 
   "Invalid response or malformed request"
