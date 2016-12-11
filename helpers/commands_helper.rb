@@ -41,6 +41,9 @@ module Sinatra
         events_message = get_upcoming_events calendar_service
         client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
 
+      elsif event.formatted_text == "add"
+        client.chat_postMessage(channel: event.channel, text:"Add to your calendar", attachments:message_add_event)
+
       else
 
         # ERROR Commands
@@ -110,6 +113,42 @@ module Sinatra
       end
 
       return message   
+    end
+
+    def message_add_event
+      
+      {
+    "attachments": [
+        {
+            "text": "What would you like to add?",
+            "fallback": "Sorry could not add that.",
+            "callback_id": "wopr_game",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "assignment",
+                    "text": "Assignment",
+                    "type": "button",
+                    "value": "assignment"
+                },
+                {
+                    "name": "lecture",
+                    "text": "Lecture",
+                    "type": "button",
+                    "value": "lecture"
+                },
+                {
+                    "name": "meeting",
+                    "text": "Meeting",
+                    "type": "button",
+                    "value": "meeting"
+                }
+                ]
+            }
+        ]
+      }.to_json
+    
     end
   
   end
