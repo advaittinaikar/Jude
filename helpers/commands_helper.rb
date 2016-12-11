@@ -44,6 +44,7 @@ module Sinatra
       elsif ef.starts_with? "details"
         assignment_text = ef.slice!(0..8)
         $assignment_record += " " + assignment_text
+        puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
       elsif ef.starts_with? "due: "
