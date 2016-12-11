@@ -267,7 +267,7 @@ post '/interactive-buttons' do
 
     message = "You're adding an assignment for #{action_name}!"
     @@assignment_record = "For #{action_name}: "
-    client.chat_postMessage(channel: channel, ts: time_stamp, text: "Please type your assignment details in <= 140 chars", as_user: true)
+    client.chat_postMessage(channel: channel, text: message, attachments: {"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}, as_user: true)
 
   else
     200
