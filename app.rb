@@ -4,7 +4,7 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-#require 'google/apis/calendar_v3'
+require 'google/apis/calendar_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 
@@ -44,6 +44,7 @@ helpers Sinatra::CommandsHelper
 enable :sessions
 
 OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
 CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
 # Initialize the calendar API
