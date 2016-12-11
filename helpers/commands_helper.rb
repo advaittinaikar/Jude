@@ -199,12 +199,17 @@ module Sinatra
     end
 
     def interactive_assignment_course
-      json_response = [
+      actions_response = [
         {
           "text": "Which course is the assignment for?",
           "callback_id": "course_assignment",
           "fallback": "Type your course number",
           "actions":[
+            { 
+              "name": "add_course",
+              "text": "Add a course",
+              "type": "button"
+            }
             # {
             #   "name": "dfe",
             #   "text": "Design for environment",
@@ -236,14 +241,14 @@ module Sinatra
         action.name = course.short_name
         action.text = course.course_name
         
-        json_response.first.actions.push(
+        actions_response.first.actions.push(
         action)
 
       end
 
-      json_response=json_response.to_json
+      actions_response=actions_response.to_json
 
-      return json_response
+      return actions_response
 
     end
 
