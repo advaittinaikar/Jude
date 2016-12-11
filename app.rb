@@ -264,9 +264,13 @@ post '/interactive-buttons' do
       end
 
   elsif call_back == "course_assignment"
+    
     message = "You're adding an assignment for #{action_name}!"
     @@assignment_record = "For #{action_name}: "
     client.chat_update(channel: channel, text: "Please type your assignment details in <= 140 chars", as_user: true)
+
+  else
+    200
 
   end
 
