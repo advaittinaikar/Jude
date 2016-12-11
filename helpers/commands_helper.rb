@@ -181,6 +181,35 @@ module Sinatra
       ].to_json
 
     end
+
+    def interactive_course_assignment
+      [
+        {
+          "text": "Which course is the assignment for?",
+          "callback_id": "course_assignment",
+          "fallback": "Type your course number",
+          "actions":[
+            {
+              "name": "dfe",
+              "text": "Design for environment",
+              "type": "button"
+            },
+            {
+              "name": "vp",
+              "text": "Visual processes",
+              "type": "button"
+            },
+            {
+              "name": "pop",
+              "text": "Programming for Online Prototypes",
+              "type": "button"
+            }
+          ]
+
+        }
+      ].to_json
+
+    end
   
   end
   

@@ -33,6 +33,7 @@ Dir["./helpers/*.rb"].each {|file| require file }
 helpers Sinatra::CommandsHelper
 
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
+@@assignment_record = ""
 
 # enable sessions for this project
 enable :sessions
@@ -229,7 +230,7 @@ post '/interactive-buttons' do
   team = Team.find_by( team_id: team_id )
   
   if team.nil?
-    client.chat_postMessage(channel: channel, text:"You don't have Jude installed. Click the below link to install: http://agile-stream-68169.herokuapp.com/")
+    client.chat_postMessage(channel: channel, text:"You don't have Jude installed. Click the below link to install: http://agile-stream-68169.herokuapp.com/", unfurl_links: true)
     return
   end
   
@@ -238,20 +239,33 @@ post '/interactive-buttons' do
   client = team.get_client
   
   if call_back == "to-do"
-      replace_message = "Thanks for that."
+      message = "Great! "
     
       if action_name == "add"
-        replace_message += "Let's add an assignment!"
+
+        @@assignment_record=""
+
+        message += "Let's add an assignment!"
         puts 'replace message'
-        client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
+        client.chat_postMessage(channel: channel, text: message, attachments: interactive_course_assignment, as_user: true)
+
+      elsif action_name == "show today"
+
+        client.chat_postMessage(channel: channel, text: "Showing today's schedule..", as_user: true)
+
+      elsif action_name == "show next"
+
+        client.chat_postMessage(channel: channel, text: "Showing next 10 events.", as_user: true) 
+      
       else
         200
-         
-        client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
+        # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
       end
 
-  # elsif call_back == "add jude"
+  elsif call_back == "course_assignment"
+    message = "You're adding an assignment for #{action_name}!"
 
+    client.chat_postMessage(channel: channel, text: "Please type your assignment details in <= 140 chars", as_user: true)
 
   end
 
