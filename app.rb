@@ -137,7 +137,7 @@ end
 #     OUTGOING WEBHOOK
 # ----------------------------------------------------------------------
 
-post "/events" do 
+post "/events" do
   request.body.rewind
   raw_body = request.body.read
   puts "Raw: " + raw_body.to_s
@@ -222,8 +222,8 @@ post '/interactive-buttons' do
   
   client = team.get_client
   
-  if call_back == "sample_button"
-      replace_message = "Thanks for your selection."
+  if call_back == "assignment"
+      replace_message = "Thanks we're going to add your assignment now."
     
       if action_name == "this_is_a_button"
         replace_message += "Yay! You have created a button that successfully displays what you wanted it to!"
