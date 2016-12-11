@@ -47,7 +47,7 @@ module Sinatra
 
       elsif event.formatted_text.starts_with? "due: "
         unformatted_date = event.formatted_text.slice! "due: "
-        due_date = Kronic.parse(user_date)
+        due_date = Kronic.parse(unformatted_date)
         # $assignment_record + = " due on" + assignment_text
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{unformatted_date} ( #{due_date} )", as_user: true)
 
