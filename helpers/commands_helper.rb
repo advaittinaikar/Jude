@@ -153,31 +153,31 @@ module Sinatra
 
       [
         {
-        "text" : "What would you like to do today?",
-        "fallback": "You're missing out on a great experience!",
-        "callback_id" : "to-do",
-        "attachment_type" : "default",
-        "actions" : [
-          {
-            "name":  "add",
-            "text":  "Add assignment",
-            "type":  "button",
-            "value" : "add"
-            },
-          {
-            "name":  "show today",
-            "text":  "Show Today's schedule",
-            "type":  "button",
-            "value" : "show-today"
-            },
-          {
-            "name":  "show next",
-            "text":  "Show Next 10 events",
-            "type":  "button",
-            "value" : "show-next"
-            }  
-        ]
-      }
+          "text": "What would you like to do today?",
+          "fallback": "You're missing out on a great experience!",
+          "callback_id": "to-do",
+          "attachment_type": "default",
+          "actions": [
+            {
+              "name":  "add",
+              "text":  "Add assignment",
+              "type":  "button",
+              "value": "add"
+              },
+            {
+              "name":  "show today",
+              "text":  "Show Today's schedule",
+              "type":  "button",
+              "value" : "show-today"
+              },
+            {
+              "name":  "show next",
+              "text":  "Show Next 10 events",
+              "type":  "button",
+              "value": "show-next"
+              }  
+          ]
+        }
       ].to_json
 
     end
