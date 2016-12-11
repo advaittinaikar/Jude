@@ -29,15 +29,28 @@ module Sinatra
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| event.formatted_text.starts_with? w }
       message = interactive_greeting
-        client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments:message, as_user:true)
+        client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
-        # Handle the Help commands
+      # Handle the Help commands
       elsif event.formatted_text.include? "help"
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
 
+      # Respond to thanks message
       elsif event.formatted_text.starts_with? "thank"
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
-      
+
+      #   
+      elsif event.formatted_text.starts_with? "details"
+        assignment_text=event.formatted_text.slice! "details: "
+        @@assignment_record + = " " + assignment_text
+        client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
+
+      elsif event.formatted_text.starts_with? "due: "
+        unformatted_date = event.formatted_text.slice! "due: "
+        due_date = Kronic.parse(user_date)
+        # @@assignment_record + = " due on" + assignment_text
+        client.chat_postMessage(channel: event.channel, text: "So your assignment is @@assignment_record, due #{unformatted_date} ( #{due_date} )", as_user: true)
+
       elsif event.formatted_text == "show"
         events_message = get_upcoming_events calendar_service
         client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
@@ -182,7 +195,7 @@ module Sinatra
 
     end
 
-    def interactive_course_assignment
+    def interactive_assignment_course
       [
         {
           "text": "Which course is the assignment for?",
@@ -210,7 +223,36 @@ module Sinatra
       ].to_json
 
     end
-  
+
+    def interactive_assignment_due
+
+      [
+        {
+          "text": "Which course is the assignment for?",
+          "callback_id": "course_assignment",
+          "fallback": "Type your course number",
+          "actions":[
+            {
+              "name": "dfe",
+              "text": "Design for environment",
+              "type": "button"
+            },
+            {
+              "name": "vp",
+              "text": "Visual processes",
+              "type": "button"
+            },
+            {
+              "name": "pop",
+              "text": "Programming for Online Prototypes",
+              "type": "button"
+            }
+          ]
+
+        }
+      ].to_json
+
+    end
   end
   
 end

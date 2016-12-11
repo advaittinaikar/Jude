@@ -7,7 +7,7 @@ require "active_support/core_ext"
 # require 'google/apis/calendar_v3'
 # require 'googleauth'
 # require 'googleauth/stores/file_token_store'
-
+require 'kronic'
 require 'fileutils'
 
 require 'haml'
@@ -248,7 +248,7 @@ post '/interactive-buttons' do
 
         message += "Let's add an assignment!"
         puts 'replace message'
-        client.chat_replace(channel: channel, ts: time_stamp, text: message, attachments: interactive_course_assignment, as_user: true)
+        client.chat_replace(channel: channel, ts: time_stamp, text: message, attachments: interactive_assignment_course, as_user: true)
 
       elsif action_name == "show today"
 
@@ -265,7 +265,7 @@ post '/interactive-buttons' do
 
   elsif call_back == "course_assignment"
     message = "You're adding an assignment for #{action_name}!"
-
+    @@assignment_record = "For #{action_name}: "
     client.chat_update(channel: channel, text: "Please type your assignment details in <= 140 chars", as_user: true)
 
   end
