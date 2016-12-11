@@ -42,14 +42,14 @@ module Sinatra
 
       #   
       elsif ef.starts_with? "details"
-        assignment_text = ef.slice!(0..8)
+        ef.slice!(0..8)
         $assignment_record += " " + ef
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
       elsif ef.starts_with? "due: "
-        unformatted_date = ef.slice!(0..4)
-        due_date = Kronic.parse(unformatted_date)
+        ef.slice!(0..4)
+        due_date = Kronic.parse(ef)
         # $assignment_record + = " due on" + assignment_text
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{unformatted_date} ( #{due_date} )", as_user: true)
