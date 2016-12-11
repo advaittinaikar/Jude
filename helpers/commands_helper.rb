@@ -178,7 +178,7 @@ module Sinatra
             }  
         ]
       }
-      ]
+      ].to_json
 
     end
   
