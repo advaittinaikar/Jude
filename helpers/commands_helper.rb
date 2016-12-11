@@ -42,7 +42,7 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
 
       elsif event.formatted_text == "add"
-        client.chat_postMessage(channel: event.channel, text:"Add to your calendar", attachments:message_add_event)
+        client.chat_postMessage(channel: event.channel, text:"Add to your calendar", attachments:add_event_buttons)
 
       else
 
@@ -115,9 +115,7 @@ module Sinatra
       return message   
     end
 
-    def message_add_event
-      
-      return [
+    add_event_buttons=[
     "attachments": [
         {
             "text": "What would you like to add?",
