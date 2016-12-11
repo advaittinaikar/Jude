@@ -49,7 +49,7 @@ CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
 # Initialize the calendar API
 calendar_service = Google::Apis::CalendarV3::CalendarService.new
-calendar_service.client_options.application_name = CALENDAR_APPLICATION_NAME
+calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
 calendar_service.authorization = authorize_calendar
 
 # ----------------------------------------------------------------------
