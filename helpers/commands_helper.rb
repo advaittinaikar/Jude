@@ -117,7 +117,7 @@ module Sinatra
 
     def message_add_event
       
-      [
+      return [
     "attachments": [
         {
             "text": "What would you like to add?",
