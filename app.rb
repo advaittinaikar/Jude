@@ -32,6 +32,7 @@ Dir["./helpers/*.rb"].each {|file| require file }
 
 helpers Sinatra::CommandsHelper
 
+@@jude_link = "http://agile-stream-68169.herokuapp.com/"
 
 # enable sessions for this project
 enable :sessions
@@ -225,8 +226,7 @@ post '/interactive-buttons' do
   # puts "team_id : " + team_id.to_s
   # puts "channel : " + channel.to_s
   
-  team = Team.find_by( team_id: team_id )
-  event = Event.find_by (team_id: team_id)
+  team = Team.find_by(team_id:team_id)
   
   if team.nil?
     client.chat_postMessage(channel: channel, text:"You don't seem to have integrated Jude in Slack. Click the below link to do so: http://agile-stream-68169.herokuapp.com/")
@@ -246,6 +246,10 @@ post '/interactive-buttons' do
       else
         200
       end
+
+  # elsif call_back == "add jude"
+
+
   end 
 
 end
@@ -269,6 +273,24 @@ end
 
 private
  
+def add_jude
+  [
+    {
+      "text" : "Add Jude to Slack"
+      "callback_id" : "add jude"
+      "fallback" : "Add Jude via Button"
+      "actions" :
+      [
+        {
+            "name":  "add-jude",
+            "text":  "Add Jude to Slack",
+            "type":  "button"
+            }
+      ]
+        }    
+  ].to_json
+end
+
 def respond_to_slack_event json
   
   # find the team 
