@@ -198,7 +198,7 @@ module Sinatra
 
     end
 
-    def interactive_assignment_course client
+    def interactive_assignment_course
       actions_response = [
         {
           "text": "Which course is the assignment for?",
