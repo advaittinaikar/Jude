@@ -198,7 +198,7 @@ module Sinatra
 
     end
 
-    def interactive_assignment_course
+    def interactive_assignment_course client
       actions_response = [
         {
           "text": "Which course is the assignment for?",
@@ -231,9 +231,9 @@ module Sinatra
       ].to_json
 
       #Adding course details from the database
-      course_details = Course.all.to_json
-
+      course_details = Course.connection.select_all
       puts "These are the raw course details:" + course_details
+      # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
       course_details.each do |course|
 
