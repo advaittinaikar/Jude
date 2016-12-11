@@ -66,10 +66,7 @@ module Sinatra
       
     end
     
-    # ------------------------------------------------------------------------
-    # =>   CONVERTS THE LIST OF COMMANDS TO A FORMATTED MESSAGE
-    # ------------------------------------------------------------------------
-    
+    # Converts the list of commands to a message
     def get_commands_message is_admin = false
       
         message = "*JudeBot* - This bot helps you add assignments to your calendar.\n"
@@ -85,10 +82,7 @@ module Sinatra
 
     end
 
-    # ------------------------------------------------------------------------
-    # =>   GETS USEFUL INFO FROM SLACK
-    # ------------------------------------------------------------------------
-    
+    # Gets useful user information from Slack
     def get_user_name client, event
       # calls users_info on slack
       info = client.users_info(user: event.user_id ) 
@@ -101,6 +95,7 @@ module Sinatra
       info['user']['is_admin'] || info['user']['is_owner']
     end
 
+    # Gets next 10 events in a user's Google Calendar
     def get_upcoming_events service
       response = service.list_events('primary',
                                max_results: 10,
@@ -117,6 +112,7 @@ module Sinatra
       return message   
     end
 
+    # Button attachment message when user types "add"
     def message_add_event
       
       [
@@ -152,14 +148,16 @@ module Sinatra
 
     end
 
+    # Button attachment message when user says hi
     def interactive_greeting
 
       [
         {
         "text" : "What would you like to do today?",
+        "fallback": "You're missing out on a great experience!",
         "callback_id" : "to-do",
-        "attachment_type": "default",
-        "actions" :[
+        "attachment_type" : "default",
+        "actions" : [
           {
             "name":  "add",
             "text":  "Add assignment",
