@@ -184,10 +184,57 @@ end
 # TO TEST THIS LOCALLY USE THIS ... 
 # DON"T INCLUDE IT IN DEVELOPMENT"
 
-post '/interactive-messages' do
+post '/interactive-buttons' do
 
+  content_type :json
+
+  request.body.rewind
+  raw_body = request.body.read
+
+  puts "Params: " + params.to_s
   
+  json_request = JSON.parse( params["payload"] )
+  puts "JSON = " + json_request.to_s
+  puts "checking token"
+
+  if json_request['token'] != ENV['SLACK_VERIFICATION_TOKEN']
+      halt 403, 'Incorrect slack token'
+  end
   
+  puts "token valid"
+
+  call_back = json_request['callback_id']
+  action_name = json_request['actions'].first["name"]
+  action_value = json_request['actions'].first["value"]
+  channel = json_request['channel']['id']
+  team_id = json_request['team']['id']
+  
+  puts "Action: " + call_back.to_s
+  puts "Call Back: " + action_name.to_s
+  puts "team_id : " + team_id.to_s
+  puts "channel : " + channel.to_s
+  
+  team = Team.find_by( team_id: team_id )
+  
+  return if team.nil?
+  
+  puts "team found :" 
+  
+  client = team.get_client
+  
+  if call_back == "sample_button"
+      replace_message = "Thanks for your selection."
+    
+      if action_name == "this_is_a_button"
+        replace_message += "Yay! You have created a button that successfully displays what you wanted it to!"
+        client.chat_postMessage(channel: channel, text: "Your button worked! I'm the text you wanted to display on clicking the button!", as_user: true)
+        
+      else
+        200
+    
+      end
+  end 
+
 end
 
 # CALL AS FOLLOWS
