@@ -119,22 +119,36 @@ module Sinatra
     def message_add_event
       
       [
-  {
-    "text": "Look at me! I'm a button!",
-    "callback_id": "sample_button",
-    "attachment_type": "default",
-    "actions": 
-    [
-      {
-        "name": "this_is_a_button",
-        "text": "Button!",
-        "type": "button",
-        "value": "this_is_a_button"
-      }
-    ]
-  }
-  ].to_json
-    
+        {
+            "text": "What would you like to add?",
+            "fallback": "Sorry could not add that.",
+            "callback_id": "add_event_button",
+            "color": "#3AA3E3",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "assignment",
+                    "text": "Assignment",
+                    "type": "button",
+                    "value": "assignment"
+                },
+                {
+                    "name": "lecture",
+                    "text": "Lecture",
+                    "type": "button",
+                    "value": "lecture"
+                },
+                {
+                    "name": "meeting",
+                    "text": "Meeting",
+                    "type": "button",
+                    "value": "meeting"
+                }
+                ]
+            }
+       
+      ].to_json
+
     end
   
   end
