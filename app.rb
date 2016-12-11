@@ -4,16 +4,18 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-require 'haml'
-require 'json'
-require 'slack-ruby-client'
-require 'httparty'
-
 require 'google/apis/calendar_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 
 require 'fileutils'
+
+require 'haml'
+require 'json'
+require 'slack-ruby-client'
+require 'httparty'
+
+
 
 # ----------------------------------------------------------------------
 
@@ -46,7 +48,10 @@ enable :sessions
 OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
-#error counter
+# Initialize the calendar API
+calendar_service = Google::Apis::CalendarV3::CalendarService.new
+calendar_service.client_options.application_name = CALENDAR_APPLICATION_NAME
+calendar_service.authorization = authorize_calendar
 
 # ----------------------------------------------------------------------
 #     ROUTES, END POINTS AND ACTIONS
@@ -191,6 +196,10 @@ end
 
 # CALL AS FOLLOWS
 # curl -X POST http://127.0.0.1:9393/test_event -F token=9GCx7G3WrHix7EJsP818YOVB -F team_id=T2QJ6HA0Z -F event_type=message -F event_user=U2QHR0F7W -F event_channel=D37HZB04D -F event_ts=1480296595.000007 -F event_text='g ddf;gkl;d fkg;ldfkg df' 
+
+post '/calendar_events' do
+
+end
 
 post "/test_event" do
 
