@@ -19,34 +19,35 @@ module Sinatra
     
     def event_to_action client, event
       
+      ef = event.formatted_text
       puts event
       puts "Formatted Text: #{event.formatted_text}"
       
-      return if event.formatted_text.nil?
+      return if ef.nil?
       
       is_admin = is_admin_or_owner client, event
         
       # Hi Commands
-      if ["hi","hello","hey","heyy"].any? { |w| event.formatted_text.starts_with? w }
+      if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
       message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
       # Handle the Help commands
-      elsif event.formatted_text.include? "help"
+      elsif ef.include? "help"
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
 
       # Respond to thanks message
-      elsif event.formatted_text.starts_with? "thank"
+      elsif ef.starts_with? "thank"
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
       #   
-      elsif event.formatted_text.starts_with? "details"
-        assignment_text = event.formatted_text.slice! "details: "
+      elsif ef.starts_with? "details"
+        assignment_text = ef.slice! "details: "
         $assignment_record += " " + assignment_text
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
-      elsif event.formatted_text.starts_with? "due: "
-        unformatted_date = event.formatted_text.slice! "due: "
+      elsif ef.starts_with? "due: "
+        unformatted_date = ef(9..(ef.length-1).slice! "due: "
         due_date = Kronic.parse(unformatted_date)
         # $assignment_record + = " due on" + assignment_text
         puts $assignment_record
