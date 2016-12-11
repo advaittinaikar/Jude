@@ -4,11 +4,11 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-# require 'google/apis/calendar_v3'
-# require 'googleauth'
-# require 'googleauth/stores/file_token_store'
+require 'google/apis/calendar_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
 
-# require 'fileutils'
+require 'fileutils'
 
 require 'haml'
 require 'json'
@@ -25,32 +25,25 @@ configure :development do
 end
 
 #require any models 
-#you add to the folder
-#using the following syntax:
-#require_relative './models/<model_name>'
-#require_relative './models/team'
 
 Dir["./models/*.rb"].each {|file| require file }
 
 Dir["./helpers/*.rb"].each {|file| require file }
 
-
-# helpers Sinatra::DateTimeHelper
-# helpers Sinatra::OfficeHoursHelper
 helpers Sinatra::CommandsHelper
 
 
 # enable sessions for this project
 enable :sessions
 
-# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-# CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
+OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
 # # Initialize the calendar API
-# calendar_service = Google::Apis::CalendarV3::CalendarService.new
-# calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
-# calendar_service.authorization = authorize_calendar
+calendar_service = Google::Apis::CalendarV3::CalendarService.new
+calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
+calendar_service.authorization = authorize_calendar
 
 # ----------------------------------------------------------------------
 #     ROUTES, END POINTS AND ACTIONS
