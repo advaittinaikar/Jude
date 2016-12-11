@@ -231,7 +231,7 @@ module Sinatra
       ].to_json
 
       #Adding course details from the database
-      course_details = Course.all
+      course_details = Course.all.to_json
 
       puts "These are the raw course details:" + course_details
 
