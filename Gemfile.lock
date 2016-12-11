@@ -110,7 +110,7 @@ DEPENDENCIES
   activerecord
   activesupport
   dotenv
-  google-api-client (>= 0.8)
+  google-api-client (~> 0.9)
   haml
   httparty
   json
