@@ -225,14 +225,14 @@ post '/interactive-buttons' do
   if call_back == "assignment"
       replace_message = "Thanks we're going to add your assignment now."
     
-      if action_name == "this_is_a_button"
-        replace_message += "Yay! You have created a button that successfully displays what you wanted it to!"
+      # if action_name == "this_is_a_button"
+      #   replace_message += "Yay! You have created a button that successfully displays what you wanted it to!"
         client.chat_postMessage(channel: channel, text: "Your button worked! I'm the text you wanted to display on clicking the button!", as_user: true)
         
-      else
-        200
+      # else
+      #   200
     
-      end
+      # end
   end 
 
 end
