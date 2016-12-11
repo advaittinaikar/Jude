@@ -233,6 +233,8 @@ module Sinatra
       #Adding course details from the database
       course_details = Course.all
 
+      puts "These are the raw course details:" + course_details
+
       course_details.each do |course|
 
         puts course
