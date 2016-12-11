@@ -248,7 +248,7 @@ post '/interactive-buttons' do
 
         message += "Let's add an assignment!"
         puts 'replace message'
-        client.chat_replace(channel: channel, ts: time_stamp, text: message, attachments: interactive_assignment_course, as_user: true)
+        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
       elsif action_name == "show today"
 
