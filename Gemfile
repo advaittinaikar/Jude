@@ -7,6 +7,11 @@ gem "rake"
 gem 'activerecord'
 gem 'sinatra-activerecord' # excellent gem that ports ActiveRecord for Sinatra
 gem 'activesupport'
+gem 'google-api-client', '>= 0.8'
+
+# gem 'google/apis/calendar_v3'
+# gem 'googleauth'
+# gem 'googleauth/stores/file_token_store'
 
 gem 'haml'
 gem 'slack-ruby-client'
