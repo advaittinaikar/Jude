@@ -41,7 +41,7 @@ module Sinatra
 
       #   
       elsif event.formatted_text.starts_with? "details"
-        assignment_text=event.formatted_text.slice! "details: "
+        assignment_text = event.formatted_text.slice! "details: "
         $assignment_record += " " + assignment_text
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
