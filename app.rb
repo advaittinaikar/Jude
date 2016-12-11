@@ -229,7 +229,7 @@ post '/interactive-buttons' do
   team = Team.find_by( team_id: team_id )
   
   if team.nil?
-    client.chat_postMessage(channel: channel, text:"You don't seem to have integrated Jude in Slack. Click the below link to do so: http://agile-stream-68169.herokuapp.com/")
+    client.chat_postMessage(channel: channel, text:"You don't have Jude installed. Click the below link to install: http://agile-stream-68169.herokuapp.com/")
     return
   end
   
@@ -243,11 +243,11 @@ post '/interactive-buttons' do
       if action_name == "add"
         replace_message += "Let's add an assignment!"
         puts 'replace message'
-        client.chat_postMessage(channel: channel, text: replace_message, replace_original: true, as_user: true)
+        client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
       else
         200
-        puts 
-        client.chat_postMessage(channel: channel, text: replace_message, replace_original: true, as_user: true)
+         
+        client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
       end
 
   # elsif call_back == "add jude"
