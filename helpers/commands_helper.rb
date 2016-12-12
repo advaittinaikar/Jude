@@ -249,7 +249,7 @@ module Sinatra
         actions_response.first[:actions].push(
         {
           "name": item.short_name,
-          "text": item.course_name],
+          "text": item.course_name,
           "type": "button" 
           }
         )
