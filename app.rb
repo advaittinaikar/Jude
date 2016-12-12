@@ -290,6 +290,7 @@ post '/interactive-buttons' do
   client = team.get_client
   
   if call_back == "to-do"
+      200
       message = "Great! "
     
       if action_name == "add"
@@ -314,7 +315,7 @@ post '/interactive-buttons' do
       end
 
   elsif call_back == "course_assignment"
-
+    200
     if action_name == "add course"
       $course_object = {}
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)

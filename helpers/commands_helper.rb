@@ -305,6 +305,27 @@ module Sinatra
 
     end
 
+    def create_calendar_event assignment, client
+
+      event = Google::Apis::CalendarV3::Event.new{
+        description: assignment['description'],
+        start: {
+          date_time: assignment['due_date'],
+          time_zone: 'America/New_York'
+          },
+        end: {
+          date_time: assignment['due_date'],
+          time_zone: 'America/New_York'
+          },
+        reminders: {
+          use_default: true,
+        }
+      }
+
+      result = client.insert_event('primary', event)
+
+    end
+
     # def interactive_assignment_due
 
     #   [
