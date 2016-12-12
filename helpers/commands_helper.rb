@@ -274,7 +274,7 @@ module Sinatra
 
     def add_assignment_to_table object
 
-      assignment = Assignment.create(course_name: object.course_name, description: object.description, due_date: object.due_date)
+      assignment = Assignment.create(course_name: object["course_name"], description: object["description"], due_date: object["due_date"])
       assignment.save
 
     end
