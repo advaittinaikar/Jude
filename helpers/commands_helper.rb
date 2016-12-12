@@ -239,7 +239,7 @@ module Sinatra
 
       puts all_courses
 
-      Course.all.each do |course| 
+      Course.all.each do |key,value|
 
         # puts course
 
@@ -248,8 +248,8 @@ module Sinatra
         
         actions_response.first[:actions].push(
         {
-          "name": course[:short_name].to_s,
-          "text": course[:course_name].to_s,
+          "name": key[:short_name],
+          "text": key[:course_name],
           "type": "button" 
           }
         )
