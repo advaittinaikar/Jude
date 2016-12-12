@@ -30,9 +30,6 @@ module Sinatra
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
-        # $service = Google::Apis::CalendarV3::CalendarService.new
-        # $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-        # $service.authorization = authorize_calendar
         intialize_api
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
@@ -46,14 +43,14 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
       #   
-      elsif ef.starts_with? "details"
+      elsif ef.starts_with? "details:"
         ef.slice!(0..8)
         $assignment_record += " " + ef
         $course_object.description = ef
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
-      elsif ef.starts_with? "due: "
+      elsif ef.starts_with? "due:"
         ef.slice!(0..4)
         due_date = Kronic.parse(ef)
 
@@ -61,8 +58,10 @@ module Sinatra
         
         add_assignment_to_table $course_object
 
-        puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
+
+        message create_calendar_event $course_object, $service  
+        client.chat_postMessage(channel: event.channel, text: message, as_user: true)
 
       elsif ef.starts_with? "course name: "
         ef.slice!(0..12)
@@ -305,7 +304,7 @@ module Sinatra
 
     end
 
-    def create_calendar_event assignment, client
+    def create_calendar_event assignment, service
 
       event = Google::Apis::CalendarV3::Event.new{
         description: assignment['description'],
@@ -322,8 +321,9 @@ module Sinatra
         }
       }
 
-      result = client.insert_event('primary', event)
+      result = service.insert_event('primary', event)
 
+      return "Successfully added to your calendar!"
     end
 
     # def interactive_assignment_due

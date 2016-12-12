@@ -161,7 +161,7 @@ get '/oauthcallback' do
 
 end
 
-get '/calendars' do
+def calendars
 
   client = Signet::OAuth2::Client.new(access_token: session[:access_token])
 
