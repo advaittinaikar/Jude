@@ -40,9 +40,9 @@ $assignment_object = {}
 # enable sessions for this project
 enable :sessions
 
-# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-# CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
+OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR
 
 # # # Initialize the calendar API
 # calendar_service = Google::Apis::CalendarV3::CalendarService.new
