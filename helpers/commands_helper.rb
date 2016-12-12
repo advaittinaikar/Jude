@@ -66,13 +66,20 @@ module Sinatra
 
       elsif ef.starts_with? "instructor: "
         ef.slice!(0..11)  
-         @@course_object["instructor"]= ef 
+        @@course_object["instructor"]= ef 
         client.chat_postMessage(channel: event.channel, text: "Enter Abbreviation of the course name starting with ~short name: ~", as_user: true)  
 
       elsif ef.starts_with? "short name: "
         ef.slice!(0..11)  
-         @@course_object["short_name"]= ef 
-        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{@@course_object["course_name"]} \n #{@@course_object["course_id"]} \n #{@@course_object["instructor"]} \n #{@@course_object["short_name"]}", as_user: true)
+        @@course_object["short_name"]= ef
+        create_course @@course_object 
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{@@course_object["course_name"]} \n #{@@course_object["course_id"]} \n #{@@course_object["instructor"]} \n #{@@course_object["short_name"]} \n", as_user: true)
+
+        $assignment_record=""
+
+        message = "Let's add an assignment!"
+        puts 'replace message'
+        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
       elsif event.formatted_text == "show"
         events_message = get_upcoming_events calendar_service
@@ -118,6 +125,12 @@ module Sinatra
 
     end
 
+    def create_course object
+
+      course = Course.create(course_name: object.course_name, course_id: object.course_id, instructor: object.instructor, short_name: object.short_name)
+      course.save
+
+    end
     # Gets useful user information from Slack
     def get_user_name client, event
       # calls users_info on slack
@@ -227,7 +240,7 @@ module Sinatra
           "actions": [
             { 
               "name": "add course",
-              "text": "Add a course",
+              "text": "+ Add a course",
               "type": "button"
             }
           ]
