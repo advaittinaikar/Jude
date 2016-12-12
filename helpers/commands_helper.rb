@@ -235,7 +235,7 @@ module Sinatra
       # puts "These are the raw course details:" + course_details
       # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
-      Course.find_each do |course|
+      Course.all.to_json.each do |course|
 
         puts course
 
