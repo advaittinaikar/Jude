@@ -366,7 +366,8 @@ def authorize_calendar
   if credentials.nil?
     url = authorizer.get_authorization_url(
       base_url: OOB_URI)
-    Launchy.open(url)
+    system("open", url)
+    # Launchy.open(url)
     # code = HTTParty.get url
     # puts "Open the following URL in the browser and enter the resulting code after authorization."
     # puts url
