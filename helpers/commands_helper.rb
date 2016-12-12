@@ -228,7 +228,7 @@ module Sinatra
           ]
 
         }
-      ].to_json
+      ]
 
       #Adding course details from the database
       # course_details = Course.connection.select_all
@@ -247,18 +247,18 @@ module Sinatra
         # action["text"] = course["course_name"]
 
         # `actions_response[:actions].push`
-        
+
         actions_response[:actions].push(
         {
-          "name": item[:short_name],
-          "text": item[:course_name],
+          "name": "#{item["short_name"]}",
+          "text": "#{item["course_name"]}",
           "type": "button"
           }
         )
 
       end
 
-      return actions_response
+      return actions_response.to_json
 
     end
 
