@@ -157,7 +157,7 @@ get '/oauthcallback' do
 
   session[:access_token] = response['access_token']
 
-  redirect_to url_for(:action => :calendars)
+  redirect url_for(:action => :calendars)
 
 end
 
@@ -416,33 +416,33 @@ def auth_calendar
     redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
   })
 
-  redirect_to client.authorization_uri.to_s
+  redirect client.authorization_uri.to_s
 
 end
 
-def authorize_calendar
-  # FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+# def authorize_calendar
+#   # FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
-  client_id = Google::Auth::ClientId.from_file('/client_secret.json')
-  scope = ['https://www.googleapis.com/auth/calendar']
-  token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
-  # token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
-  authorizer = Google::Auth::UserAuthorizer.new(
-    client_id, CALENDAR_SCOPE, token_store,'/oauth2callback')
+#   client_id = Google::Auth::ClientId.from_file('/client_secret.json')
+#   scope = ['https://www.googleapis.com/auth/calendar']
+#   token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
+#   # token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+#   authorizer = Google::Auth::UserAuthorizer.new(
+#     client_id, CALENDAR_SCOPE, token_store,'/oauth2callback')
 
-  user_id = 'default'
-  credentials = authorizer.get_credentials(user_id)
-  if credentials.nil?
-    url = authorizer.get_authorization_url(
-      base_url: OOB_URI)
-    system("open", url)
-    # Launchy.open(url)
-    # code = HTTParty.get url
-    # puts "Open the following URL in the browser and enter the resulting code after authorization."
-    # puts url
-    # code = gets
-    credentials = authorizer.get_and_store_credentials_from_code(
-      user_id: user_id, code: code, base_url: OOB_URI)
-  end
-  credentials
-end
+#   user_id = 'default'
+#   credentials = authorizer.get_credentials(user_id)
+#   if credentials.nil?
+#     url = authorizer.get_authorization_url(
+#       base_url: OOB_URI)
+#     system("open", url)
+#     # Launchy.open(url)
+#     # code = HTTParty.get url
+#     # puts "Open the following URL in the browser and enter the resulting code after authorization."
+#     # puts url
+#     # code = gets
+#     credentials = authorizer.get_and_store_credentials_from_code(
+#       user_id: user_id, code: code, base_url: OOB_URI)
+#   end
+#   credentials
+# end
