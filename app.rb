@@ -1,6 +1,7 @@
 require 'google/apis/calendar_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
+require 'launchy'
 
 require "sinatra"
 require 'sinatra/activerecord'
@@ -365,7 +366,8 @@ def authorize_calendar
   if credentials.nil?
     url = authorizer.get_authorization_url(
       base_url: OOB_URI)
-    code = HTTParty.get url
+    launchy.open(url)
+    # code = HTTParty.get url
     # puts "Open the following URL in the browser and enter the resulting code after authorization."
     # puts url
     # code = gets
