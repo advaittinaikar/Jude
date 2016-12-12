@@ -31,7 +31,7 @@ module Sinatra
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
         $service = Google::Apis::CalendarV3::CalendarService.new
-        $service.client_options.application_name = CALENDAR_APPLICATION_NAME
+        $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
         $service.authorization = authorize_calendar
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
@@ -58,7 +58,7 @@ module Sinatra
 
         $course_object.due_date = due_date
         
-        add_assignment_to_table $
+        add_assignment_to_table $course_object
 
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
