@@ -54,6 +54,14 @@ module Sinatra
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
 
+      elsif ef.starts_with? "course name: "
+        ef.slice!(0..4)  
+        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
+
+      elsif ef.starts_with? "course name: "
+        ef.slice!(0..4)  
+        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)  
+
       elsif event.formatted_text == "show"
         events_message = get_upcoming_events calendar_service
         client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
@@ -210,21 +218,6 @@ module Sinatra
               "text": "Add a course",
               "type": "button"
             }
-            # {
-            #   "name": "dfe",
-            #   "text": "Design for environment",
-            #   "type": "button"
-            # },
-            # {
-            #   "name": "vp",
-            #   "text": "Visual processes",
-            #   "type": "button"
-            # },
-            # {
-            #   "name": "pop",
-            #   "text": "Programming for Online Prototypes",
-            #   "type": "button"
-            # }
           ]
 
         }
@@ -248,7 +241,7 @@ module Sinatra
 
         # `actions_response[:actions].push`
 
-        actions_response[:actions].push(
+        actions_response.first[:actions].push(
         {
           "name": item[:short_name],
           "text": item[:course_name],
