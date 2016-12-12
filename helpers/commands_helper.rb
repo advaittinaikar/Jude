@@ -61,7 +61,7 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
 
         # message create_calendar_event $assignment_object, $service  
-        client.chat_postMessage(channel: event.channel, text: message, as_user: true)
+        # client.chat_postMessage(channel: event.channel, text: message, as_user: true)
 
       elsif ef.starts_with? "course name: "
         ef.slice!(0..12)
@@ -86,9 +86,9 @@ module Sinatra
 
         $assignment_record=""
 
-        message = "Let's add an assignment!"
-        puts 'replace message'
-        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+        # message = "Let's add an assignment!"
+        # puts 'replace message'
+        # client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
       elsif event.formatted_text == "show"
         events_message = get_upcoming_events calendar_service
@@ -241,22 +241,8 @@ module Sinatra
       ]
 
       #Adding course details from the database
-      # course_details = Course.connection.select_all
-      # puts "These are the raw course details:" + course_details
-      # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
-
-      # all_courses = Course.all
-
-      # puts all_courses
-
       Course.all.each do |item,index|
 
-        # puts course
-
-        # action["name"] = course["short_name"]
-        # action["text"] = course["course_name"]
-
-        # `actions_response[:actions].push`
 
         actions_response.first[:actions].insert(0,
         {
