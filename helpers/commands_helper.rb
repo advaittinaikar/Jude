@@ -237,7 +237,7 @@ module Sinatra
 
       # all_courses = Course.all
 
-      puts all_courses
+      # puts all_courses
 
       Course.all.each do |item,index|
 
