@@ -58,7 +58,7 @@ get "/" do
   # all_courses.each do |course|
   #   course
   # end
-  Course.all.to_json
+  Course.all
 
 end
 
