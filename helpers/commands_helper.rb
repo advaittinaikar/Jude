@@ -250,7 +250,7 @@ module Sinatra
       Course.all.each do |item,index|
 
 
-        actions_response.first[:actions].insert(0,
+        actions_response.first[:actions].push(0,
         {
           "name": item[:short_name],
           "text": item[:course_name],
