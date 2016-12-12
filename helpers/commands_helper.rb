@@ -231,20 +231,19 @@ module Sinatra
       ].to_json
 
       #Adding course details from the database
-      course_details = Course.connection.select_all
-      puts "These are the raw course details:" + course_details
+      # course_details = Course.connection.select_all
+      # puts "These are the raw course details:" + course_details
       # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
-      course_details.each do |course|
+      Course.find_each do |course|
 
         puts course
 
         action = {}
-        action.name = course.short_name
-        action.text = course.course_name
+        action["name"] = course["short_name"]
+        action["text"] = course["course_name"]
         
-        actions_response.first.actions.push(
-        action)
+        actions_response["first"]["actions"].push(action)
 
       end
 
