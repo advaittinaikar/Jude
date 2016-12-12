@@ -53,7 +53,7 @@ enable :sessions
 
 get "/" do
   haml :index
-  Course.all
+  Course.all.to_json
 end
 
 get "/privacy" do
