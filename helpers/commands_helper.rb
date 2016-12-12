@@ -30,7 +30,7 @@ module Sinatra
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
-        intialize_api
+        # intialize_api
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
@@ -60,7 +60,7 @@ module Sinatra
 
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
 
-        message create_calendar_event $course_object, $service  
+        # message create_calendar_event $course_object, $service  
         client.chat_postMessage(channel: event.channel, text: message, as_user: true)
 
       elsif ef.starts_with? "course name: "
@@ -151,23 +151,6 @@ module Sinatra
       # calls users_info on slack
       info = client.users_info(user: event.user_id ) 
       info['user']['is_admin'] || info['user']['is_owner']
-    end
-
-    # Gets next 10 events in a user's Google Calendar
-    def get_upcoming_events service
-      response = service.list_events('primary',
-                               max_results: 10,
-                               single_events: true,
-                               order_by: 'startTime',
-                               time_min: Time.now.iso8601)
-
-      message="Your upcoming 10 events are:"
-
-      respond.items.each do |event|
-        message+="\n#{event.summary} on #{event.start.date}"
-      end
-
-      return message   
     end
 
     # Button attachment message when user types "add"
@@ -289,14 +272,6 @@ module Sinatra
 
     end
 
-    def intialize_api
-
-      $service = Google::Apis::CalendarV3::CalendarService.new
-      $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-      $service.authorization = auth_calendar
-
-    end
-
     def add_assignment_to_table object
 
       assignment = Assignment.create(course_name: object.course_name, description: object.description, due_date: object.due_date)
@@ -304,58 +279,6 @@ module Sinatra
 
     end
 
-    def create_calendar_event (assignment, service)
-
-      event = Google::Apis::CalendarV3::Event.new{
-        description : assignment['description'],
-        start : {
-          date_time : assignment['due_date'],
-          time_zone : 'America/New_York',
-          },
-        end: {
-          date_time : assignment['due_date'],
-          time_zone : 'America/New_York',
-          },
-        reminders: {
-          use_default: true,
-        }
-      }
-
-      result = service.insert_event('primary', event)
-
-      return "Successfully added to your calendar!"
-
-    end
-
-    # def interactive_assignment_due
-
-    #   [
-    #     {
-    #       "text": "Which course is the assignment for?",
-    #       "callback_id": "course_assignment",
-    #       "fallback": "Type your course number",
-    #       "actions":[
-    #         {
-    #           "name": "dfe",
-    #           "text": "Design for environment",
-    #           "type": "button"
-    #         },
-    #         {
-    #           "name": "vp",
-    #           "text": "Visual processes",
-    #           "type": "button"
-    #         },
-    #         {
-    #           "name": "pop",
-    #           "text": "Programming for Online Prototypes",
-    #           "type": "button"
-    #         }
-    #       ]
-
-    #     }
-    #   ].to_json
-
-    # end
   end
   
 end
