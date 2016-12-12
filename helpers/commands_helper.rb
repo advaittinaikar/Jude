@@ -30,7 +30,9 @@ module Sinatra
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
-        intialize_api
+        $service = Google::Apis::CalendarV3::CalendarService.new
+        $service.client_options.application_name = CALENDAR_APPLICATION_NAME
+        $service.authorization = authorize_calendar
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
@@ -102,7 +104,7 @@ module Sinatra
         if @@error_counter > 10
           client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You aren't normally like this. Please be nice or type `help` to find my commands.", as_user: true)
         elsif @@error_counter > 6 and @@error_counter <= 10
-          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seems to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
+          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else  
           client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
         end
