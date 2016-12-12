@@ -273,10 +273,15 @@ post '/interactive-buttons' do
 
   elsif call_back == "course_assignment"
 
-    message = "You're adding an assignment for #{action_name}!"
-    $assignment_record = "For #{action_name}: "
-    client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
-
+    if action_name == "add course"
+      @@course_object = {}
+      client.chat_postMessage(channel: event.channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+    else
+      message = "You're adding an assignment for #{action_name}!"
+      $assignment_record = "For #{action_name}: "
+      client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
+    end  
+  
   else
     200
 
