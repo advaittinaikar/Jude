@@ -275,7 +275,7 @@ post '/interactive-buttons' do
 
     if action_name == "add course"
       @@course_object = {}
-      client.chat_postMessage(channel: event.channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+      client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
     else
       message = "You're adding an assignment for #{action_name}!"
       $assignment_record = "For #{action_name}: "
