@@ -6,9 +6,9 @@ module Sinatra
     # ------------------------------------------------------------------------
 
     @@jude_bot_commands = [
-      { message: "*add* - Helps add an assignment to your calendar", is_admin: false },
-      { message: "*help* - Provides help on different features", is_admin: false },
-      { message: "*about* - Tells you the story of Jude", is_admin: false }
+      { message: "`add` - Helps add an assignment to your calendar", is_admin: false },
+      { message: "`help` - Provides help on different features", is_admin: false },
+      { message: "`about` - Tells you the story of Jude", is_admin: false }
     ]
 
     @@error_counter = 0
@@ -35,7 +35,7 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
       elsif ef.starts_with? "about"
-        client.chat_postMessage(channel: event.channel, text: about_jude, attachments: message, as_user:true)
+        client.chat_postMessage(channel: event.channel, text: "_#{about_jude}_", attachments: message, as_user:true)
             
       # Handle the Help commands
       elsif ef.include? "help"
@@ -113,7 +113,7 @@ module Sinatra
         @@error_counter += 1
 
         if @@error_counter > 10
-          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You aren't normally like this. Please be nice or type `help` to find my commands.", as_user: true)
+          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You've entered something I dont get for the #{@@error_counter}th time. Please be nice or type `help` to find my commands.", as_user: true)
         elsif @@error_counter > 6 and @@error_counter <= 10
           client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else  
@@ -132,7 +132,7 @@ module Sinatra
       
         @@jude_bot_commands.each do |c|
           if c[:is_admin] == false or (c[:is_admin] == true and is_admin)
-            message += "`#{c["message"]}` + \n"
+            message += "#{c["message"]} + \n"
           end
         end
 
@@ -250,7 +250,7 @@ module Sinatra
       Course.all.each do |item,index|
 
 
-        actions_response.first[:actions].push(0,
+        actions_response.first[:actions].push(
         {
           "name": item[:short_name],
           "text": item[:course_name],
@@ -272,8 +272,8 @@ module Sinatra
     end
 
     def about_jude
-      message = "Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh.\n 
-                While he realised that his assignments were going out of hand he decided to merely build something to help himself and others. \n
+      message = "Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. 
+                While he realised that his assignments were going out of hand he decided to merely build something to help himself and others.
                 Jude has been built to make it easier to add structure google calendar events for assignments, as well as show upcoming events." 
 
       return message
