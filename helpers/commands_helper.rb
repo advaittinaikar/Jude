@@ -246,7 +246,7 @@ module Sinatra
         # action["name"] = course["short_name"]
         # action["text"] = course["course_name"]
         
-        actions_response.first["actions"].push(
+        actions_response.first[:actions].push(
         {
           "name": course["short_name"],
           "text": course["course_name"],
