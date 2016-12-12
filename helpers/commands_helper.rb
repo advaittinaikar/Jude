@@ -55,12 +55,24 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
 
       elsif ef.starts_with? "course name: "
-        ef.slice!(0..4)  
-        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
+        ef.slice!(0..12)
+        @@course_object["course_name"]=ef  
+        client.chat_postMessage(channel: event.channel, text: "Enter Course ID starting with ~course id: ~", as_user: true)
 
-      elsif ef.starts_with? "course name: "
-        ef.slice!(0..4)  
-        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)  
+      elsif ef.starts_with? "course id: "
+        ef.slice!(0..10)
+        @@course_object["course_id"]=ef  
+        client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with ~instructor: ~", as_user: true) 
+
+      elsif ef.starts_with? "instructor: "
+        ef.slice!(0..11)  
+         @@course_object["instructor"]= ef 
+        client.chat_postMessage(channel: event.channel, text: "Enter Abbreviation of the course name starting with ~short name: ~", as_user: true)  
+
+      elsif ef.starts_with? "short name: "
+        ef.slice!(0..11)  
+         @@course_object["short_name"]= ef 
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{@@course_object["course_name"]} \n #{@@course_object["course_id"]} \n #{@@course_object["instructor"]} \n #{@@course_object["short_name"]}", as_user: true)
 
       elsif event.formatted_text == "show"
         events_message = get_upcoming_events calendar_service
@@ -241,7 +253,7 @@ module Sinatra
 
         # `actions_response[:actions].push`
 
-        actions_response.first[:actions].push(
+        actions_response.first[:actions].insert(0,
         {
           "name": item[:short_name],
           "text": item[:course_name],
