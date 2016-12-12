@@ -34,6 +34,9 @@ module Sinatra
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
+      elsif ef.starts_with? "about"
+        client.chat_postMessage(channel: event.channel, text: about_jude, attachments: message, as_user:true)
+            
       # Handle the Help commands
       elsif ef.include? "help"
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
@@ -84,19 +87,22 @@ module Sinatra
         create_course $course_object 
         client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{$course_object["course_name"]} \n #{$course_object["course_id"]} \n #{$course_object["instructor"]} \n #{$course_object["short_name"]} \n", as_user: true)
 
-        $assignment_record=""
+        $assignment_record = ""
 
         # message = "Let's add an assignment!"
         # puts 'replace message'
         # client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
-      elsif event.formatted_text == "show"
-        events_message = get_upcoming_events calendar_service
-        client.chat_postMessage(channel: event.channel, text: events_message, as_user: true)
+      elsif event.formatted_text == "show next"
+
+        client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
 
       elsif event.formatted_text == "add"
-        buttons = message_add_event
-        client.chat_postMessage(channel: event.channel, text:"Add to your calendar", attachments:buttons)
+        $assignment_record=""
+
+        message += "Let's add an assignment!"
+      
+        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
       else
 
@@ -126,7 +132,7 @@ module Sinatra
       
         @@jude_bot_commands.each do |c|
           if c[:is_admin] == false or (c[:is_admin] == true and is_admin)
-            message += c[:message] + "\n"
+            message += "`#{c["message"]}` + \n"
           end
         end
 
@@ -263,6 +269,14 @@ module Sinatra
       assignment = Assignment.create(course_name: object["course_name"], description: object["description"], due_date: object["due_date"])
       assignment.save
 
+    end
+
+    def about_jude
+      message = "Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh.\n 
+                While he realised that his assignments were going out of hand he decided to merely build something to help himself and others. \n
+                Jude has been built to make it easier to add structure google calendar events for assignments, as well as show upcoming events." 
+
+      return message
     end
 
   end

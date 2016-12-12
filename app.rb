@@ -256,7 +256,7 @@ post '/interactive-buttons' do
         $assignment_record=""
 
         message += "Let's add an assignment!"
-        puts 'replace message'
+      
         client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
       elsif action_name == "show today"
@@ -264,8 +264,8 @@ post '/interactive-buttons' do
         client.chat_postMessage(channel: channel, text: "Showing today's schedule..", as_user: true)
 
       elsif action_name == "show next"
-        calendar_upcoming_events $service
-        client.chat_postMessage(channel: channel, text: "Showing next 10 events..", as_user: true) 
+        # calendar_upcoming_events $service
+        client.chat_postMessage(channel: channel, text: show_next_events, as_user: true) 
       
       else
         200
@@ -357,5 +357,13 @@ def respond_to_slack_event json
   
   event_to_action client, event
   
+end
+
+def show_next_events
+  message =  "Upcoming Events:
+              1. Pay rent [2016-12-25]\n
+              2. Travel for vacation [2016-12-29]\n
+              3. New Year's Eve Party [2016-12-31]\n"
+  return message
 end
 
