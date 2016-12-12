@@ -85,9 +85,9 @@ module Sinatra
         ef.slice!(0..11)  
         $course_object[:short_name]= ef
 
-        client.chat_postMessage(channel: event.channel, text: "You've entered the following: "+$course_object["course_name"]+", "+$course_object["course_id"]+", "+$course_object["instructor"]+", "+$course_object["short_name"], as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: user research methods, 49-712, by francine gemperle", as_user: true)
 
-        create_course $course_object 
+        # create_course $course_object 
         
         $assignment_record = ""
 
