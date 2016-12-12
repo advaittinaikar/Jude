@@ -58,6 +58,8 @@ get "/" do
   # all_courses.each do |course|
   #   course
   # end
+  Course.all.to_json
+
 end
 
 get "/privacy" do
