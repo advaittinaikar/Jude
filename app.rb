@@ -36,7 +36,7 @@ helpers Sinatra::CommandsHelper
 
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
 $assignment_record = ""
-
+$assignment_object = {}
 # enable sessions for this project
 enable :sessions
 
@@ -273,7 +273,9 @@ post '/interactive-buttons' do
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
     else
       message = "You're adding an assignment for #{action_name}!"
+      $course_object={}
       $assignment_record = "For #{action_name}: "
+      $course_object.course_name = action_name
       client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
     end  
   
@@ -354,7 +356,7 @@ end
 def authorize_calendar
   FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
-  client_id = Google::Auth::ClientId.from_file(CALENDAR_CLIENT_SECRETS)
+  client_id = Google::Auth::ClientId.from_file(ENV["CALENDAR_CLIENT_SECRETS"])
   token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
   authorizer = Google::Auth::UserAuthorizer.new(
     client_id, CALENDAR_SCOPE, token_store)

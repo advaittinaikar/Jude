@@ -48,13 +48,18 @@ module Sinatra
       elsif ef.starts_with? "details"
         ef.slice!(0..8)
         $assignment_record += " " + ef
+        $course_object.description = ef
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
       elsif ef.starts_with? "due: "
         ef.slice!(0..4)
         due_date = Kronic.parse(ef)
-        # $assignment_record + = " due on" + assignment_text
+
+        $course_object.due_date = due_date
+        
+        add_assignment_to_table $
+
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
 
@@ -138,7 +143,7 @@ module Sinatra
     # Gets useful user information from Slack
     def get_user_name client, event
       # calls users_info on slack
-      info = client.users_info(user: event.user_id ) 
+      info = client.users_info(user: event.user_id )
       info['user']['name']
     end
     
@@ -289,6 +294,13 @@ module Sinatra
       $service = Google::Apis::CalendarV3::CalendarService.new
       $service.client_options.application_name = CALENDAR_APPLICATION_NAME
       $service.authorization = authorize_calendar
+
+    end
+
+    def add_assignment_to_table object
+
+      assignment = Assignment.create(course_name: object.course_name, description: object.description, due_date: object.due_date)
+      assignment.save
 
     end
 
