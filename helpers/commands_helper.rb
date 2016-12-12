@@ -235,7 +235,7 @@ module Sinatra
       # puts "These are the raw course details:" + course_details
       # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
-      all_courses = Course.all
+      # all_courses = Course.all
 
       puts all_courses
 
@@ -248,9 +248,9 @@ module Sinatra
         
         actions_response.first[:actions].push(
         {
-          "name": item.short_name,
-          "text": item.course_name,
-          "type": "button" 
+          "name": item[:short_name],
+          "text": item[:course_name],
+          "type": "button"
           }
         )
 
