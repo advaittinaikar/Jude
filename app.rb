@@ -1,12 +1,14 @@
+require 'google/apis/calendar_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
 require "sinatra"
 require 'sinatra/activerecord'
 require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-# require 'google/apis/calendar_v3'
-# require 'googleauth'
-# require 'googleauth/stores/file_token_store'
+
 require 'kronic'
 require 'fileutils'
 
