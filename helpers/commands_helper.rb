@@ -29,7 +29,9 @@ module Sinatra
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
-      message = interactive_greeting
+
+        intialize_api
+        message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
       # Handle the Help commands
@@ -277,6 +279,14 @@ module Sinatra
       end
 
       return actions_response.to_json
+
+    end
+
+    def intialize_api
+
+      $service = Google::Apis::CalendarV3::CalendarService.new
+      $service.client_options.application_name = CALENDAR_APPLICATION_NAME
+      $service.authorization = authorize_calendar
 
     end
 

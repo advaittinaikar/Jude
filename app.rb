@@ -258,7 +258,7 @@ post '/interactive-buttons' do
         client.chat_postMessage(channel: channel, text: "Showing today's schedule..", as_user: true)
 
       elsif action_name == "show next"
-
+        calendar_upcoming_events $service
         client.chat_postMessage(channel: channel, text: "Showing next 10 events..", as_user: true) 
       
       else
@@ -370,4 +370,24 @@ def authorize_calendar
       user_id: user_id, code: code, base_url: OOB_URI)
   end
   credentials
+end
+
+#Returning a message that contains upcoming events
+def calendar_upcoming_events service
+  calendar_id = 'primary'
+  response = service.list_events(
+                                 calendar_id,
+                                 max_results: 20,
+                                 single_events: true,
+                                 order_by: 'startTime',
+                                 time_min: Time.now.iso8601
+                                )
+
+  puts "Upcoming events:"
+  puts "No upcoming events found" if response.items.empty?
+  response.items.each do |event|
+    start = event.start.date || event.start.date_time
+    puts "- #{event.summary} (#{start})"
+  end
+
 end
