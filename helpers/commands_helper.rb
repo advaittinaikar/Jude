@@ -250,8 +250,8 @@ module Sinatra
 
         actions_response[:actions].push(
         {
-          "name": "#{item["short_name"]}",
-          "text": "#{item["course_name"]}",
+          "name": item[:short_name],
+          "text": item[:course_name],
           "type": "button"
           }
         )
