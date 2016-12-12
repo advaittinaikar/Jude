@@ -237,15 +237,22 @@ module Sinatra
 
       all_courses = Course.all
 
-      Course.all.each do |course|
+      puts all_courses
+
+      Course.all.each do |course| 
 
         # puts course
 
-        action = {}
-        action["name"] = course["short_name"]
-        action["text"] = course["course_name"]
+        # action["name"] = course["short_name"]
+        # action["text"] = course["course_name"]
         
-        actions_response["first"]["actions"].push(action)
+        actions_response["first"]["actions"].push(
+        {
+          "name": course["short_name"],
+          "text": course["course_name"],
+          "type": "button" 
+          }
+        )
 
       end
 
