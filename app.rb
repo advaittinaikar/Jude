@@ -53,6 +53,7 @@ enable :sessions
 
 get "/" do
   haml :index
+  Course.all
 end
 
 get "/privacy" do
@@ -230,7 +231,7 @@ post '/interactive-buttons' do
   
   team = Team.find_by( team_id: team_id )
   puts team
-  
+
   if team.nil?
     client.chat_postMessage(channel: channel, text:"You don't have Jude installed. Click the below link to install: http://agile-stream-68169.herokuapp.com/", unfurl_links: true)
     return
