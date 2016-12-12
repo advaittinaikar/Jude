@@ -304,26 +304,27 @@ module Sinatra
 
     end
 
-    def create_calendar_event assignment, service
+    def create_calendar_event (assignment, service)
 
       event = Google::Apis::CalendarV3::Event.new{
-        description: assignment['description'],
-        start: {
-          date_time: assignment['due_date'],
-          time_zone: 'America/New_York'
+        description : assignment['description'],
+        start : {
+          date_time : assignment['due_date'],
+          time_zone : 'America/New_York'
           },
         end: {
-          date_time: assignment['due_date'],
-          time_zone: 'America/New_York'
+          date_time : assignment['due_date'],
+          time_zone : 'America/New_York'
           },
         reminders: {
-          use_default: true,
+          use_default: true
         }
       }
 
       result = service.insert_event('primary', event)
 
       return "Successfully added to your calendar!"
+
     end
 
     # def interactive_assignment_due
