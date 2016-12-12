@@ -279,9 +279,9 @@ post '/interactive-buttons' do
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
     else
       message = "You're adding an assignment for #{action_name}!"
-      $course_object={}
+      $assignment_object={}
       $assignment_record = "For #{action_name}: "
-      $course_object["course_name"] = action_name
+      $assignment_object["course_name"] = action_name
       client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
     end  
   
@@ -308,7 +308,8 @@ end
 #   METHODS
 
 private
- 
+
+#Add to Slack button in Slack Channel 
 # def add_jude
 #   [
 #     {
