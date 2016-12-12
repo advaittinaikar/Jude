@@ -53,8 +53,8 @@ enable :sessions
 
 get "/" do
   haml :index
-  all_courses = Course.all.to_json
-
+  Course.all.each{ |t| t.name + "<br/>" }
+  # Task.all.each{ |t| t.name + "<br/>" }
   # all_courses.each do |course|
   #   course
   # end
