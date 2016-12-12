@@ -226,7 +226,7 @@ module Sinatra
           "fallback": "Type your course number",
           "actions": [
             { 
-              "name": "add_course",
+              "name": "add course",
               "text": "Add a course",
               "type": "button"
             }
