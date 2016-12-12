@@ -235,11 +235,11 @@ module Sinatra
       # puts "These are the raw course details:" + course_details
       # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
-      all_courses = Course.all.to_json
+      all_courses = Course.all
 
-      all_courses.each do |course|
+      Course.all.each do |course|
 
-        puts course
+        # puts course
 
         action = {}
         action["name"] = course["short_name"]

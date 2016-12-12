@@ -53,7 +53,7 @@ enable :sessions
 
 get "/" do
   haml :index
-  Course.all.each{ |t| t.course_name + "<br/>" }
+  # Course.all.each{ |t| t.course_name + "<br/>" }
   # Task.all.each{ |t| t.name + "<br/>" }
   # all_courses.each do |course|
   #   course
