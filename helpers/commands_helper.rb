@@ -85,7 +85,7 @@ module Sinatra
         ef.slice!(0..11)  
         $course_object[:short_name]= ef
 
-        client.chat_postMessage(channel: event.channel, text: "You've entered the following: "+$course_object["course_name"]}+", "+$course_object["course_id"]+", "+$course_object["instructor"]+", "+$course_object["short_name"], as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: "+$course_object["course_name"]+", "+$course_object["course_id"]+", "+$course_object["instructor"]+", "+$course_object["short_name"], as_user: true)
 
         create_course $course_object 
         
@@ -114,9 +114,9 @@ module Sinatra
         
         @@error_counter += 1
 
-        if @@error_counter > 10
+        if @@error_counter > 5
           client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You've entered something I dont get for the #{@@error_counter}th time. Please be nice or type `help` to find my commands.", as_user: true)
-        elsif @@error_counter > 6 and @@error_counter <= 10
+        elsif @@error_counter > 2 and @@error_counter <= 4
           client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else  
           client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
