@@ -55,9 +55,9 @@ get "/" do
   haml :index
   all_courses = Course.all.to_json
 
-  all_courses.each do |course|
-    course
-  end
+  # all_courses.each do |course|
+  #   course
+  # end
 end
 
 get "/privacy" do
