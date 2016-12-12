@@ -32,7 +32,7 @@ module Sinatra
 
         # intialize_api
         message = interactive_greeting
-        client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
+        client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
 
       elsif ef.starts_with? "about"
         client.chat_postMessage(channel: event.channel, text: "_#{about_jude}_", attachments: message, as_user:true)
