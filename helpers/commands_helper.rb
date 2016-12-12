@@ -204,7 +204,7 @@ module Sinatra
           "text": "Which course is the assignment for?",
           "callback_id": "course_assignment",
           "fallback": "Type your course number",
-          "actions":[
+          "actions": [
             { 
               "name": "add_course",
               "text": "Add a course",
@@ -235,7 +235,9 @@ module Sinatra
       # puts "These are the raw course details:" + course_details
       # client.chat_postMessage(channel: event.channel, text: text, as_user: true)
 
-      Course.all.to_json.each do |course|
+      all_courses = Course.all.to_json
+
+      all_courses.each do |course|
 
         puts course
 
@@ -246,8 +248,6 @@ module Sinatra
         actions_response["first"]["actions"].push(action)
 
       end
-
-      actions_response=actions_response.to_json
 
       return actions_response
 
