@@ -261,7 +261,7 @@ post '/interactive-buttons' do
 
       elsif action_name == "show today"
 
-        client.chat_postMessage(channel: channel, text: "Showing today's schedule..", as_user: true)
+        client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
 
       elsif action_name == "show next"
         # calendar_upcoming_events $service
@@ -365,5 +365,9 @@ def show_next_events
               2. Travel for vacation [2016-12-29]\n
               3. New Year's Eve Party [2016-12-31]\n"
   return message
+end
+
+def callback_todo
+
 end
 
