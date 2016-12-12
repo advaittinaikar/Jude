@@ -84,9 +84,11 @@ module Sinatra
       elsif ef.starts_with? "short name: "
         ef.slice!(0..11)  
         $course_object[:short_name]= ef
-        create_course $course_object 
+
         client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{$course_object["course_name"]} \n #{$course_object["course_id"]} \n #{$course_object["instructor"]} \n #{$course_object["short_name"]} \n", as_user: true)
 
+        create_course $course_object 
+        
         $assignment_record = ""
 
         # message = "Let's add an assignment!"
@@ -132,7 +134,7 @@ module Sinatra
       
         @@jude_bot_commands.each do |c|
           if c[:is_admin] == false or (c[:is_admin] == true and is_admin)
-            message += "#{c["message"]} + \n"
+            message += c["message"] + "\n"
           end
         end
 
@@ -142,7 +144,7 @@ module Sinatra
 
     def create_course object
 
-      course = Course.create(course_name: object.course_name, course_id: object.course_id, instructor: object.instructor, short_name: object.short_name)
+      course = Course.create(course_name: object["course_name"], course_id: object["course_id"], instructor: object["instructor"], short_name: object["short_name"])
       course.save
 
     end
@@ -272,9 +274,7 @@ module Sinatra
     end
 
     def about_jude
-      message = "Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. 
-                While he realised that his assignments were going out of hand he decided to merely build something to help himself and others.
-                Jude has been built to make it easier to add structure google calendar events for assignments, as well as show upcoming events." 
+      message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to merely build something to help himself and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
 
       return message
     end
