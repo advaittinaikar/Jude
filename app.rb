@@ -1,6 +1,9 @@
 require 'google/apis/calendar_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
+require 'googleauth/web_user_authorizer'
+require 'googleauth/stores/redis_token_store'
+require 'redis'
 require 'launchy'
 
 require "sinatra"
@@ -43,7 +46,7 @@ enable :sessions
 
 OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-CALENDAR_SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR
+CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
 
 # # # Initialize the calendar API
 # calendar_service = Google::Apis::CalendarV3::CalendarService.new
@@ -137,6 +140,49 @@ end
 
 # If successful this will give us something like this:
 # {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
+
+get '/oauthcallback' do
+
+  client = Signet::OAuth2::Client.new({
+
+    client_id: ENV['CALENDAR_CLIENT_ID'],
+    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+    code: params[:code]
+
+  })
+
+  response = client.fetch_access_token!
+
+  session[:access_token] = response['access_token']
+
+  redirect_to url_for(:action => :calendars)
+
+end
+
+get '/calendars' do
+
+  client = Signet::OAuth2::Client.new(access_token: session[:access_token])
+
+  service = Google::Apis::CalendarV3::CalendarService.new
+
+  service.authorization = client
+
+  @calendar_list = service.list_calendar_lists
+
+end
+
+# get '/authorize' do
+#   # NOTE: Assumes the user is already authenticated to the app
+#   user_id = request.session['user_id']
+#   credentials = authorizer.get_credentials(user_id, request)
+#   if credentials.nil?
+#     redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
+#   end
+#   # Credentials are valid, can call APIs
+#   # ...
+# end
 
 # ----------------------------------------------------------------------
 #     OUTGOING WEBHOOK
@@ -260,7 +306,7 @@ post '/interactive-buttons' do
 
       elsif action_name == "show next"
         calendar_upcoming_events $service
-        client.chat_postMessage(channel: channel, text: "Showing next 10 events..", as_user: true) 
+        client.chat_postMessage(channel: channel, text: get_upcoming_events($service), as_user: true) 
       
       else
         200
@@ -354,13 +400,36 @@ def respond_to_slack_event json
 end
 
 #Oauth for Calendar API
-def authorize_calendar
-  FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+def auth_calendar
 
-  client_id = Google::Auth::ClientId.from_file(ENV["CALENDAR_CLIENT_SECRETS"])
-  token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+  # client_id = Google::Auth::ClientId.from_file('/client_secrets.json')
+  # scope = ['https://www.googleapis.com/auth/calendar']
+  # token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
+  # authorizer = Google::Auth::WebUserAuthorizer.new(
+  #             client_id, scope, token_store, '/oauth2callback')
+  
+  client = Signet::OAuth2::Client.new({
+    client_id: ENV['CALENDAR_CLIENT_ID'],
+    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+    scope: Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY,
+    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
+  })
+
+  redirect_to client.authorization_uri.to_s
+
+end
+
+def authorize_calendar
+  # FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+
+  client_id = Google::Auth::ClientId.from_file('/client_secret.json')
+  scope = ['https://www.googleapis.com/auth/calendar']
+  token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
+  # token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
   authorizer = Google::Auth::UserAuthorizer.new(
-    client_id, CALENDAR_SCOPE, token_store)
+    client_id, CALENDAR_SCOPE, token_store,'/oauth2callback')
+
   user_id = 'default'
   credentials = authorizer.get_credentials(user_id)
   if credentials.nil?
@@ -376,24 +445,4 @@ def authorize_calendar
       user_id: user_id, code: code, base_url: OOB_URI)
   end
   credentials
-end
-
-#Returning a message that contains upcoming events
-def calendar_upcoming_events service
-  calendar_id = 'primary'
-  response = service.list_events(
-                                 calendar_id,
-                                 max_results: 20,
-                                 single_events: true,
-                                 order_by: 'startTime',
-                                 time_min: Time.now.iso8601
-                                )
-
-  puts "Upcoming events:"
-  puts "No upcoming events found" if response.items.empty?
-  response.items.each do |event|
-    start = event.start.date || event.start.date_time
-    puts "- #{event.summary} (#{start})"
-  end
-
 end
