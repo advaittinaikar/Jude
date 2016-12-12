@@ -30,9 +30,10 @@ module Sinatra
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
-        $service = Google::Apis::CalendarV3::CalendarService.new
-        $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-        $service.authorization = authorize_calendar
+        # $service = Google::Apis::CalendarV3::CalendarService.new
+        # $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+        # $service.authorization = authorize_calendar
+        intialize_api
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. Let's get something done today.", attachments: message, as_user:true)
 
