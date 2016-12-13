@@ -137,6 +137,42 @@ get "/oauth" do
   
 end
 
+#ENDPOINT: The redirect_url entered in Google Console. 
+#Google Oauth redirects to this endpoint once user has authorised request.
+  get '/oauthcallback' do
+
+  client = Signet::OAuth2::Client.new({
+
+      client_id: ENV['CALENDAR_CLIENT_ID'],
+      client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+      code: params[:code]
+
+    })
+
+  # session[:code] = client.code
+
+  response = client.fetch_access_token!
+
+  session[:access_token] = response['access_token']
+
+  calendar_list = calendars
+
+end
+
+#The Authorization url which checks if credentials are valid.
+get '/authorize' do
+  # NOTE: Assumes the user is already authenticated to the app
+  user_id = request.session['user_id']
+  credentials = authorizer.get_credentials(user_id, request)
+  if credentials.nil?
+    redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
+  end
+  # Credentials are valid, can call APIs
+  # ...
+end
+
 # If successful this will give us something like this:
 # {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
 
