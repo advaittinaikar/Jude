@@ -3,7 +3,7 @@ module Sinatra
 
 		#METHOD: Posts message in a slakc DM or Channel
 		def post_message(client, channel, text, attachment)
-			client.chat_postmessage (channel: channel,text: text, attachment: attachment, as_user: true)
+			client.chat_postmessage (channel: channel, text: text, attachment: attachment, as_user: true)
 		end
 
 		#METHOD: Interactive message body when user says hi
