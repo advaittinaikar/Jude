@@ -26,9 +26,9 @@ module Sinatra
       
       is_admin = is_admin_or_owner client, event
 
-      if session[:access_token].nil?
-          auth_calendar
-      end
+      # if session[:access_token].nil?
+      #     auth_calendar
+      # end
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
