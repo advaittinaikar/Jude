@@ -20,17 +20,19 @@ module Sinatra
     def event_to_action client, event
       
       ef = event.formatted_text
-      puts event
       puts "Formatted Text: #{event.formatted_text}"
       
       return if ef.nil?
       
       is_admin = is_admin_or_owner client, event
+
+      if session[:access_token].nil?
+          auth_calendar
+      end
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
-        # intialize_api
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
 
@@ -126,7 +128,7 @@ module Sinatra
       
     end
     
-    # Converts the list of commands to a message
+    #METHOD: Converts the list of commands to a message
     def get_commands_message is_admin = false
       
         message = "*JudeBot* - This bot helps you add assignments to your calendar.\n"
@@ -134,148 +136,30 @@ module Sinatra
       
         @@jude_bot_commands.each do |c|
           if c[:is_admin] == false or (c[:is_admin] == true and is_admin)
-            message += c["message"] + "\n"
+            message += c[:message] + "\n"
           end
         end
 
         message
-
     end
 
-    def create_course object
-
-      course = Course.create(course_name: object["course_name"], course_id: object["course_id"], instructor: object["instructor"], short_name: object["short_name"])
-      course.save
-
-    end
-    # Gets useful user information from Slack
+    #METHOD: Gets useful user information from Slack
     def get_user_name client, event
       # calls users_info on slack
       info = client.users_info(user: event.user_id )
       info['user']['name']
     end
     
+    #METHOD: Returns if the client is an admin or not
     def is_admin_or_owner client, event
       # calls users_info on slack
       info = client.users_info(user: event.user_id ) 
       info['user']['is_admin'] || info['user']['is_owner']
     end
 
-    # Button attachment message when user types "add"
-    def message_add_event
-      
-      [
-        {
-            "text": "What would you like to add?",
-            "fallback": "Sorry could not add that.",
-            "callback_id": "add_event_button",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            "actions": [
-                {
-                    "name": "assignment",
-                    "text": "Assignment",
-                    "type": "button",
-                    "value": "assignment"
-                },
-                {
-                    "name": "lecture",
-                    "text": "Lecture",
-                    "type": "button",
-                    "value": "lecture"
-                },
-                {
-                    "name": "meeting",
-                    "text": "Meeting",
-                    "type": "button",
-                    "value": "meeting"
-                }
-                ]
-            }
-       
-      ].to_json
-
-    end
-
-    # Button attachment message when user says hi
-    def interactive_greeting
-
-      [
-        {
-          "text": "What would you like to do today?",
-          "fallback": "You're missing out on a great experience!",
-          "callback_id": "to-do",
-          "attachment_type": "default",
-          "actions": [
-            {
-              "name":  "add",
-              "text":  "Add assignment",
-              "type":  "button",
-              "value": "add"
-              },
-            {
-              "name":  "show today",
-              "text":  "Show Today's schedule",
-              "type":  "button",
-              "value": "show-today"
-              },
-            {
-              "name":  "show next",
-              "text":  "Show Next 10 events",
-              "type":  "button",
-              "value": "show-next"
-              }  
-          ]
-        }
-      ].to_json
-
-    end
-
-    def interactive_assignment_course
-      actions_response = [
-        {
-          "text": "Which course is the assignment for?",
-          "callback_id": "course_assignment",
-          "fallback": "Type your course number",
-          "actions": [
-            { 
-              "name": "add course",
-              "text": "+ Add a course",
-              "type": "button"
-            }
-          ]
-
-        }
-      ]
-
-      #Adding course details from the database
-      Course.all.each do |item,index|
-
-
-        actions_response.first[:actions].push(
-        {
-          "name": item[:short_name],
-          "text": item[:course_name],
-          "type": "button"
-          }
-        )
-
-      end
-
-      return actions_response.to_json
-
-    end
-
-    def add_assignment_to_table object
-
-      assignment = Assignment.create(course_name: object["course_name"], description: object["description"], due_date: object["due_date"])
-      assignment.save
-
-    end
-
+    #METHOD: Returns the about me message for Jude
     def about_jude
       message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to merely build something to help himself and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
-
       return message
     end
 

@@ -31,6 +31,10 @@ post "/test_event" do
   
 end
 
+
+
+#--------------------------------------------------------
+
 #EVENT Returned JSON looks like this
 
 # This will look a lot like this: 
@@ -51,3 +55,32 @@ end
 #     "U37HMQRS8"
 #   ]
 # }
+
+#--------------------------------------------------------
+
+# def authorize_calendar
+#   # FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
+
+#   client_id = Google::Auth::ClientId.from_file('/client_secret.json')
+#   scope = ['https://www.googleapis.com/auth/calendar']
+#   token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
+#   # token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
+#   authorizer = Google::Auth::UserAuthorizer.new(
+#     client_id, CALENDAR_SCOPE, token_store,'/oauth2callback')
+
+#   user_id = 'default'
+#   credentials = authorizer.get_credentials(user_id)
+#   if credentials.nil?
+#     url = authorizer.get_authorization_url(
+#       base_url: OOB_URI)
+#     system("open", url)
+#     # Launchy.open(url)
+#     # code = HTTParty.get url
+#     # puts "Open the following URL in the browser and enter the resulting code after authorization."
+#     # puts url
+#     # code = gets
+#     credentials = authorizer.get_and_store_credentials_from_code(
+#       user_id: user_id, code: code, base_url: OOB_URI)
+#   end
+#   credentials
+# end

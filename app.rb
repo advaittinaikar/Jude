@@ -36,12 +36,18 @@ Dir["./models/*.rb"].each {|file| require file }
 
 Dir["./helpers/*.rb"].each {|file| require file }
 
+#require helper files
 helpers Sinatra::CommandsHelper
-# helpers Sinatra::CalendarHelper
+helpers Sinatra::CalendarHelper
+helpers Sinatra::DatabaseHelper
+helpers Sinatra::SlackInteractionsHelper
 
+
+#global variables to be used in app
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
 $assignment_record = ""
 $assignment_object = {}
+
 # enable sessions for this project
 enable :sessions
 
@@ -58,6 +64,7 @@ CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
 #     ROUTES, END POINTS AND ACTIONS
 # ----------------------------------------------------------------------
 
+#
 get "/" do
   haml :index
 end
@@ -77,15 +84,6 @@ end
 # This will handle the OAuth stuff for adding our app to Slack
 # https://99designs.com/tech-blog/blog/2015/08/26/add-to-slack-button/
 # check it out here. 
-
-# basically after clicking on the add to slack button 
-# it'll return back with a code as a parameter in the query string
-# e.g. https://yourdomain.com/oauth?code=92618588033.110206495095.452e860e77&state=
-
-# we need to make a POST request to Slack's API to get a more
-# permanent token that we can use to make requests to the API
-# https://slack.com/api/oauth.access 
-# read also: http://blog.teamtreehouse.com/its-time-to-httparty
 
 get "/oauth" do
   
@@ -143,7 +141,7 @@ end
 # {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
 
 # ----------------------------------------------------------------------
-#     OUTGOING WEBHOOK
+#     OUTGOING WEBHOOK FROM SLACK
 # ----------------------------------------------------------------------
 
 # ANY EVENT: Endpoint for an event subscription
@@ -328,6 +326,9 @@ private
 #   ].to_json
 # end
 
+#METHOD: Responds to a slack event that is passed to the "/events" endpoint.
+# => Returns method event_to_action.
+
 def respond_to_slack_event json
   
   # find the team
@@ -359,15 +360,8 @@ def respond_to_slack_event json
   
 end
 
-def show_next_events
-  message =  "Upcoming Events:
-              1. Pay rent [2016-12-25]\n
-              2. Travel for vacation [2016-12-29]\n
-              3. New Year's Eve Party [2016-12-31]\n"
-  return message
-end
+#METHOD: Shows upcoming events in a calendar. Reacts to "show events" button.
+# => Returns method event_to_action.
 
-def callback_todo
 
-end
 

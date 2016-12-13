@@ -1,7 +1,51 @@
 module Sinatra
   module CalendarHelper
 
-  	#Initialising the API by creating a Calendar Service
+  	# ----------------------------------------------------------------------
+	#     ROUTES AND END POINTS
+	# ----------------------------------------------------------------------
+
+	#ENDPOINT: The redirect_url entered in Google Console. 
+	#Google Oauth redirects to this endpoint once user has authorised request.
+  	get '/oauthcallback' do
+
+	  client = Signet::OAuth2::Client.new({
+
+		    client_id: ENV['CALENDAR_CLIENT_ID'],
+		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+		    code: params[:code]
+
+	  	})
+
+	  # session[:code] = client.code
+
+	  response = client.fetch_access_token!
+
+	  session[:access_token] = response['access_token']
+
+	  calendar_list = calendars
+
+	end
+
+	#The Authorization url which checks if credentials are valid.
+	get '/authorize' do
+	  # NOTE: Assumes the user is already authenticated to the app
+	  user_id = request.session['user_id']
+	  credentials = authorizer.get_credentials(user_id, request)
+	  if credentials.nil?
+	    redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
+	  end
+	  # Credentials are valid, can call APIs
+	  # ...
+	end
+
+	# ----------------------------------------------------------------------
+	#     METHODS
+	# ----------------------------------------------------------------------
+
+	#METHOD: Initialises the API by creating a Calendar service
   	def intialize_api
 
       $service = Google::Apis::CalendarV3::CalendarService.new
@@ -10,54 +54,46 @@ module Sinatra
 
     end
 
-    #Oauth for Calendar API
+    #METHOD: Initialises the API by creating a Calendar service
+    def authorization_complete
+
+    end
+
+    #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
 	def auth_calendar
-
-	  # client_id = Google::Auth::ClientId.from_file('/client_secrets.json')
-	  # scope = ['https://www.googleapis.com/auth/calendar']
-	  # token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
-	  # authorizer = Google::Auth::WebUserAuthorizer.new(
-	  #             client_id, scope, token_store, '/oauth2callback')
 	  
-	  client = Signet::OAuth2::Client.new({
-	    client_id: ENV['CALENDAR_CLIENT_ID'],
-	    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-	    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-	    scope: Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY,
-	    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
-	  })
+		client = Signet::OAuth2::Client.new({
 
-	  redirect client.authorization_uri.to_s
+		    client_id: ENV['CALENDAR_CLIENT_ID'],
+		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+		    code: params[:code]
+
+	  	})
+
+		redirect to(client.authorization_uri.to_s)
+
+	end
+	
+	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
+	def create_signet_client *code
+
+		client = Signet::OAuth2::Client.new({
+
+		    client_id: ENV['CALENDAR_CLIENT_ID'],
+		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+		    code: code
+
+	  	})
+
+	  	return client
 
 	end
 
-# def authorize_calendar
-#   # FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
-
-#   client_id = Google::Auth::ClientId.from_file('/client_secret.json')
-#   scope = ['https://www.googleapis.com/auth/calendar']
-#   token_store = Google::Auth::Stores::RedisTokenStore.new(redis: Redis.new)
-#   # token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
-#   authorizer = Google::Auth::UserAuthorizer.new(
-#     client_id, CALENDAR_SCOPE, token_store,'/oauth2callback')
-
-#   user_id = 'default'
-#   credentials = authorizer.get_credentials(user_id)
-#   if credentials.nil?
-#     url = authorizer.get_authorization_url(
-#       base_url: OOB_URI)
-#     system("open", url)
-#     # Launchy.open(url)
-#     # code = HTTParty.get url
-#     # puts "Open the following URL in the browser and enter the resulting code after authorization."
-#     # puts url
-#     # code = gets
-#     credentials = authorizer.get_and_store_credentials_from_code(
-#       user_id: user_id, code: code, base_url: OOB_URI)
-#   end
-#   credentials
-# end
-
+	#METHOD: Gets a list of events from Google Calendar using Calendar List.
     def calendars
 
 	  client = Signet::OAuth2::Client.new(access_token: session[:access_token])
@@ -70,30 +106,32 @@ module Sinatra
 
 	end
 
-    # def create_calendar_event (assignment, service)
+	#METHOD: Creates an event in Google Calendar. 
+	#Returns a success message when done.
+    def create_calendar_event (assignment, service)
 
-    #   event = Google::Apis::CalendarV3::Event.new{
-    #     description : assignment['description'],
-    #     start : {
-    #       date_time : assignment['due_date'],
-    #       time_zone : 'America/New_York',
-    #       },
-    #     end: {
-    #       date_time : assignment['due_date'],
-    #       time_zone : 'America/New_York',
-    #       },
-    #     reminders: {
-    #       use_default: true,
-    #     }
-    #   }
+      event = Google::Apis::CalendarV3::Event.new{
+        description : assignment['description'],
+        start : {
+          date_time : assignment['due_date'],
+          time_zone : 'America/New_York',
+          },
+        end: {
+          date_time : assignment['due_date'],
+          time_zone : 'America/New_York',
+          },
+        reminders: {
+          use_default: true,
+        }
+      }
 
-    #   result = service.insert_event('primary', event)
+      result = service.insert_event('primary', event)
 
-    #   return "Successfully added to your calendar!"
+      return "Successfully added to your calendar!"
 
-    # end
+    end
 
-    # Gets next 10 events in a user's Google Calendar
+    #METHOD: Gets next 10 events in a user's Google Calendar
     def get_upcoming_events service
       response = service.list_events('primary',
                                max_results: 10,
@@ -103,43 +141,21 @@ module Sinatra
 
       message="Your upcoming 10 events are:"
 
-      respond.items.each do |event|
+      response.items.each do |event|
         message+="\n#{event.summary} on #{event.start.date}"
       end
 
       return message   
     end
 
-    # get '/oauthcallback' do
-
-	#   client = Signet::OAuth2::Client.new({
-
-	#     client_id: ENV['CALENDAR_CLIENT_ID'],
-	#     client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-	#     authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-	#     redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-	#     code: params[:code]
-
-	#   })
-
-	#   response = client.fetch_access_token!
-
-	#   session[:access_token] = response['access_token']
-
-	#   redirect url_for(:action => :calendars)
-
-	# end
-
-	# get '/authorize' do
-	#   # NOTE: Assumes the user is already authenticated to the app
-	#   user_id = request.session['user_id']
-	#   credentials = authorizer.get_credentials(user_id, request)
-	#   if credentials.nil?
-	#     redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
-	#   end
-	#   # Credentials are valid, can call APIs
-	#   # ...
-	# end
+    #METHOD: Hardcoded. Gets next few events in user's Google Calendar.
+    def show_next_events
+	  message =  "Upcoming Events:
+	              1. Pay rent [2016-12-25]\n
+	              2. Travel for vacation [2016-12-29]\n
+	              3. New Year's Eve Party [2016-12-31]\n"
+	  return message
+	end
 
   end
 end
