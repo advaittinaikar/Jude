@@ -106,28 +106,28 @@ module Sinatra
 
 	#METHOD: Creates an event in Google Calendar. 
 	#Returns a success message when done.
-    def create_calendar_event (assignment, service)
+    # def create_calendar_event (assignment, service)
 
-      event = Google::Apis::CalendarV3::Event.new{
-        description: assignment['description'],
-        start: {
-          date_time: assignment['due_date'],
-          time_zone: 'America/New_York',
-          },
-        end: {
-          date_time: assignment['due_date'],
-          time_zone: 'America/New_York',
-          },
-        reminders: {
-          use_default: true,
-        }
-      }
+    #   event = Google::Apis::CalendarV3::Event.new{
+    #     description: 'assignment['description']',
+    #     start: {
+    #       date_time: assignment['due_date'],
+    #       time_zone: 'America/New_York'
+    #       },
+    #     end: {
+    #       date_time: assignment['due_date'],
+    #       time_zone: 'America/New_York'
+    #       },
+    #     reminders: {
+    #       use_default: true,
+    #     }
+    #   }
 
-      result = service.insert_event('primary', event)
+    #   result = service.insert_event('primary', event)
 
-      return "Successfully added to your calendar!"
+    #   return "Successfully added to your calendar!"
 
-    end
+    # end
 
     #METHOD: Gets next 10 events in a user's Google Calendar
     def get_upcoming_events service
