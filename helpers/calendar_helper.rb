@@ -1,46 +1,6 @@
 module Sinatra
   module CalendarHelper
 
-  	# ----------------------------------------------------------------------
-	#     ROUTES AND END POINTS
-	# ----------------------------------------------------------------------
-
-	#ENDPOINT: The redirect_url entered in Google Console. 
-	#Google Oauth redirects to this endpoint once user has authorised request.
-  	get '/oauthcallback' do
-
-	  client = Signet::OAuth2::Client.new({
-
-		    client_id: ENV['CALENDAR_CLIENT_ID'],
-		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-		    code: params[:code]
-
-	  	})
-
-	  # session[:code] = client.code
-
-	  response = client.fetch_access_token!
-
-	  session[:access_token] = response['access_token']
-
-	  calendar_list = calendars
-
-	end
-
-	#The Authorization url which checks if credentials are valid.
-	get '/authorize' do
-	  # NOTE: Assumes the user is already authenticated to the app
-	  user_id = request.session['user_id']
-	  credentials = authorizer.get_credentials(user_id, request)
-	  if credentials.nil?
-	    redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
-	  end
-	  # Credentials are valid, can call APIs
-	  # ...
-	end
-
 	# ----------------------------------------------------------------------
 	#     METHODS
 	# ----------------------------------------------------------------------
