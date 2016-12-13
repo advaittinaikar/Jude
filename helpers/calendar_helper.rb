@@ -111,14 +111,14 @@ module Sinatra
     def create_calendar_event (assignment, service)
 
       event = Google::Apis::CalendarV3::Event.new{
-        description : assignment['description'],
-        start : {
-          date_time : assignment['due_date'],
-          time_zone : 'America/New_York',
+        description: assignment['description'],
+        start: {
+          date_time: assignment['due_date'],
+          time_zone: 'America/New_York',
           },
         end: {
-          date_time : assignment['due_date'],
-          time_zone : 'America/New_York',
+          date_time: assignment['due_date'],
+          time_zone: 'America/New_York',
           },
         reminders: {
           use_default: true,
