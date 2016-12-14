@@ -64,8 +64,7 @@ configure do
   logger.level = Logger::DEBUG
 
   client = Google::APIClient.new(
-    :application_name => 'Ruby Calendar sample',
-    :application_version => '1.0.0')
+    :application_name => 'Jude Bot')
   
   file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
   if file_storage.authorization.nil?
@@ -87,12 +86,12 @@ configure do
   set :calendar, calendar
 end
 
-before do
-  # Ensure user has authorized the app
-  unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
-    redirect to('/oauth2authorize')
-  end
-end
+# before do
+#   # Ensure user has authorized the app
+#   unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
+#     redirect to('/oauth2authorize')
+#   end
+# end
 
 after do
   # Serialize the access/refresh token to the session and credential store.
@@ -192,6 +191,10 @@ get "/oauth" do
     
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
+
+    unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
+     redirect to('/oauth2authorize')
+    end
     
   else
     401
