@@ -259,6 +259,7 @@ post '/interactive-buttons' do
 
   call_back = json_request['callback_id']
   action_name = json_request['actions'].first["name"]
+  action_text = json_request['actions'].first["text"]
   action_value = json_request['actions'].first["value"]
   channel = json_request['channel']['id']
   team_id = json_request['team']['id']
@@ -313,9 +314,9 @@ post '/interactive-buttons' do
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
     else
       message = "You're adding an assignment for #{action_name}!"
-      $assignment_object={}
+      
       $assignment_record = "For #{action_name}: "
-      $assignment_object["course_name"] = action_name
+      $assignment_object["course_name"] = action_text
       client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
     end  
   
