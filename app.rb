@@ -293,17 +293,17 @@ post '/interactive-buttons' do
         message += "Let's add an assignment!"
       
         client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
-        {  message: "You selected 'let's add an assignment" , replace_original: true }
+        {  message: "You selected 'let's add an assignment" , replace_original: true }.to_json
 
       elsif action_name == "show today"
 
         client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
-        {  message: "You selected 'show today'" , replace_original: true }
+        {  message: "You selected 'show today'" , replace_original: true }.to_json
 
       elsif action_name == "show next"
         # calendar_upcoming_events $service
         client.chat_postMessage(channel: channel, text: show_next_events, as_user: true) 
-        {  message: "You selected 'show next'" , replace_original: true }
+        {  message: "You selected 'show next'" , replace_original: true }.to_json
 
       else
         # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
@@ -313,7 +313,7 @@ post '/interactive-buttons' do
   elsif call_back == "course_assignment"
     if action_name == "add course"
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
-      {  message: "You selected 'add a course'" , replace_original: true }
+      {  message: "You selected 'add a course'" , replace_original: true }.to_json
     else
       message = "You're adding an assignment for #{action_name}!"
       
@@ -321,7 +321,7 @@ post '/interactive-buttons' do
       $assignment_object[:course_name] = action_text
       client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
     
-      {  message: "You selected 'add an assignment'" , replace_original: true }
+      {  message: "You selected 'add an assignment'" , replace_original: true }.to_json
     end  
   
   else
