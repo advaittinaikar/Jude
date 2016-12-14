@@ -58,9 +58,10 @@ module Sinatra
 	        }
 	      ]
 
+	      puts Course.all.to_json
+
 	      #Adding course details from the database
 	      Course.all.each do |item,index|
-
 
 	        actions_response.first[:actions].push(
 	        {
