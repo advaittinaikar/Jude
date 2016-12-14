@@ -51,7 +51,7 @@ module Sinatra
       elsif ef.starts_with? "details:"
         ef.slice!(0..8)
         $assignment_record += " " + ef
-        $assignment_object["description"] = ef
+        $assignment_object[:description] = ef
         puts $assignment_record
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
@@ -59,7 +59,7 @@ module Sinatra
         ef.slice!(0..4)
         due_date = Kronic.parse(ef)
 
-        $assignment_object["due_date"] = due_date
+        $assignment_object[:due_date] = due_date
         
         puts $assignment_object
 
@@ -77,12 +77,12 @@ module Sinatra
 
       elsif ef.starts_with? "course id: "
         ef.slice!(0..10)
-        $course_object[:course_id]=ef  
+        $course_object[:course_id]= ef  
         client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with ~instructor: ~", as_user: true) 
 
       elsif ef.starts_with? "instructor: "
         ef.slice!(0..11)  
-        $course_object[:instructor]= ef 
+        $course_object[:instructor]= ef
         client.chat_postMessage(channel: event.channel, text: "Enter Abbreviation of the course name starting with ~short name: ~", as_user: true)  
 
       elsif ef.starts_with? "short name: "
