@@ -5,6 +5,8 @@
 # require 'googleauth/stores/redis_token_store'
 require 'redis'
 require 'launchy'
+require 'google-api-client'
+require 'googleauth'
 
 require "sinatra"
 require 'sinatra/activerecord'
