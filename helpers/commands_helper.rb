@@ -32,7 +32,7 @@ module Sinatra
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
-        
+
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
 
@@ -59,10 +59,10 @@ module Sinatra
         ef.slice!(0..4)
         due_date = Kronic.parse(ef)
 
-        $assignment_object[:due_date] = due_date
+        $assignment_object["due_date"] = due_date
         
         puts $assignment_object
-        
+
         add_assignment_to_table $assignment_object
 
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)

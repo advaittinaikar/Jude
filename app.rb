@@ -139,25 +139,25 @@ end
 
 #ENDPOINT: The redirect_url entered in Google Console. 
 #Google Oauth redirects to this endpoint once user has authorised request.
-  get '/oauthcallback' do
+get '/oauthcallback' do
 
-  client = Signet::OAuth2::Client.new({
+client = Signet::OAuth2::Client.new({
 
-      client_id: ENV['CALENDAR_CLIENT_ID'],
-      client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-      redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-      code: params[:code]
+    client_id: ENV['CALENDAR_CLIENT_ID'],
+    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+    code: params[:code]
 
-    })
+  })
 
-  # session[:code] = client.code
+# session[:code] = client.code
 
-  response = client.fetch_access_token!
+response = client.fetch_access_token!
 
-  session[:access_token] = response['access_token']
+session[:access_token] = response['access_token']
 
-  calendar_list = calendars
+calendar_list = calendars
 
 end
 
