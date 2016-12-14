@@ -284,7 +284,6 @@ post '/interactive-buttons' do
   client = team.get_client
   
   if call_back == "to-do"
-      200
       message = "Great! "
     
       if action_name == "add"
@@ -304,12 +303,10 @@ post '/interactive-buttons' do
         client.chat_postMessage(channel: channel, text: show_next_events, as_user: true) 
       
       else
-        200
         # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
       end
 
   elsif call_back == "course_assignment"
-    200
     if action_name == "add course"
       
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
@@ -319,12 +316,14 @@ post '/interactive-buttons' do
       $assignment_record = "For #{action_name}: "
       $assignment_object[:course_name] = action_text
       client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
+    
+      {  message: "You selected 'add an assignment'" , replace_original: true }
     end  
   
   else
-    200
-
+    # do nothing... 
   end
+  200
 
 end
 
