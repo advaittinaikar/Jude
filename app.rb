@@ -47,6 +47,7 @@ helpers Sinatra::SlackInteractionsHelper
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
 $assignment_record = ""
 $assignment_object = {}
+$course_object = {}
 
 # enable sessions for this project
 enable :sessions
@@ -310,7 +311,7 @@ post '/interactive-buttons' do
   elsif call_back == "course_assignment"
     200
     if action_name == "add course"
-      $course_object = {}
+      
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
     else
       message = "You're adding an assignment for #{action_name}!"
