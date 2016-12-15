@@ -3,9 +3,9 @@ module Sinatra
 
 		#METHOD: Adds a course to the course table
 		def create_course (object,client,channel)
-		  course_name = object['course_name']
+		  course_name = object['course_name'].capitalize
 	   	  course_id = object['course_id']
-	      short_name = object['short_name']
+	      short_name = abbreviate object['course_name']
 	      instructor =  object['instructor']
 
 	      course = Course.create(:course_name => course_name, :course_id => course_id, :instructor => instructor, :short_name => short_name)
@@ -46,6 +46,17 @@ module Sinatra
 
     		return message
     	end	
+
+    	def abbreviate name
+    		words = name.split(" ")
+    		short_name = ""
+
+    		words.each do |word|
+    			short_name += word.slice(0)
+    		end
+
+    		return short_name.upcase
+    	end
 
 	end
 end
