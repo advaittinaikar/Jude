@@ -54,9 +54,9 @@ enable :sessions
 #
 get "/" do
   haml :index
-  Assignment.all.to_json
-  # Course.all.to_json
-  Event.all.to_json
+  # Assignment.all.to_json
+  Course.all.to_json
+  # Event.all.to_json
 end
 
 get "/privacy" do
@@ -347,4 +347,3 @@ def respond_to_slack_event json
   event_to_action client, event
   
 end
-
