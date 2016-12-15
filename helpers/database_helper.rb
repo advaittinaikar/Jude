@@ -9,13 +9,15 @@ module Sinatra
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
-	    def add_assignment_to_table object
+	    def add_assignment_to_table object, client, channel
 	    	course_name = object['course_name']
 	    	description = object['description']
 	    	due_date = object['due_date']
 
 		    assignment = Assignment.create(course_name: course_name, description: description, due_date: due_date)
 		    assignment.save
+
+		    client.chat_postMessage(channel: channel,text: "Assignment with #{course_name}, #{description}, #{due_date} has been saved to db" ,as_user: true)
 		    puts "Assignment saved!"
     	end
 
