@@ -60,12 +60,8 @@ module Sinatra
         due_date = Kronic.parse(ef)
 
         $assignment_object["due_date"] = due_date
-        
-        puts $assignment_object
 
-        add_assignment_to_table($assignment_object,client,event.channel)
-
-        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", attachments: interactive_confirmation_assignment ,as_user: true)
 
         # message create_calendar_event $assignment_object, $service  
         # client.chat_postMessage(channel: event.channel, text: message, as_user: true)
@@ -73,21 +69,18 @@ module Sinatra
       elsif ef.starts_with? "course name: "
         ef.slice!(0..12)
         $course_object["course_name"]= ef
-        client.chat_postMessage(channel: event.channel, text: "Enter Course ID starting with ~course id: ~", as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "Enter Course ID starting with *course id: *", as_user: true)
 
       elsif ef.starts_with? "course id: "
         ef.slice!(0..10)
         $course_object["course_id"]= ef  
-        client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with ~instructor: ~", as_user: true) 
+        client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with *instructor: *", as_user: true) 
 
       elsif ef.starts_with? "instructor: "
         ef.slice!(0..11)  
         $course_object["instructor"]= ef
 
-        create_course($course_object,client,event.channel)
-
-        # client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{course_object["course_name"]}, #{course_object["course_id"]}, by #{course_object["instructor"]}", as_user: true)
-        200
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{course_object["course_name"]}, #{course_object["course_id"]}, by #{course_object["instructor"]}", attachments: interactive_confirmation_course, as_user: true)
 
       elsif event.formatted_text == "show assignments"
 

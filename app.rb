@@ -244,63 +244,91 @@ post '/interactive-buttons' do
   client = team.get_client
   
   if call_back == "to-do"
-      message = "Great! "
-    
-      if action_name == "add"
-
-        $assignment_record=""
-
-        message += "Let's add an assignment!"
+        message = "Great! "
       
-        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
-        {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
+        if action_name == "add"
 
-      elsif action_name == "show today"
+          $assignment_record=""
 
-        client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
-        {  text: "You selected 'show today'" , replace_original: true }.to_json
+          message += "Let's add an assignment!"
+        
+          client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+          {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
-      elsif action_name == "show next"
-        service = create_calendar_service
-        client.chat_postMessage(channel: channel, text: get_upcoming_events(service), as_user: true) 
-        {  text: "You selected 'show next'" , replace_original: true }.to_json
+        elsif action_name == "show today"
 
-      else
-        # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
-        200
-      end
+          client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
+          {  text: "You selected 'show today'" , replace_original: true }.to_json
+
+        elsif action_name == "show next"
+          service = create_calendar_service
+          client.chat_postMessage(channel: channel, text: get_upcoming_events(service), as_user: true) 
+          {  text: "You selected 'show next'" , replace_original: true }.to_json
+
+        else
+          # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
+          200
+        end
 
   elsif call_back == "course_assignment"
-    if action_name == "add course"
-      client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
-      {  text: "You selected 'add a course'" , replace_original: true }.to_json
-    else
-      message = "You're adding an assignment for #{action_name}!"
-      
-      $assignment_record = "For #{action_name}: "
-      $assignment_object["course_name"] = action_name
-      client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
-    
-      {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
-    end  
+
+        if action_name == "add course"
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          {  text: "You selected 'add a course'" , replace_original: true }.to_json
+        else
+          message = "You're adding an assignment for #{action_name}!"
+          
+          $assignment_record = "For #{action_name}: "
+          $assignment_object["course_name"] = action_name
+          client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
+        
+          {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
+        end  
   
   elsif call_back == "add event"
 
-    if action_name == "add assignment"
+        if action_name == "add assignment"
 
-      $assignment_record=""
-      
-        client.chat_postMessage(channel: channel, text: "Let's add an assignment!", attachments: interactive_assignment_course, as_user: true)
-        {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
+          $assignment_record= ""
+          
+            client.chat_postMessage(channel: channel, text: "Let's add an assignment!", attachments: interactive_assignment_course, as_user: true)
+            {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
-    elsif action_name == "add course"
+        elsif action_name == "add course"
 
-      client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
-      {  text: "You selected 'add a course'" , replace_original: true }.to_json
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          {  text: "You selected 'add a course'" , replace_original: true }.to_json
 
-    else
-      200
-    end
+        else
+          200
+        end
+
+  elsif call_back == "confirm_assignment"
+
+        if action_name == "confirm"
+
+          add_assignment_to_table($assignment_object,client,channel)
+          client.chat_postMessage(channel: channel, text: "The assignment has been added to your Calendar.", as_user: true)
+          
+        else
+
+          client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+          {  text: "Please add the assignment again!" , replace_original: true }.to_json
+
+        end
+
+  elsif call_back == "confirm_course"
+
+        if action_name == "confirm"
+
+          client.chat_postMessage(channel: channel, text: "The course has been added to your list of courses.", as_user: true)
+        
+        else
+
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          {  text: "Please add the course again!" , replace_original: true }.to_json
+
+        end
 
   else
     200

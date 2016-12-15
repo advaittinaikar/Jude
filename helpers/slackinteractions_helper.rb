@@ -77,6 +77,52 @@ module Sinatra
 	      return actions_response.to_json
 	    end
 
+	    def interactive_confirmation_assignment
+	    	[
+	    		{
+	    			"text": "Can I add it your Calendar?",
+	    			"callback_id": "confirm_assignment",
+	    			"fallback": "Add assignment to Calendar?",
+	    			"actions":[
+					{
+					"name": "confirm",
+					"text": "Confirm?",
+					"type": "button"    				
+				    			},
+				    {
+					"name": "change",
+					"text": "Change",
+					"type": "button"    				
+				    			}
+		    		]
+
+	    			}
+			].to_json
+	    end
+
+	    def interactive_confirmation_course
+	    	[
+	    		{
+	    			"text": "Can I add this course to your list of courses?",
+	    			"callback_id": "confirm_course",
+	    			"fallback": "Add course to Calendar?",
+	    			"actions":[
+					{
+					"name": "confirm",
+					"text": "Confirm?",
+					"type": "button"    				
+				    			},
+				    {
+					"name": "change",
+					"text": "Change",
+					"type": "button"    				
+				    			}
+		    		]
+
+	    			}
+			].to_json
+	    end
+
 	    def add_event client, channel
 
 	    	attachment = [

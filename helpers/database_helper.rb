@@ -11,7 +11,7 @@ module Sinatra
 	      course = Course.create(:course_name => course_name, :course_id => course_id, :instructor => instructor, :short_name => short_name)
 	      course.save
 
-	      client.chat_postMessage(channel: channel, text: "#{course.to_json}", as_user: true)
+	      client.chat_postMessage(channel: channel, text: "#{course.to_json}", attachments: interactive_confirmation_course, as_user: true)
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
