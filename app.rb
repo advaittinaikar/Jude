@@ -138,7 +138,8 @@ get '/oauthcallback' do
   code=params[:code]
 
   if code
-    client = Signet::OAuth2::Client.new({
+    client = Signet::OAuth2::Client.new(
+    {
 
         client_id: ENV['CALENDAR_CLIENT_ID'],
         client_secret: ENV['CALENDAR_CLIENT_SECRET'],
@@ -147,7 +148,8 @@ get '/oauthcallback' do
         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
         code: code
 
-      })
+      }
+        )
 
     response = client.fetch_access_token!
 
