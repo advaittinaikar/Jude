@@ -121,7 +121,7 @@ get "/oauth" do
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    if sessions[:access_token].nil?
+    if session[:access_token].nil?
      auth_calendar
     end
     
