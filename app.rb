@@ -140,6 +140,7 @@ get '/oauthcallback' do
       client_id: ENV['CALENDAR_CLIENT_ID'],
       client_secret: ENV['CALENDAR_CLIENT_SECRET'],
       authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      scope:Google::Apis::CalendarV3::AUTH_CALENDAR,
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
       code: params[:code]
 
