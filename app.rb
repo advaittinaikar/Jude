@@ -142,8 +142,8 @@ get '/oauthcallback' do
 
         client_id: ENV['CALENDAR_CLIENT_ID'],
         client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-        authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+        token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
         code: code
 
@@ -193,7 +193,6 @@ post "/events" do
   # always respond with a 200
   # event otherwise it will retry...
   200
-  
 end
 
 # ANY EVENT: Endpoint for an interactive message interaction. Control center for all button interactions.
@@ -305,14 +304,12 @@ post '/interactive-buttons' do
     200
     # do nothing... 
   end
-
 end
 
 # CALL AS FOLLOWS
 # curl -X POST http://127.0.0.1:9393/test_event -F token=9GCx7G3WrHix7EJsP818YOVB -F team_id=T2QJ6HA0Z -F event_type=message -F event_user=U2QHR0F7W -F event_channel=D37HZB04D -F event_ts=1480296595.000007 -F event_text='g ddf;gkl;d fkg;ldfkg df' 
 
 post '/calendar_events' do
-
 end
 
 #     ERRORS
