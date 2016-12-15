@@ -9,8 +9,7 @@ module Sinatra
 	def create_calendar_service
 
 		client = Signet::OAuth2::Client.new(
-      access_token: session[:access_token],
-      token_credential_uri:  'https://accounts.google.com/o/oauth2/token' 
+      access_token: $access_token 
       )
 
 		service = Google::Apis::CalendarV3::CalendarService.new
@@ -40,7 +39,7 @@ module Sinatra
 	#METHOD: Gets a list of events from Google Calendar using Calendar List.
   def calendars
 
-	  client = Signet::OAuth2::Client.new(access_token: session[:access_token])
+	  client = Signet::OAuth2::Client.new(access_token: $access_token)
 
 	  service = Google::Apis::CalendarV3::CalendarService.new
 

@@ -121,7 +121,7 @@ get "/oauth" do
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    if session[:access_token].nil?
+    if $access_token.nil?
      auth_calendar
     end
     
@@ -154,11 +154,11 @@ get '/oauthcallback' do
     response = client.fetch_access_token!
 
     if response
-      session[:access_token] = response['access_token']
+      $access_token = response['access_token']
       # finally respond... 
       "Jude has been successfully installed.\nYour Calendar has been successfully synced with Jude.\nPlease login to your Slack team to meet Jude!"
     else
-      "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!"   
+      "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
     end
 
   else
