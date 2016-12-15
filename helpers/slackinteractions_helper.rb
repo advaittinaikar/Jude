@@ -42,6 +42,7 @@ module Sinatra
 
 	    #METHOD: Interactive message body when user wants to add the course of an assignment
 	    def interactive_assignment_course
+
 	      actions_response = [
 	        {
 	          "text": "Which course is the assignment for?",
@@ -74,6 +75,32 @@ module Sinatra
 	      end
 
 	      return actions_response.to_json
+	    end
+
+	    def add_event client, channel
+
+	    	client.chat_postmessage(channel: channel, text: "What would you like to add?", attachments: attachment, as_user: true)
+
+	    	attachment = [
+	        {
+	          # "text": "What would you like to add?",
+	          "fallback": "You're missing out on a great experience!",
+	          "callback_id": "add-event",
+	          "attachment_type": "default",
+	          "actions": [
+	            {
+	              "name":  "add-assignment",
+	              "text":  "Add Assignment",
+	              "type":  "button"
+	              },
+	            {
+	              "name":  "add-course",
+	              "text":  "Add Course",
+	              "type":  "button"
+	              } 
+	          ]
+	        }
+	      ].to_json
 
 	    end
 	end

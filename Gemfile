@@ -3,16 +3,18 @@ source 'https://rubygems.org'
 # ruby '2.2.6'
 
 gem 'sinatra'
-gem 'launchy'
 gem 'json'
 gem 'shotgun'
+
 gem "rake"
 gem 'activerecord'
 gem 'sinatra-activerecord' # excellent gem that ports ActiveRecord for Sinatra
 gem 'activesupport'
 gem 'kronic'
-gem 'google-api-client', '>0.9'
+
+gem 'google-api-client'
 gem 'googleauth'
+gem 'redis'
 
 gem 'haml'
 gem 'slack-ruby-client'

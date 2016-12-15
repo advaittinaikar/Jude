@@ -104,11 +104,9 @@ module Sinatra
         client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
 
       elsif event.formatted_text == "add"
-        $assignment_record=""
+        $assignment_record = ""
 
-        message += "Let's add an assignment!"
-      
-        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+        add_event client, event.channel
 
       else
 
