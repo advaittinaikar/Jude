@@ -54,9 +54,9 @@ enable :sessions
 #
 get "/" do
   haml :index
-  "Assignments table is: \n" + Assignment.all.to_json + "\n" +
-  "Courses table is: \n" + Course.all.to_json + "\n" + 
-  "Events table is: \n" + Event.all.to_json
+  # "Assignments table is: \n" + Assignment.all.to_json + "\n" +
+  # "Courses table is: \n" + Course.all.to_json + "\n" + 
+  # "Events table is: \n" + Event.all.to_json
 end
 
 get "/privacy" do
@@ -121,7 +121,7 @@ get "/oauth" do
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    unless sessions[:access_token].nil?
+    if sessions[:access_token].nil?
      auth_calendar
     end
     
