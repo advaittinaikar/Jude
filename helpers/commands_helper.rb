@@ -84,11 +84,11 @@ module Sinatra
         ef.slice!(0..11)  
         $course_object["instructor"]= ef
 
-        create_course ($course_object,client,event.channel)
+        create_course($course_object,client,event.channel)
 
         # client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{course_object["course_name"]}, #{course_object["course_id"]}, by #{course_object["instructor"]}", as_user: true)
         200
-        
+
       elsif event.formatted_text == "show assignments"
 
         client.chat_postMessage(channel: event.channel, text: show_assignments, as_user: true)
