@@ -15,7 +15,6 @@ gem 'google-api-client', '~> 0.9'
 gem 'googleauth'
 gem 'redis'
 gem 'fileutils'
-require 'logger'
 
 # gem 'google/apis/calendar_v3'
 # gem 'googleauth'
