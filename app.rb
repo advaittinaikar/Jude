@@ -1,9 +1,3 @@
-# require 'google/apis/calendar_v3'
-# require 'googleauth'
-# require 'googleauth/stores/file_token_store'
-# require 'googleauth/web_user_authorizer'
-# require 'googleauth/stores/redis_token_store'
-require 'redis'
 require 'launchy'
 require 'google-api-client'
 require 'googleauth'
@@ -13,8 +7,6 @@ require 'sinatra/activerecord'
 require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
-# require 'logger'
-
 
 require 'kronic'
 require 'fileutils'
@@ -55,9 +47,9 @@ $course_object = {}
 # enable sessions for this project
 enable :sessions
 
-OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
-CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
-CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
+# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+# CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
 
 # configure do
 #   # log_file = File.open('calendar.log', 'a+')
