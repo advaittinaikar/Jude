@@ -10,11 +10,11 @@ module Sinatra
 
 		client = Signet::OAuth2::Client.new(access_token: session[:access_token])
 
-		$service = Google::Apis::CalendarV3::CalendarService.new
-		$service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-		$service.authorization = client
+		service = Google::Apis::CalendarV3::CalendarService.new
+		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+		service.authorization = client
 
-		return $service
+		return service
 
 	end
 
@@ -82,8 +82,8 @@ module Sinatra
 
       message= "Your upcoming 10 events are:"
 
-      response.items.each do |event|
-        message+="\n#{event.summary} on #{event.start.date}"
+      response.items.each do |event,index|
+        message+="\n#{index}. #{event.summary} on #{event.start.date}"
       end
 
       return message   
