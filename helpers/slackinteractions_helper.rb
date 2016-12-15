@@ -83,16 +83,16 @@ module Sinatra
 	        {
 	          # "text": "What would you like to add?",
 	          "fallback": "You're missing out on a great experience!",
-	          "callback_id": "add-event",
+	          "callback_id": "add event",
 	          "attachment_type": "default",
 	          "actions": [
 	            {
-	              "name":  "add-assignment",
+	              "name":  "add assignment",
 	              "text":  "Add Assignment",
 	              "type":  "button"
 	              },
 	            {
-	              "name":  "add-course",
+	              "name":  "add course",
 	              "text":  "Add Course",
 	              "type":  "button"
 	              } 

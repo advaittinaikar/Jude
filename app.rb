@@ -269,18 +269,16 @@ post '/interactive-buttons' do
       {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
     end  
   
-  elsif call_back == "add-event"
+  elsif call_back == "add event"
 
-    if action_name = "add-assignment"
+    if action_name = "add assignment"
 
       $assignment_record=""
-
-        message += "Let's add an assignment!"
       
-        client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+        client.chat_postMessage(channel: channel, text: "Let's add an assignment!", attachments: interactive_assignment_course, as_user: true)
         {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
-    elsif action_name = "add-course"
+    elsif action_name = "add course"
 
       client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
       {  text: "You selected 'add a course'" , replace_original: true }.to_json
