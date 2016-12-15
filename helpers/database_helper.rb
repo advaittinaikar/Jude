@@ -12,7 +12,6 @@ module Sinatra
 	      course.save
 
 	      client.chat_postMessage(channel: channel, text: "#{course.to_json}", as_user: true)
-
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
@@ -41,7 +40,7 @@ module Sinatra
     		message=""
 
     		Course.all.each do |course|
-    			message+="#{course["course_name"]}, #{course["description"]}, #{course["due_date"]}\n"
+    			message+="#{course["course_name"]}, #{course["course_id"]}, #{course["instructor"]}\n"
     		end
 
     		return message
