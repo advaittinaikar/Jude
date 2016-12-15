@@ -12,7 +12,7 @@ module Sinatra
 
 		service = Google::Apis::CalendarV3::CalendarService.new
 		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-		service.authorization = client
+		service.authentication = client
 
 		return service
 
