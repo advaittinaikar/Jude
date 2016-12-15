@@ -161,7 +161,7 @@ module Sinatra
 
     #METHOD: Returns the about me message for Jude
     def about_jude
-      message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to merely build something to help himself and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
+      message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to build something that would solve his problem and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
       return message
     end
 

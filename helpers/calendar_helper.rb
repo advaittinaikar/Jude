@@ -5,25 +5,24 @@ module Sinatra
 	#     METHODS
 	# ----------------------------------------------------------------------
 
-	#METHOD: Initialises the API by creating a Calendar service
-  	def intialize_api
+	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
+	def create_calendar_service
 
-      $service = Google::Apis::CalendarV3::CalendarService.new
-      $service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-      $service.authorization = auth_calendar
+		client = Signet::OAuth2::Client.new(access_token: session[:access_token])
 
-    end
+		$service = Google::Apis::CalendarV3::CalendarService.new
+		$service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+		$service.authorization = client
 
-    #METHOD: Initialises the API by creating a Calendar service
-    def authorization_complete
+		return $service
 
-    end
+	end
 
     #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
 	def auth_calendar
 	  
 		client = Signet::OAuth2::Client.new({
-
+ 
 		    client_id: ENV['CALENDAR_CLIENT_ID'],
 		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
 		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
@@ -34,23 +33,6 @@ module Sinatra
 
 	end
 	
-	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
-	def create_signet_client *code
-
-		client = Signet::OAuth2::Client.new({
-
-		    client_id: ENV['CALENDAR_CLIENT_ID'],
-		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-		    code: code
-
-	  	})
-
-	  	return client
-
-	end
-
 	#METHOD: Gets a list of events from Google Calendar using Calendar List.
     def calendars
 
@@ -97,7 +79,7 @@ module Sinatra
                                order_by: 'startTime',
                                time_min: Time.now.iso8601)
 
-      message="Your upcoming 10 events are:"
+      message= "Your upcoming 10 events are:"
 
       response.items.each do |event|
         message+="\n#{event.summary} on #{event.start.date}"

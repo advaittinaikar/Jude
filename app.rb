@@ -13,7 +13,7 @@ require 'sinatra/activerecord'
 require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
-require 'logger'
+# require 'logger'
 
 
 require 'kronic'
@@ -59,64 +59,64 @@ OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
 CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
 
-configure do
-  log_file = File.open('calendar.log', 'a+')
-  log_file.sync = true
-  logger = Logger.new(log_file)
-  logger.level = Logger::DEBUG
+# configure do
+#   # log_file = File.open('calendar.log', 'a+')
+#   # log_file.sync = true
+#   # logger = Logger.new(log_file)
+#   # logger.level = Logger::DEBUG
 
-  client = Google::APIClient.new(
-    :application_name => 'Jude Bot')
+#   client = Google::APIClient.new(
+#     :application_name => 'Jude Bot')
   
-  file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
-  if file_storage.authorization.nil?
-    client_secrets = Google::APIClient::ClientSecrets.load
-    client.authorization = client_secrets.to_authorization
-    client.authorization.scope = 'https://www.googleapis.com/auth/calendar'
-  else
-    client.authorization = file_storage.authorization
-  end
-
-  # Since we're saving the API definition to the settings, we're only retrieving
-  # it once (on server start) and saving it between requests.
-  # If this is still an issue, you could serialize the object and load it on
-  # subsequent runs.
-  calendar = client.discovered_api('calendar', 'v3')
-
-  set :logger, logger
-  set :api_client, client
-  set :calendar, calendar
-end
-
-# before do
-#   # Ensure user has authorized the app
-#   unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
-#     redirect to('/oauth2authorize')
+#   file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
+#   if file_storage.authorization.nil?
+#     client_secrets = Google::APIClient::ClientSecrets.load
+#     client.authorization = client_secrets.to_authorization
+#     client.authorization.scope = 'https://www.googleapis.com/auth/calendar'
+#   else
+#     client.authorization = file_storage.authorization
 #   end
+
+#   # Since we're saving the API definition to the settings, we're only retrieving
+#   # it once (on server start) and saving it between requests.
+#   # If this is still an issue, you could serialize the object and load it on
+#   # subsequent runs.
+#   calendar = client.discovered_api('calendar', 'v3')
+
+#   # set :logger, logger
+#   set :api_client, client
+#   set :calendar, calendar
 # end
 
-after do
-  # Serialize the access/refresh token to the session and credential store.
-  session[:access_token] = user_credentials.access_token
-  session[:refresh_token] = user_credentials.refresh_token
-  session[:expires_in] = user_credentials.expires_in
-  session[:issued_at] = user_credentials.issued_at
+# # before do
+# #   # Ensure user has authorized the app
+# #   unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
+# #     redirect to('/oauth2authorize')
+# #   end
+# # end
 
-  file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
-  file_storage.write_credentials(user_credentials)
-end
+# after do
+#   # Serialize the access/refresh token to the session and credential store.
+#   session[:access_token] = user_credentials.access_token
+#   session[:refresh_token] = user_credentials.refresh_token
+#   session[:expires_in] = user_credentials.expires_in
+#   session[:issued_at] = user_credentials.issued_at
 
-get '/oauth2authorize' do
-  # Request authorization
-  redirect user_credentials.authorization_uri.to_s, 303
-end
+#   file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
+#   file_storage.write_credentials(user_credentials)
+# end
 
-get '/oauthcallback' do
-  # Exchange token
-  user_credentials.code = params[:code] if params[:code]
-  user_credentials.fetch_access_token!
-  redirect to('/')
-end
+# get '/oauth2authorize' do
+#   # Request authorization
+#   redirect user_credentials.authorization_uri.to_s, 303
+# end
+
+# get '/oauthcallback' do
+#   # Exchange token
+#   user_credentials.code = params[:code] if params[:code]
+#   user_credentials.fetch_access_token!
+#   redirect to('/')
+# end
 
 # # # Initialize the calendar API
 # calendar_service = Google::Apis::CalendarV3::CalendarService.new
@@ -194,8 +194,8 @@ get "/oauth" do
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
-     redirect to('/oauth2authorize')
+    unless sessions[:access_token].nil?
+     auth_calendar
     end
     
   else
@@ -206,42 +206,26 @@ end
 
 #ENDPOINT: The redirect_url entered in Google Console. 
 #Google Oauth redirects to this endpoint once user has authorised request.
-# get '/oauthcallback' do
+get '/oauthcallback' do
 
-# client = Signet::OAuth2::Client.new({
+  client = Signet::OAuth2::Client.new({
 
-#     client_id: ENV['CALENDAR_CLIENT_ID'],
-#     client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-#     authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-#     redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-#     code: params[:code]
+      client_id: ENV['CALENDAR_CLIENT_ID'],
+      client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+      code: params[:code]
 
-#   })
+    })
 
-# # session[:code] = client.code
+  response = client.fetch_access_token!
 
-# response = client.fetch_access_token!
+  session[:access_token] = response['access_token']
 
-# session[:access_token] = response['access_token']
+  # finally respond... 
+  "Jude has been successfully installed. Your Calendar has been successfully synced with Jude.\nPlease login to your Slack team to meet Jude!"
 
-# calendar_list = calendars
-
-# end
-
-# #The Authorization url which checks if credentials are valid.
-# get '/authorize' do
-#   # NOTE: Assumes the user is already authenticated to the app
-#   user_id = request.session['user_id']
-#   credentials = authorizer.get_credentials(user_id, request)
-#   if credentials.nil?
-#     redirect authorizer.get_authorization_url(login_hint: user_id, request: request)
-#   end
-#   # Credentials are valid, can call APIs
-#   # ...
-# end
-
-# If successful this will give us something like this:
-# {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
+end
 
 # ----------------------------------------------------------------------
 #     OUTGOING WEBHOOK FROM SLACK
@@ -273,35 +257,6 @@ post "/events" do
   200
   
 end
-
-# JSON Payload:
-# {
-#   "actions": [
-#     {
-#       "name": "recommend",
-#       "value": "yes"
-#     }
-#   ],
-#   "callback_id": "comic_1234_xyz",
-#   "team": {
-#     "id": "T47563693",
-#     "domain": "watermelonsugar"
-#   },
-#   "channel": {
-#     "id": "C065W1189",
-#     "name": "forgotten-works"
-#   },
-#   "user": {
-#     "id": "U045VRZFT",
-#     "name": "brautigan"
-#   },
-#   "action_ts": "1458170917.164398",
-#   "message_ts": "1458170866.000004",
-#   "attachment_id": "1",
-#   "token": "xAB3yVzGS4BQ3O9FACTa8Ho4",
-#   "original_message": "{\"text\":\"New comic book alert!\",\"attachments\":[{\"title\":\"The Further Adventures of Slackbot\",\"fields\":[{\"title\":\"Volume\",\"value\":\"1\",\"short\":true},{\"title\":\"Issue\",\"value\":\"3\",\"short\":true}],\"author_name\":\"Stanford S. Strickland\",\"author_icon\":\"https://api.slack.comhttps://a.slack-edge.com/bfaba/img/api/homepage_custom_integrations-2x.png\",\"image_url\":\"http://i.imgur.com/OJkaVOI.jpg?1\"},{\"title\":\"Synopsis\",\"text\":\"After @episod pushed exciting changes to a devious new branch back in Issue 1, Slackbot notifies @don about an unexpected deploy...\"},{\"fallback\":\"Would you recommend it to customers?\",\"title\":\"Would you recommend it to customers?\",\"callback_id\":\"comic_1234_xyz\",\"color\":\"#3AA3E3\",\"attachment_type\":\"default\",\"actions\":[{\"name\":\"recommend\",\"text\":\"Recommend\",\"type\":\"button\",\"value\":\"recommend\"},{\"name\":\"no\",\"text\":\"No\",\"type\":\"button\",\"value\":\"bad\"}]}]}",
-#   "response_url": "https://hooks.slack.com/actions/T47563693/6204672533/x7ZLaiVMoECAW50Gw1ZYAXEM"
-# }
 
 # ANY EVENT: Endpoint for an interactive message interaction. Control center for all button interactions.
 
@@ -359,7 +314,7 @@ post '/interactive-buttons' do
         message += "Let's add an assignment!"
       
         client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
-        {  text: "You selected 'let's add an assignment" , replace_original: true }.to_json
+        {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
       elsif action_name == "show today"
 
@@ -414,25 +369,6 @@ end
 
 private
 
-#Add to Slack button in Slack Channel 
-# def add_jude
-#   [
-#     {
-#       "text" : "Add Jude to Slack",
-#       "callback_id" : "add jude",
-#       "fallback" : "Add Jude via Button",
-#       "actions" :
-#       [
-#         {
-#             "name":  "add-jude",
-#             "text":  "Add Jude to Slack",
-#             "type":  "button"
-#             }
-#       ]
-#         }    
-#   ].to_json
-# end
-
 #METHOD: Responds to a slack event that is passed to the "/events" endpoint.
 # => Returns method event_to_action.
 
@@ -467,23 +403,3 @@ def respond_to_slack_event json
   
 end
 
-#METHOD: Shows upcoming events in a calendar. Reacts to "show events" button.
-# => Returns method event_to_action.
-
-
-def logger; settings.logger end
-
-def api_client; settings.api_client; end
-
-def calendar_api; settings.calendar; end
-
-def user_credentials
-  # Build a per-request oauth credential based on token stored in session
-  # which allows us to use a shared API client.
-  @authorization ||= (
-    auth = api_client.authorization.dup
-    auth.redirect_uri = to('/oauth2callback')
-    auth.update_token!(session)
-    auth
-  )
-end
