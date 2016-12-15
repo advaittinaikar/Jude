@@ -99,9 +99,9 @@ module Sinatra
         # puts 'replace message'
         # client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
 
-      elsif event.formatted_text == "show next"
+      elsif event.formatted_text == "show assignments"
 
-        client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
+        client.chat_postMessage(channel: event.channel, text: show_assignments, as_user: true)
 
       elsif event.formatted_text == "add"
         $assignment_record = ""

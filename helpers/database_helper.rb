@@ -21,5 +21,14 @@ module Sinatra
 		    puts "Assignment saved!"
     	end
 
+    	def show_assignments
+    		message=""
+
+    		Assignment.all.each do |assignment|
+    			message+="#{assignment["course_name"]}, #{assignment["description"]}, #{assignment["due_date"]}\n"
+    		end
+
+    		return message
+
 	end
 end

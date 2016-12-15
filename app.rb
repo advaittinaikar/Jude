@@ -4,10 +4,10 @@ require 'rake'
 require 'active_support/all'
 require "active_support/core_ext"
 
-# require 'google/apis/calendar_v3'
-# require 'googleauth'
-# require 'googleauth/stores/file_token_store'
-# require 'fileutils'
+require 'google/apis/calendar_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+require 'fileutils'
 
 require 'kronic'
 
@@ -118,9 +118,9 @@ get "/oauth" do
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    # unless sessions[:access_token].nil?
-    #  auth_calendar
-    # end
+    unless sessions[:access_token].nil?
+     auth_calendar
+    end
     
   else
     401
