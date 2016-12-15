@@ -259,8 +259,8 @@ post '/interactive-buttons' do
         {  text: "You selected 'show today'" , replace_original: true }.to_json
 
       elsif action_name == "show next"
-        # calendar_upcoming_events $service
-        client.chat_postMessage(channel: channel, text: get_upcoming_events, as_user: true) 
+        service = create_calendar_service
+        client.chat_postMessage(channel: channel, text: get_upcoming_events(service), as_user: true) 
         {  text: "You selected 'show next'" , replace_original: true }.to_json
 
       else
