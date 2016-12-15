@@ -135,23 +135,33 @@ end
 #Google Oauth redirects to this endpoint once user has authorised request.
 get '/oauthcallback' do
 
-  client = Signet::OAuth2::Client.new({
+  code=params[:code]
 
-      client_id: ENV['CALENDAR_CLIENT_ID'],
-      client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-      scope:Google::Apis::CalendarV3::AUTH_CALENDAR,
-      redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-      code: params[:code]
+  if code
+    client = Signet::OAuth2::Client.new({
 
-    })
+        client_id: ENV['CALENDAR_CLIENT_ID'],
+        client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+        authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+        scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+        redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+        code: code
 
-  response = client.fetch_access_token!
+      })
 
-  session[:access_token] = response['access_token']
+    response = client.fetch_access_token!
 
-  # finally respond... 
-  "Jude has been successfully installed. Your Calendar has been successfully synced with Jude.\nPlease login to your Slack team to meet Jude!"
+    if response
+      session[:access_token] = response['access_token']
+      # finally respond... 
+      "Jude has been successfully installed. Your Calendar has been successfully synced with Jude.\nPlease login to your Slack team to meet Jude!"
+    else
+      "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!"   
+    end
+
+  else
+    401
+  end
 
 end
 
