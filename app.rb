@@ -54,6 +54,9 @@ enable :sessions
 #
 get "/" do
   haml :index
+  Assignment.all.to_json
+  # Course.all.to_json
+  Event.all.to_json
 end
 
 get "/privacy" do
@@ -335,7 +338,7 @@ def respond_to_slack_event json
   # if so we shoud ignore the event
   return if team.bot_user_id == event_user
   
-  event = Event.create( team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel , timestamp: Time.at(event_ts.to_f) )
+  event = Event.create( :team_id => team_id, :type_name => event_type, :user_id => event_user, :text => event_text, :channel => event_channel , :timestamp => Time.at(event_ts.to_f) )
   event.team = team
   event.save
   
