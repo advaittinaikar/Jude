@@ -79,7 +79,7 @@ module Sinatra
 
 	    def add_event client, channel
 
-	    	client.chat_postmessage(channel: channel, text: "What would you like to add?", attachments: attachment, as_user: true)
+	    	client.chat_postMessage(channel: channel, text: "What would you like to add?", attachments: attachment, as_user: true)
 
 	    	attachment = [
 	        {
