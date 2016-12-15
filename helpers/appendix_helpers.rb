@@ -189,3 +189,72 @@ end
 
 # If successful this will give us something like this:
 # {"ok"=>true, "access_token"=>"xoxp-92618588033-92603015268-110199165062-deab8ccb6e1d119caaa1b3f2c3e7d690", "scope"=>"identify,bot,commands,incoming-webhook", "user_id"=>"U2QHR0F7W", "team_name"=>"Programming for Online Prototypes", "team_id"=>"T2QJ6HA0Z", "incoming_webhook"=>{"channel"=>"bot-testing", "channel_id"=>"G36QREX9P", "configuration_url"=>"https://onlineprototypes2016.slack.com/services/B385V4V8E", "url"=>"https://hooks.slack.com/services/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"}, "bot"=>{"bot_user_id"=>"U37HMQRS8", "bot_access_token"=>"xoxb-109599841892-oTaxqITzZ8fUSdmMDxl5kraO"}
+
+
+# OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
+# CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "calendar-ruby-quickstart.yaml")
+# CALENDAR_SCOPE = ['https://www.googleapis.com/auth/calendar']
+
+# configure do
+#   # log_file = File.open('calendar.log', 'a+')
+#   # log_file.sync = true
+#   # logger = Logger.new(log_file)
+#   # logger.level = Logger::DEBUG
+
+#   client = Google::APIClient.new(
+#     :application_name => 'Jude Bot')
+  
+#   file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
+#   if file_storage.authorization.nil?
+#     client_secrets = Google::APIClient::ClientSecrets.load
+#     client.authorization = client_secrets.to_authorization
+#     client.authorization.scope = 'https://www.googleapis.com/auth/calendar'
+#   else
+#     client.authorization = file_storage.authorization
+#   end
+
+#   # Since we're saving the API definition to the settings, we're only retrieving
+#   # it once (on server start) and saving it between requests.
+#   # If this is still an issue, you could serialize the object and load it on
+#   # subsequent runs.
+#   calendar = client.discovered_api('calendar', 'v3')
+
+#   # set :logger, logger
+#   set :api_client, client
+#   set :calendar, calendar
+# end
+
+# # before do
+# #   # Ensure user has authorized the app
+# #   unless user_credentials.access_token || request.path_info =~ /\A\/oauth2/
+# #     redirect to('/oauth2authorize')
+# #   end
+# # end
+
+# after do
+#   # Serialize the access/refresh token to the session and credential store.
+#   session[:access_token] = user_credentials.access_token
+#   session[:refresh_token] = user_credentials.refresh_token
+#   session[:expires_in] = user_credentials.expires_in
+#   session[:issued_at] = user_credentials.issued_at
+
+#   file_storage = Google::APIClient::FileStorage.new(CREDENTIAL_STORE_FILE)
+#   file_storage.write_credentials(user_credentials)
+# end
+
+# get '/oauth2authorize' do
+#   # Request authorization
+#   redirect user_credentials.authorization_uri.to_s, 303
+# end
+
+# get '/oauthcallback' do
+#   # Exchange token
+#   user_credentials.code = params[:code] if params[:code]
+#   user_credentials.fetch_access_token!
+#   redirect to('/')
+# end
+
+# # # Initialize the calendar API
+# calendar_service = Google::Apis::CalendarV3::CalendarService.new
+# calendar_service.client_options.application_name = 'Google Calendar API Ruby Quickstart'
+# calendar_service.authorization = authorize_calendar
