@@ -3,9 +3,15 @@ module Sinatra
 
 		#METHOD: Adds a course to the course table
 		def create_course object
-	      course = Course.create(:course_name => object["course_name"], :course_id => object["course_id"], :instructor => object["instructor"], :short_name => object["short_name"])
+		  course_name = object['course_name']
+	   	  course_id = object['course_id']
+	      short_name = object['short_name']
+	      instructor =  object['instructor']
+
+	      course = Course.create(:course_name => course_name, :course_id => course_id, :instructor => instructor, :short_name => short_name)
 	      course.save
-	      puts "Course created succesfully!"
+
+	      client.chat_postMessage(channel: channel, text: "#{course.to_json}", as_user: true)
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
@@ -17,8 +23,7 @@ module Sinatra
 		    assignment = Assignment.create(:course_name => course_name, :description => description, :due_date => due_date)
 		    assignment.save
 
-		    client.chat_postMessage(channel: channel,text: "Assignment with #{course_name}, #{description}, #{due_date} has been saved to db" ,as_user: true)
-		    puts "Assignment saved!"
+		    client.chat_postMessage(channel: channel, text: "#{assignment.to_json}", as_user: true)
     	end
 
     	def show_assignments

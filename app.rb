@@ -54,9 +54,9 @@ enable :sessions
 #
 get "/" do
   haml :index
-  # Assignment.all.to_json
-  Course.all.to_json
-  # Event.all.to_json
+  "Assignments table is: \n" + Assignment.all.to_json + "\n" +
+  "Courses table is: \n" + Course.all.to_json + "\n" + 
+  "Events table is: \n" + Event.all.to_json
 end
 
 get "/privacy" do

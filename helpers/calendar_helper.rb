@@ -18,7 +18,7 @@ module Sinatra
 
 	end
 
-    #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
+  #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
 	def auth_calendar
 	  
 		client = Signet::OAuth2::Client.new({
@@ -34,7 +34,7 @@ module Sinatra
 	end
 	
 	#METHOD: Gets a list of events from Google Calendar using Calendar List.
-    def calendars
+  def calendars
 
 	  client = Signet::OAuth2::Client.new(access_token: session[:access_token])
 
