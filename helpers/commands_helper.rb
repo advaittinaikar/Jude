@@ -89,15 +89,9 @@ module Sinatra
         ef.slice!(0..11)  
         $course_object["short_name"]= ef
 
-        client.chat_postMessage(channel: event.channel, text: "You've entered the following: user research methods, 49-712, by francine gemperle", as_user: true)
-
         create_course $course_object 
-        
-        $assignment_record = ""
 
-        # message = "Let's add an assignment!"
-        # puts 'replace message'
-        # client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: user research methods, 49-712, by francine gemperle", as_user: true)
 
       elsif event.formatted_text == "show assignments"
 
@@ -114,6 +108,7 @@ module Sinatra
 
       else
 
+        200
         # ERROR Commands
         # not understood or an error
         puts "Error Counter #{ @@error_counter }"
