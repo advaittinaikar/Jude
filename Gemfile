@@ -20,7 +20,6 @@ gem 'haml'
 gem 'slack-ruby-client'
 gem 'httparty'
 
-
 # to avoid installing postgres use 
 # bundle install --without production
 
