@@ -9,7 +9,7 @@ module Sinatra
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
-	    def add_assignment_to_table object, client, channel
+	    def add_assignment_to_table(object,client,channel)
 	    	course_name = object['course_name']
 	    	description = object['description']
 	    	due_date = object['due_date']
