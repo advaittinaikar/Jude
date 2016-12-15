@@ -8,11 +8,11 @@ module Sinatra
 	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
 	def create_calendar_service
 
-		client = Signet::OAuth2::Client.new(access_token: session[:access_token])
+		client = Signet::OAuth2::Client.new({access_token: session[:access_token]})
 
 		service = Google::Apis::CalendarV3::CalendarService.new
 		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-		service.authentication = client
+		service.authorization = client
 
 		return service
 
@@ -74,11 +74,14 @@ module Sinatra
 
     #METHOD: Gets next 10 events in a user's Google Calendar
     def get_upcoming_events service
-      response = service.list_events('primary',
-                               max_results: 10,
-                               single_events: true,
-                               order_by: 'startTime',
-                               time_min: Time.now.iso8601)
+
+      response = service.list_calendar_lists
+
+      # response = service.list_events('primary',
+      #                          max_results: 10,
+      #                          single_events: true,
+      #                          order_by: 'startTime',
+      #                          time_min: Time.now.iso8601)
 
       message= "Your upcoming 10 events are:"
 
