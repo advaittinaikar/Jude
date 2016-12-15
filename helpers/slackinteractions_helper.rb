@@ -79,8 +79,6 @@ module Sinatra
 
 	    def add_event client, channel
 
-	    	client.chat_postMessage(channel: channel, text: "What would you like to add?", attachments: attachment, as_user: true)
-
 	    	attachment = [
 	        {
 	          # "text": "What would you like to add?",
@@ -98,9 +96,11 @@ module Sinatra
 	              "text":  "Add Course",
 	              "type":  "button"
 	              } 
-	          ]
-	        }
-	      ].to_json
+	          	]	
+	        	}
+	      	].to_json
+
+	    	client.chat_postMessage(channel: channel, text: "What would you like to add?", attachments: attachment, as_user: true)
 
 	    end
 	end
