@@ -72,26 +72,26 @@ module Sinatra
 
       elsif ef.starts_with? "course name: "
         ef.slice!(0..12)
-        $course_object[:course_name]= ef
+        $course_object["course_name"]= ef
         client.chat_postMessage(channel: event.channel, text: "Enter Course ID starting with ~course id: ~", as_user: true)
 
       elsif ef.starts_with? "course id: "
         ef.slice!(0..10)
-        $course_object[:course_id]= ef  
+        $course_object["course_id"]= ef  
         client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with ~instructor: ~", as_user: true) 
 
       elsif ef.starts_with? "instructor: "
         ef.slice!(0..11)  
-        $course_object[:instructor]= ef
+        $course_object["instructor"]= ef
         client.chat_postMessage(channel: event.channel, text: "Enter Abbreviation of the course name starting with ~short name: ~", as_user: true)  
 
       elsif ef.starts_with? "short name: "
         ef.slice!(0..11)  
-        $course_object[:short_name]= ef
+        $course_object["short_name"]= ef
 
         client.chat_postMessage(channel: event.channel, text: "You've entered the following: user research methods, 49-712, by francine gemperle", as_user: true)
 
-        # create_course $course_object 
+        create_course $course_object 
         
         $assignment_record = ""
 
@@ -102,6 +102,10 @@ module Sinatra
       elsif event.formatted_text == "show assignments"
 
         client.chat_postMessage(channel: event.channel, text: show_assignments, as_user: true)
+
+      elsif event.formatted_text == "show courses"
+
+        client.chat_postMessage(channel: event.channel, text: show_courses, as_user: true)
 
       elsif event.formatted_text == "add"
         $assignment_record = ""

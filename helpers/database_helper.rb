@@ -20,7 +20,7 @@ module Sinatra
 	    	description = object['description']
 	    	due_date = object['due_date']
 
-		    assignment = Assignment.create(:course_name => course_name, :description => description, :due_date => due_date)
+		    assignment = Assignment.create!(:course_name => course_name, :description => description, :due_date => due_date)
 		    assignment.save
 
 		    client.chat_postMessage(channel: channel, text: "#{assignment.to_json}", as_user: true)
@@ -35,5 +35,16 @@ module Sinatra
 
     		return message
     	end
+
+		def show_courses
+    		message=""
+
+    		Course.all.each do |course|
+    			message+="#{course["course_name"]}, #{course["description"]}, #{course["due_date"]}\n"
+    		end
+
+    		return message
+    	end	
+
 	end
 end
