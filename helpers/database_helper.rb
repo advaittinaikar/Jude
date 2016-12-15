@@ -2,7 +2,7 @@ module Sinatra
 	module DatabaseHelper
 
 		#METHOD: Adds a course to the course table
-		def create_course object
+		def create_course (object,client,channel)
 		  course_name = object['course_name']
 	   	  course_id = object['course_id']
 	      short_name = object['short_name']
@@ -12,6 +12,7 @@ module Sinatra
 	      course.save
 
 	      client.chat_postMessage(channel: channel, text: "#{course.to_json}", as_user: true)
+
 	    end
 
 	    #METHOD: Adds an assignment to the assignment table
