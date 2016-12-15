@@ -29,6 +29,6 @@ module Sinatra
     		end
 
     		return message
-
+    	end
 	end
 end
