@@ -11,10 +11,10 @@ gem 'activerecord'
 gem 'sinatra-activerecord' # excellent gem that ports ActiveRecord for Sinatra
 gem 'activesupport'
 gem 'kronic'
-gem 'google-api-client', '~> 0.9'
+gem 'google-api-client', '< 0.9'
 gem 'googleauth'
 # gem 'redis'
-# gem 'fileutils'
+gem 'fileutils'
 
 gem 'haml'
 gem 'slack-ruby-client'
