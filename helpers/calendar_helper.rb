@@ -82,7 +82,7 @@ module Sinatra
       client = Signet::OAuth2::Client.new(access_token: $access_token)
 
       # client.expires_in = Time.now + 1_000_000
-      
+
       client.update!(
         :code => $access_code,
         :access_token => $access_token,
@@ -102,7 +102,7 @@ module Sinatra
       message= "Your upcoming 10 events are:"
 
       response.items.each do |event,index|
-        message+="\n#{event.summary} on #{event.start.date}"
+        message+="#{index}. \n#{event.summary} on #{event.start.date}"
       end
 
       return message   
