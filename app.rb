@@ -307,7 +307,9 @@ post '/interactive-buttons' do
           {  text: "You selected 'add a course'" , replace_original: true }.to_json
 
         else
+          
           200
+
         end
 
   elsif call_back == "confirm_assignment"
@@ -315,7 +317,11 @@ post '/interactive-buttons' do
         if action_name == "confirm"
 
           create_assignment($assignment_object,client,channel)
-          client.chat_postMessage(channel: channel, text: "The assignment has been added to your Calendar.", as_user: true)
+
+          message = create_calendar_event $assignment_object
+
+          client.chat_postMessage(channel: channel, text: message, as_user: true)
+          {  text: "The assignment has been added to your Google Calendar." , replace_original: true }.to_json
           
         else
 
@@ -329,6 +335,7 @@ post '/interactive-buttons' do
         if action_name == "confirm"
 
           client.chat_postMessage(channel: channel, text: "The course has been added to your list of courses.", as_user: true)
+          {  text: "The course has been added to your list of courses." , replace_original: true }.to_json
         
         else
 

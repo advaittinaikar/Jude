@@ -1,7 +1,7 @@
 module Sinatra
 	module SlackInteractionsHelper
 
-		#METHOD: Posts message in a slakc DM or Channel
+		#METHOD: Posts message in a slack DM or Channel
 		# def post_message(client, channel, text, attachment)
 		# 	client.chat_postmessage (channel: channel, text: text, attachment: attachment, as_user: true)
 		# end

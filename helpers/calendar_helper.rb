@@ -53,60 +53,76 @@ module Sinatra
 
 	#METHOD: Creates an event in Google Calendar. 
 	#Returns a success message when done.
-    # def create_calendar_event (assignment, service)
+  def create_calendar_event (assignment)
 
-    #   event = Google::Apis::CalendarV3::Event.new{
-    #     description: 'assignment['description']',
-    #     start: {
-    #       date_time: assignment['due_date'],
-    #       time_zone: 'America/New_York'
-    #       },
-    #     end: {
-    #       date_time: assignment['due_date'],
-    #       time_zone: 'America/New_York'
-    #       },
-    #     reminders: {
-    #       use_default: true,
-    #     }
-    #   }
+    client = Signet::OAuth2::Client.new(access_token: $access_token)
 
-    #   result = service.insert_event('primary', event)
+    # client.expires_in = Time.now + 1_000_000
 
-    #   return "Successfully added to your calendar!"
+    client.update!(
+      :code => $access_code,
+      :access_token => $access_token,
+      :expires_in => 9000
+      )
 
-    # end
+    service = Google::Apis::CalendarV3::CalendarService.new
+    # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+    service.authorization = client
 
-    #METHOD: Gets next 10 events in a user's Google Calendar
-    def get_upcoming_events
+    event_description = "Assignment for #{assignment['coursename']}: #{assignment['description']}"
 
-      client = Signet::OAuth2::Client.new(access_token: $access_token)
+    event = Google::Apis::CalendarV3::Event.new{
+      description: event_description,
+      start: {
+        date_time: assignment['due_date'],
+        time_zone: 'America/New_York'
+        },
+      end: {
+        date_time: assignment['due_date'],
+        time_zone: 'America/New_York'
+        },
+      reminders: {
+        use_default: true,
+      }
+    }
 
-      # client.expires_in = Time.now + 1_000_000
+    result = service.insert_event('primary', event)
 
-      client.update!(
-        :code => $access_code,
-        :access_token => $access_token,
-        :expires_in => 9000
-        )
+    return "Successfully added to your calendar!"
 
-      service = Google::Apis::CalendarV3::CalendarService.new
-      # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-      service.authorization = client    
+  end
 
-      response = service.list_events('primary',
-                               max_results: 10,
-                               single_events: true,
-                               order_by: 'startTime',
-                               time_min: Time.now.iso8601)
+  #METHOD: Gets next 10 events in a user's Google Calendar
+  def get_upcoming_events
 
-      message= "Your upcoming 10 events are:"
+    client = Signet::OAuth2::Client.new(access_token: $access_token)
 
-      response.items.each do |event,index|
-        message+="#{index}. \n#{event.summary} on #{event.start.date}"
-      end
+    # client.expires_in = Time.now + 1_000_000
 
-      return message   
+    client.update!(
+      :code => $access_code,
+      :access_token => $access_token,
+      :expires_in => 9000
+      )
+
+    service = Google::Apis::CalendarV3::CalendarService.new
+    # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+    service.authorization = client    
+
+    response = service.list_events('primary',
+                             max_results: 10,
+                             single_events: true,
+                             order_by: 'startTime',
+                             time_min: Time.now.iso8601)
+
+    message= "Your upcoming 10 events are:"
+
+    response.items.each do |event,ind|
+      message+="#{ind}. \n#{event.summary} on #{event.start.date}"
     end
+
+    return message   
+  end
 
     #METHOD: Hardcoded. Gets next few events in user's Google Calendar.
     def show_next_events
