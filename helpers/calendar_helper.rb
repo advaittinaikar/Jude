@@ -71,7 +71,7 @@ module Sinatra
 
     event_description = "Assignment for #{assignment['coursename']}: #{assignment['description']}"
 
-    event = Google::Apis::CalendarV3::Event.new{
+    event = Google::Apis::CalendarV3::Event.new({
       description: event_description,
       start: {
         date_time: assignment['due_date'],
@@ -84,7 +84,7 @@ module Sinatra
       reminders: {
         use_default: true,
       }
-    }
+    })
 
     result = service.insert_event('primary', event)
 
