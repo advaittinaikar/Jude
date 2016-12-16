@@ -81,7 +81,7 @@ module Sinatra
 
       client = Signet::OAuth2::Client.new(access_token: $access_token)
 
-      # client.expires_in = Time.now + 1_000_000
+      client.expires_in = Time.now + 1_000_000
       # client.update!(
       #   :code => $access_code,
       #   :access_token => $access_token,
