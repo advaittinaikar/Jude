@@ -269,7 +269,7 @@ post '/interactive-buttons' do
           
           message = get_upcoming_events
 
-          client.chat_postMessage(channel: channel, text: message, as_user: true) 
+          client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
           {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
