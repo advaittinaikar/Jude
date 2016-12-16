@@ -32,23 +32,32 @@ module Sinatra
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
+        reset_error_counter
 
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
 
       elsif ef.starts_with? "about"
+        reset_error_counter
+
         client.chat_postMessage(channel: event.channel, text: "_#{about_jude}_", attachments: message, as_user:true)
             
       # Handle the Help commands
       elsif ef.include? "help"
+        reset_error_counter
+
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
 
       # Respond to thanks message
       elsif ef.starts_with? "thank"
+        reset_error_counter
+
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
       #   
       elsif ef.starts_with? "details:"
+        reset_error_counter
+
         ef.slice!(0..8)
         $assignment_record += " " + ef
         $assignment_object["description"] = ef
@@ -56,6 +65,8 @@ module Sinatra
         client.chat_postMessage(channel: event.channel, text: "So when is this assignment due?", as_user: true)
 
       elsif ef.starts_with? "due:"
+        reset_error_counter
+
         ef.slice!(0..4)
         due_date = Kronic.parse(ef)
 
@@ -67,30 +78,40 @@ module Sinatra
         # client.chat_postMessage(channel: event.channel, text: message, as_user: true)
 
       elsif ef.starts_with? "course name: "
+        reset_error_counter
+
         ef.slice!(0..12)
         $course_object["course_name"]= ef
         client.chat_postMessage(channel: event.channel, text: "Enter Course ID starting with *course id: *", as_user: true)
 
       elsif ef.starts_with? "course id: "
+        reset_error_counter
+
         ef.slice!(0..10)
         $course_object["course_id"]= ef  
         client.chat_postMessage(channel: event.channel, text: "Enter Instructor Name starting with *instructor: *", as_user: true) 
 
       elsif ef.starts_with? "instructor: "
+        reset_error_counter
+
         ef.slice!(0..11)  
         $course_object["instructor"]= ef
 
         client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{course_object["course_name"]}, #{course_object["course_id"]}, by #{course_object["instructor"]}", attachments: interactive_confirmation_course, as_user: true)
 
       elsif event.formatted_text == "show assignments"
+        reset_error_counter
 
         client.chat_postMessage(channel: event.channel, text: show_assignments, as_user: true)
 
       elsif event.formatted_text == "show courses"
+        reset_error_counter
 
         client.chat_postMessage(channel: event.channel, text: show_courses, as_user: true)
 
       elsif event.formatted_text == "add"
+        reset_error_counter
+        
         $assignment_record = ""
 
         add_event client, event.channel
@@ -105,9 +126,9 @@ module Sinatra
         @@error_counter += 1
 
         if @@error_counter > 5
-          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. You've entered something I dont get for the #{@@error_counter}th time. Please be nice or type `help` to find my commands.", as_user: true)
+          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. Why are you doing this? :unamused: Please be nice or type `help` to find my commands.", as_user: true)
         elsif @@error_counter > 2 and @@error_counter <= 4
-          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
+          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today :thinking_face:. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else  
           client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
         end
@@ -149,6 +170,10 @@ module Sinatra
     def about_jude
       message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to build something that would solve his problem and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
       return message
+    end
+
+    def reset_error_counter
+      @error_counter = 0
     end
 
   end

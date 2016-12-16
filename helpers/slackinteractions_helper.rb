@@ -64,7 +64,7 @@ module Sinatra
 	      #Adding course details from the database
 	      Course.all.each do |item,index|
 
-	        actions_response.first[:actions].push(
+	        actions_response.first[:actions].insert(0,
 	        {
 	          "name": item[:short_name],
 	          "text": item[:course_name],

@@ -273,7 +273,7 @@ post '/interactive-buttons' do
   elsif call_back == "course_assignment"
 
         if action_name == "add course"
-          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
           {  text: "You selected 'add a course'" , replace_original: true }.to_json
         else
           message = "You're adding an assignment for #{action_name}!"
@@ -296,7 +296,7 @@ post '/interactive-buttons' do
 
         elsif action_name == "add course"
 
-          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
           {  text: "You selected 'add a course'" , replace_original: true }.to_json
 
         else
@@ -325,7 +325,7 @@ post '/interactive-buttons' do
         
         else
 
-          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with ~course name: ~", as_user: true)
+          client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
           {  text: "Please add the course again!" , replace_original: true }.to_json
 
         end
