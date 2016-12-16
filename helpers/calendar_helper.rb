@@ -81,12 +81,13 @@ module Sinatra
 
       client = Signet::OAuth2::Client.new(access_token: $access_token)
 
-      client.expires_in = Time.now + 1_000_000
-      # client.update!(
-      #   :code => $access_code,
-      #   :access_token => $access_token,
-      #   :expires_in => 9000
-      #   )
+      # client.expires_in = Time.now + 1_000_000
+      
+      client.update!(
+        :code => $access_code,
+        :access_token => $access_token,
+        :expires_in => 9000
+        )
 
       service = Google::Apis::CalendarV3::CalendarService.new
       # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
