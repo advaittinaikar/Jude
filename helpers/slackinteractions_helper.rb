@@ -19,20 +19,17 @@ module Sinatra
 	            {
 	              "name":  "add",
 	              "text":  "Add assignment",
-	              "type":  "button",
-	              "value": "add"
+	              "type":  "button"
 	              },
 	            {
-	              "name":  "show today",
-	              "text":  "Show Today's schedule",
-	              "type":  "button",
-	              "value": "show-today"
+	              "name":  "show assignments",
+	              "text":  "Show Assignments",
+	              "type":  "button"
 	              },
 	            {
 	              "name":  "show next",
 	              "text":  "Show Next 10 events",
-	              "type":  "button",
-	              "value": "show-next"
+	              "type":  "button"
 	              }  
 	          ]
 	        }

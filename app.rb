@@ -260,7 +260,7 @@ post '/interactive-buttons' do
           client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
           {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
-        elsif action_name == "show today"
+        elsif action_name == "show assignments"
 
           client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
           {  text: "You selected 'show today'" , replace_original: true }.to_json
@@ -316,7 +316,7 @@ post '/interactive-buttons' do
 
         if action_name == "confirm"
 
-          create_calendar_event $assignment_object
+          create_calendar_event($assignment_object)
 
           message = create_assignment($assignment_object, client, channel)
 

@@ -97,7 +97,7 @@ module Sinatra
         ef.slice!(0..11)  
         $course_object["instructor"]= ef
 
-        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{course_object["course_name"]}, #{course_object["course_id"]}, by #{course_object["instructor"]}", attachments: interactive_confirmation_course, as_user: true)
+        client.chat_postMessage(channel: event.channel, text: "You've entered the following: #{$course_object["course_name"]}, #{$course_object["course_id"]}, by #{$course_object["instructor"]}", attachments: interactive_confirmation_course, as_user: true)
 
       elsif event.formatted_text == "show assignments"
         reset_error_counter
@@ -111,7 +111,7 @@ module Sinatra
 
       elsif event.formatted_text == "add"
         reset_error_counter
-        
+
         $assignment_record = ""
 
         add_event client, event.channel
