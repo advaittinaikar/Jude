@@ -1,3 +1,5 @@
+require 'sinatra'
+
 class Assignment < ActiveRecord::Base
   
   #has_many :tasks, dependent: :destroy

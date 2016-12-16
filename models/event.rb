@@ -1,3 +1,5 @@
+require 'sinatra'
+
 class Event < ActiveRecord::Base
   
   #has_many :tasks, dependent: :destroy

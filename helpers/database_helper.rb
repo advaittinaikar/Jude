@@ -23,7 +23,7 @@ module Sinatra
 		    assignment = Assignment.create!(:course_name => course_name, :description => description, :due_date => due_date)
 		    assignment.save
 
-		    client.chat_postMessage(channel: channel, text: "#{assignment.to_json}", as_user: true)
+		    return "Assignment for #{course} regarding #{description}, due #{due_date} has been created!"
     	end
 
     	def show_assignments

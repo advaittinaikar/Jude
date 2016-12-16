@@ -1,3 +1,5 @@
+require 'sinatra'
+
 class User < ActiveRecord::Base
   
   #has_many :tasks, dependent: :destroy
@@ -9,6 +11,6 @@ class User < ActiveRecord::Base
 
   def formatted_text
     text.downcase.strip
-  end    
+  end
 
 end
