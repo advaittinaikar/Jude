@@ -7,6 +7,7 @@ require "active_support/core_ext"
 require 'google/apis/calendar_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
+require 'google/api_client/client_secrets'
 require 'fileutils'
 
 require 'kronic'

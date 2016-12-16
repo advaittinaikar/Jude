@@ -12,6 +12,8 @@ module Sinatra
       access_token: $access_token 
       )
 
+    client.expires_in = Time.now + 1_000_000
+
 		service = Google::Apis::CalendarV3::CalendarService.new
 		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
 		service.authorization = client
@@ -77,13 +79,21 @@ module Sinatra
     #METHOD: Gets next 10 events in a user's Google Calendar
     def get_upcoming_events service
 
-      response = service.list_calendar_lists
+      client = Signet::OAuth2::Client.new(
+        access_token: $access_token 
+        )
 
-      # response = service.list_events('primary',
-      #                          max_results: 10,
-      #                          single_events: true,
-      #                          order_by: 'startTime',
-      #                          time_min: Time.now.iso8601)
+      client.expires_in = Time.now + 1_000_000
+
+      service = Google::Apis::CalendarV3::CalendarService.new
+      service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
+      service.authorization = client     
+
+      response = service.list_events('primary',
+                               max_results: 10,
+                               single_events: true,
+                               order_by: 'startTime',
+                               time_min: Time.now.iso8601)
 
       message= "Your upcoming 10 events are:"
 
