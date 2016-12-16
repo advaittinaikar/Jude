@@ -45,6 +45,7 @@ $assignment_record = ""
 $assignment_object = {}
 $course_object = {}
 $access_token = ""
+$access_code = ""
 
 # enable sessions for this project
 enable :sessions
@@ -79,7 +80,7 @@ end
 
 get "/oauth" do
   
-  code = params[ :code ]
+  $access_code = params[ :code ]
   
   puts "All good till here"
 
@@ -137,9 +138,9 @@ end
 #Google Oauth redirects to this endpoint once user has authorised request.
 get '/oauthcallback' do
 
-  code=params[:code]
+  $access_code = params[:code]
 
-  if code
+  if $access_code
     client = Signet::OAuth2::Client.new(
     {
 
@@ -148,7 +149,7 @@ get '/oauthcallback' do
         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
         token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-        code: code
+        code: $access_code
 
       }
         )
@@ -263,8 +264,10 @@ post '/interactive-buttons' do
           {  text: "You selected 'show today'" , replace_original: true }.to_json
 
         elsif action_name == "show next"
-          service = create_calendar_service
-          client.chat_postMessage(channel: channel, text: get_upcoming_events(service), as_user: true) 
+          
+          message = get_upcoming_events
+
+          client.chat_postMessage(channel: channel, text: message, as_user: true) 
           {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
