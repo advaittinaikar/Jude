@@ -253,28 +253,25 @@ post '/interactive-buttons' do
       
         if action_name == "add"
 
-          $assignment_record=""
-
-          message += "Let's add an assignment!"
-        
-          client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
-          {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
+              $assignment_record = ""
+              message += "Let's add an assignment!"
+              client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+              {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
         elsif action_name == "show assignments"
 
-          client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
-          {  text: "You selected 'show today'" , replace_original: true }.to_json
+              client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
+              {  text: "You selected 'show today'" , replace_original: true }.to_json
 
         elsif action_name == "show next"
-          
-          message = get_upcoming_events
 
-          client.chat_postMessage(channel: channel, text: message, as_user: true) 
-          {  text: "You selected 'show next'" , replace_original: true }.to_json
+              message = get_upcoming_events
+              client.chat_postMessage(channel: channel, text: message, as_user: true) 
+              {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
-          # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
-          200
+              # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
+              200
         end
 
   elsif call_back == "course_assignment"
@@ -318,7 +315,7 @@ post '/interactive-buttons' do
 
           create_calendar_event($assignment_object)
 
-          message = create_assignment($assignment_object, client, channel)
+          # message = create_assignment($assignment_object, client, channel)
 
           client.chat_postMessage(channel: channel, text: message, as_user: true)
           {  text: "The assignment has been added to your Google Calendar." , replace_original: true }.to_json
