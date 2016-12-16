@@ -5,7 +5,6 @@ class Team < ActiveRecord::Base
   validates_presence_of :team_id
   validates_presence_of :user_id
   
-  has_many :office_hour_queues
   has_many :events
   
   

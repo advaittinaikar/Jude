@@ -43,6 +43,7 @@ helpers Sinatra::SlackInteractionsHelper
 $assignment_record = ""
 $assignment_object = {}
 $course_object = {}
+$access_token = ""
 
 # enable sessions for this project
 enable :sessions
@@ -307,7 +308,7 @@ post '/interactive-buttons' do
 
         if action_name == "confirm"
 
-          add_assignment_to_table($assignment_object,client,channel)
+          create_assignment($assignment_object,client,channel)
           client.chat_postMessage(channel: channel, text: "The assignment has been added to your Calendar.", as_user: true)
           
         else
