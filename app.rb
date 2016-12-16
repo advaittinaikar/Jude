@@ -262,7 +262,7 @@ post '/interactive-buttons' do
 
         elsif action_name == "show today"
 
-          client.chat_postMessage(channel: channel, text: show_next_events, as_user: true)
+          client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
           {  text: "You selected 'show today'" , replace_original: true }.to_json
 
         elsif action_name == "show next"
