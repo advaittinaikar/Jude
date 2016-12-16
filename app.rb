@@ -80,7 +80,7 @@ end
 
 get "/oauth" do
   
-  $access_code = params[ :code ]
+  code = params[ :code ]
   
   puts "All good till here"
 
