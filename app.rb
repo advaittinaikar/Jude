@@ -44,7 +44,7 @@ helpers Sinatra::SlackInteractionsHelper
 $assignment_record = ""
 $assignment_object = {}
 $course_object = {}
-$access_token = ""
+$access_token = nil
 $access_code = ""
 
 # enable sessions for this project
