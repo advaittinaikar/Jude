@@ -126,6 +126,8 @@ get "/oauth" do
 
     if $access_token.nil?
      auth_calendar
+    else
+      "Jude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
     end
     
   else
