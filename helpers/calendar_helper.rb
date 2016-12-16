@@ -75,11 +75,11 @@ module Sinatra
       description: event_description,
       start: {
         date_time: assignment['due_date'],
-        time_zone: 'America/New_York'
+        time_zone: 'America/New_York',
         },
       end: {
         date_time: assignment['due_date'],
-        time_zone: 'America/New_York'
+        time_zone: 'America/New_York',
         },
       reminders: {
         use_default: true,
