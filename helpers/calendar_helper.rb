@@ -68,26 +68,37 @@ module Sinatra
 
     # event_description = "Tes"
 
-    event = Google::Apis::CalendarV3::Event.new(
-    {
-      description: "Test assignment!",
+    event = Google::Apis::CalendarV3::Event.new{
+      summary: 'Google I/O 2015',
+      location: '800 Howard St., San Francisco, CA 94103',
+      description: 'A chance to hear more about Google\'s developer products.',
       start: {
-        date_time: assignment['due_date'],
-        # time_zone: 'America/New_York',
-        },
+        date_time: '2016-12-28T09:00:00-07:00',
+        time_zone: 'America/Los_Angeles',
+      },
       end: {
-        date_time: assignment['due_date'],
-        # time_zone: 'America/New_York',
-        },
+        date_time: '2016-12-28T17:00:00-07:00',
+        time_zone: 'America/Los_Angeles',
+      },
+      recurrence: [
+        'RRULE:FREQ=DAILY;COUNT=2'
+      ],
+      attendees: [
+        {email: 'lpage@example.com'},
+        {email: 'sbrin@example.com'},
+      ],
       reminders: {
-        use_default: true,
-      }
+        use_default: false,
+        overrides: [
+          {method => 'email', 'minutes: 24 * 60'},
+          {method => 'popup', 'minutes: 10'},
+        ],
+      },
     }
-      )
 
     result = client.insert_event('primary', event)
+    puts "Event created: #{result.html_link}"
 
-    # return "Successfully added to your calendar!"
   end
 
   #METHOD: Gets next 10 events in a user's Google Calendar
@@ -105,7 +116,7 @@ module Sinatra
 
     service = Google::Apis::CalendarV3::CalendarService.new
     # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
-    service.authorization = client    
+    service.authorization = client
 
     response = service.list_events('primary',
                              max_results: 10,
