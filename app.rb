@@ -109,27 +109,22 @@ get "/oauth" do
     # we can... 
     
     team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
+  
+    team.access_token = access_token
+    team.team_name = team_name
+    team.raw_json = $response.to_s
+    team.incoming_channel = incoming_channel
+    team.incoming_webhook = incoming_url
+    team.bot_token = bot_access_token
+    team.bot_user_id = bot_user_id
+    team.save
 
-    if team["access_token"].nil?
-      team.access_token = access_token
-      team.team_name = team_name
-      team.raw_json = $response.to_s
-      team.incoming_channel = incoming_channel
-      team.incoming_webhook = incoming_url
-      team.bot_token = bot_access_token
-      team.bot_user_id = bot_user_id
-      team.save
-
-      if team["calendar_token"].nil?
-        auth_calendar
-      else
-        sign_up_greeting team
-      end
-
+    if team["calendar_token"].nil?
+      auth_calendar
     else
       sign_up_greeting team
     end
-
+    
   else
     401
   end
