@@ -267,7 +267,7 @@ post '/interactive-buttons' do
         elsif action_name == "show next"
 
               # message = get_upcoming_events team
-              client.chat_postMessage(channel: channel, text: "#{team["calendar_token"]}, #{team["calendar_code"]}", as_user: true) 
+              client.chat_postMessage(channel: channel, text: "#{Team.all.to_json}", as_user: true) 
               {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
