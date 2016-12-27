@@ -6,10 +6,11 @@ module Sinatra
 	# ----------------------------------------------------------------------
 
 	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
-	def create_calendar_service
+	def create_calendar_service team
+    access_token = team.access_token
 
 		client = Signet::OAuth2::Client.new(
-      access_token: $access_token 
+      access_token: access_token 
       )
 
     client.expires_in = Time.now + 1_000_000
@@ -50,20 +51,20 @@ module Sinatra
 
 	#METHOD: Creates an event in Google Calendar. 
 	#Returns a success message when done.
-  def create_calendar_event (assignment)
+  def create_calendar_event (assignment,team)
+
+    access_token = team.calendar_token
+    access_code = team.calendar_code
 
     client = Signet::OAuth2::Client.new(access_token: $access_token)
 
-    # client.expires_in = Time.now + 1_000_000
-
     client.update!(
-      :code => $access_code,
-      :access_token => $access_token,
+      :code => access_code,
+      :access_token => access_token,
       :expires_in => 9000
       )
 
     service = Google::Apis::CalendarV3::CalendarService.new
-    # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     service.authorization = client
 
     # event_description = "Tes"
@@ -102,15 +103,18 @@ module Sinatra
   end
 
   #METHOD: Gets next 10 events in a user's Google Calendar
-  def get_upcoming_events
+  def get_upcoming_events team
+
+    access_token = team.calendar_token
+    access_code = team.calendar_code
 
     client = Signet::OAuth2::Client.new(access_token: $access_token)
 
     # client.expires_in = Time.now + 1_000_000
 
     client.update!(
-      :code => $access_code,
-      :access_token => $access_token,
+      :code => access_code,
+      :access_token => access_token,
       :expires_in => 9000
       )
 
@@ -131,15 +135,6 @@ module Sinatra
     end
 
     return message   
-  end
-
-  #METHOD: Hardcoded. Gets next few events in user's Google Calendar.
-  def show_next_events
-	  message =  "Upcoming Events:
-	              1. Pay rent [2016-12-25]\n
-	              2. Travel for vacation [2016-12-29]\n
-	              3. New Year's Eve Party [2016-12-31]\n"
-	  return message
   end
 
   end

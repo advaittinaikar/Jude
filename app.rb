@@ -233,6 +233,7 @@ post '/interactive-buttons' do
   action_value = json_request['actions'].first["value"]
   channel = json_request['channel']['id']
   team_id = json_request['team']['id']
+  user_id = json_request['user']['id']
   time_stamp = json_request['message_ts']
   
   # puts "Action: " + call_back.to_s
@@ -240,7 +241,7 @@ post '/interactive-buttons' do
   # puts "team_id : " + team_id.to_s
   # puts "channel : " + channel.to_s
   
-  team = Team.find_by( team_id: team_id )
+  team = Team.find_by(user_id: user_id)
   puts team
 
   if team.nil?
@@ -269,7 +270,7 @@ post '/interactive-buttons' do
 
         elsif action_name == "show next"
 
-              message = get_upcoming_events
+              message = get_upcoming_events team
               client.chat_postMessage(channel: channel, text: message, as_user: true) 
               {  text: "You selected 'show next'" , replace_original: true }.to_json
 
