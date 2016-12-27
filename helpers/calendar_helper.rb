@@ -53,8 +53,8 @@ module Sinatra
 	#Returns a success message when done.
   def create_calendar_event (assignment,team)
 
-    access_token = team.calendar_token
-    access_code = team.calendar_code
+    access_token = team["calendar_token"]
+    access_code = team["calendar_code"]
 
     client = Signet::OAuth2::Client.new(access_token: $access_token)
 
@@ -105,12 +105,10 @@ module Sinatra
   #METHOD: Gets next 10 events in a user's Google Calendar
   def get_upcoming_events team
 
-    access_token = team.calendar_token
-    access_code = team.calendar_code
+    access_token = team["calendar_token"]
+    access_code = team["calendar_code"]
 
     client = Signet::OAuth2::Client.new(access_token: $access_token)
-
-    # client.expires_in = Time.now + 1_000_000
 
     client.update!(
       :code => access_code,
@@ -119,7 +117,6 @@ module Sinatra
       )
 
     service = Google::Apis::CalendarV3::CalendarService.new
-    # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     service.authorization = client
 
     response = service.list_events('primary',
