@@ -128,6 +128,7 @@ get "/oauth" do
 
     else
       sign_up_greeting
+    end
     
   else
     401
