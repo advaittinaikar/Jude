@@ -122,7 +122,7 @@ get "/oauth" do
     if team["calendar_token"].nil?
       auth_calendar
     else
-      sign_up_greeting team
+      sign_up_greeting
     end
     
   else
@@ -142,7 +142,7 @@ get '/oauthcallback' do
   team.calendar_code = params[:code]
   team.save
 
-  if team.calendar_code
+  if team["calendar_code"]
     client = Signet::OAuth2::Client.new(
     {
 
@@ -151,7 +151,7 @@ get '/oauthcallback' do
         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
         token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-        code: team.calendar_code
+        code: team["calendar_code"]
 
       }
         )
@@ -159,9 +159,9 @@ get '/oauthcallback' do
     response = client.fetch_access_token!
 
     if response
-      team.calendar_token = response['access_token']
+      team["calendar_token"] = response['access_token']
       # finally respond...
-      sign_up_greeting team
+      sign_up_greeting
     else
       "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
     end
@@ -267,7 +267,7 @@ post '/interactive-buttons' do
         elsif action_name == "show next"
 
               # message = get_upcoming_events team
-              client.chat_postMessage(channel: channel, text: "#{Team.all.to_json}", as_user: true) 
+              client.chat_postMessage(channel: channel, text: "#{Team.all.to_json}", as_user: true)
               {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
@@ -398,7 +398,6 @@ def respond_to_slack_event json
   
 end
 
-def sign_up_greeting team
-  team=team.to_json
-  "#{team}\nJude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
+def sign_up_greeting
+  "#{Team.all.to_json}\nJude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
 end
