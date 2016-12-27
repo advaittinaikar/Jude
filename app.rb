@@ -123,13 +123,13 @@ get "/oauth" do
       if team["calendar_token"].nil?
         auth_calendar
       else
-        sign_up_greeting
+        sign_up_greeting team
       end
 
     else
-      sign_up_greeting
+      sign_up_greeting team
     end
-    
+
   else
     401
   end
@@ -166,7 +166,7 @@ get '/oauthcallback' do
     if response
       team.calendar_token = response['access_token']
       # finally respond...
-      sign_up_greeting
+      sign_up_greeting team
     else
       "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
     end
@@ -403,6 +403,6 @@ def respond_to_slack_event json
   
 end
 
-def sign_up_greeting
-  "Jude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
+def sign_up_greeting team
+  "#{team}\nJude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
 end

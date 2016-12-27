@@ -108,10 +108,7 @@ module Sinatra
     access_token = team["calendar_token"]
     access_code = team["calendar_code"]
 
-    client = Signet::OAuth2::Client.new( 
-      { access_token: access_token, 
-        token_credential_uri:  'https://accounts.google.com/o/oauth2/token'} 
-      )
+    client = Signet::OAuth2::Client.new( access_token: access_token )
 
     client.update!(
       :code => access_code,
