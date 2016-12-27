@@ -111,11 +111,12 @@ module Sinatra
 
     client = Signet::OAuth2::Client.new( access_token: access_token )
 
-    client.update!(
-      :code => access_code,
-      :access_token => access_token,
-      :expires_in => 9000
-    )
+    client.expires_in = Time.now + 1_000_000
+    # client.update!(
+    #   :code => access_code,
+    #   :access_token => access_token,
+    #   :expires_in => 9000
+    # )
 
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client
@@ -132,7 +133,7 @@ module Sinatra
       message+="#{ind}. \n#{event.summary} on #{event.start.date}"
     end
 
-    return message   
+    return message
   end
 
   end
