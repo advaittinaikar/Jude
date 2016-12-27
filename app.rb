@@ -404,5 +404,5 @@ def respond_to_slack_event json
 end
 
 def sign_up_greeting team
-  "#{team}\nJude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
+  "#{team["calendar_token"]} ; #{team["calendar_code"]}\nJude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
 end
