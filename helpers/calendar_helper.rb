@@ -114,7 +114,7 @@ module Sinatra
       :code => access_code,
       :access_token => access_token,
       :expires_in => 9000
-      )
+    )
 
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client
