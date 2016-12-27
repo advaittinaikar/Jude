@@ -20,7 +20,7 @@ module Sinatra
     def event_to_action client, event
       
       ef = event.formatted_text
-      puts "Formatted Text: #{event.formatted_text}"
+      puts "Formatted Text: #{ef}"
       
       return if ef.nil?
       

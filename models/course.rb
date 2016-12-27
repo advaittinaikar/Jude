@@ -1,3 +1,5 @@
+require 'sinatra'
+
 class Course < ActiveRecord::Base
   
   #has_many :tasks, dependent: :destroy
@@ -6,8 +8,13 @@ class Course < ActiveRecord::Base
   validates_presence_of :course_name
   validates_presence_of :course_id
 
-  def formatted_text
-    text.downcase.strip
+  def abbreviate
+    words = course_name.split(" ")
+	short_name = ""
+
+	words.each do |word|
+		short_name += word.slice(0)
+	end
   end
   
 end

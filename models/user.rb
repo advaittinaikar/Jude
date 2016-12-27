@@ -9,8 +9,4 @@ class User < ActiveRecord::Base
   validates_presence_of :user_name
   validates_presence_of :courses_taken
 
-  def formatted_text
-    text.downcase.strip
-  end
-
 end
