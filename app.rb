@@ -46,6 +46,7 @@ $assignment_object = {}
 $course_object = {}
 $access_token = nil
 $access_code = ""
+$response
 
 # enable sessions for this project
 enable :sessions
@@ -89,24 +90,24 @@ get "/oauth" do
   puts "All good till here too!"
   
   if code 
-    response = HTTParty.post slack_oauth_request, body: {client_id: ENV['SLACK_CLIENT_ID'], client_secret: ENV['SLACK_CLIENT_SECRET'], code: code}
+    $response = HTTParty.post slack_oauth_request, body: {client_id: ENV['SLACK_CLIENT_ID'], client_secret: ENV['SLACK_CLIENT_SECRET'], code: code}
     
-    puts response.to_s
+    puts $response.to_s
     
     # We can extract lots of information from this web hook... 
     
-    access_token = response["access_token"]
-    team_name = response["team_name"]
-    team_id = response["team_id"]
-    user_id = response["user_id"]
+    access_token = $response["access_token"]
+    team_name = $response["team_name"]
+    team_id = $response["team_id"]
+    user_id = $response["user_id"]
         
-    incoming_channel = response['incoming_webhook']['channel']
-    incoming_channel_id = response['incoming_webhook']['channel_id']
-    incoming_config_url = response['incoming_webhook']['configuration_url']
-    incoming_url = response['incoming_webhook']['url']
+    incoming_channel = $response['incoming_webhook']['channel']
+    incoming_channel_id = $response['incoming_webhook']['channel_id']
+    incoming_config_url = $response['incoming_webhook']['configuration_url']
+    incoming_url = $response['incoming_webhook']['url']
     
-    bot_user_id = response['bot']['bot_user_id']
-    bot_access_token = response['bot']['bot_access_token']
+    bot_user_id = $response['bot']['bot_user_id']
+    bot_access_token = $response['bot']['bot_access_token']
     
     # wouldn't it be useful if we could store this? 
     # we can... 
@@ -114,12 +115,15 @@ get "/oauth" do
     team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
     team.access_token = access_token
     team.team_name = team_name
-    team.raw_json = response.to_s
+    team.raw_json = $response.to_s
     team.incoming_channel = incoming_channel
     team.incoming_webhook = incoming_url
     team.bot_token = bot_access_token
     team.bot_user_id = bot_user_id
     team.save
+
+    user = User.find_or_create_by( team_id: team_id, user_id: user_id)
+    user.access_token
     
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
@@ -140,7 +144,11 @@ end
 #Google Oauth redirects to this endpoint once user has authorised request.
 get '/oauthcallback' do
 
-  $access_code = params[:code]
+  team_id = $response["team_id"]
+  user_id = $response["user_id"]
+
+  team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
+  team.calendar_code = params[:code]
 
   if $access_code
     client = Signet::OAuth2::Client.new(
@@ -151,7 +159,7 @@ get '/oauthcallback' do
         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
         token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-        code: $access_code
+        code: team.calendar_code
 
       }
         )
@@ -159,8 +167,8 @@ get '/oauthcallback' do
     response = client.fetch_access_token!
 
     if response
-      $access_token = response['access_token']
-      # finally respond... 
+      team.calendar_token = response['access_token']
+      # finally respond...
       "Jude has been successfully installed.\nYour Calendar has been successfully synced with Jude.\nPlease login to your Slack team to meet Jude!"
     else
       "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 

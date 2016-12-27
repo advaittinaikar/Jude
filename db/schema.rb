@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161211225133) do
+ActiveRecord::Schema.define(version: 20161227061059) do
 
   create_table "assignments", force: :cascade do |t|
     t.string   "course_name"
@@ -38,15 +38,6 @@ ActiveRecord::Schema.define(version: 20161211225133) do
     t.datetime "timestamp"
   end
 
-  create_table "office_hours_queues", force: :cascade do |t|
-    t.string   "team_id"
-    t.string   "user_id"
-    t.string   "user_name"
-    t.text     "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "teams", force: :cascade do |t|
     t.string  "access_token"
     t.string  "team_name"
@@ -58,6 +49,7 @@ ActiveRecord::Schema.define(version: 20161211225133) do
     t.string  "bot_token"
     t.string  "bot_user_id"
     t.boolean "is_active",        default: true
+    t.string  "calendar_token"
   end
 
   create_table "users", force: :cascade do |t|

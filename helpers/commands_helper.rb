@@ -56,6 +56,7 @@ module Sinatra
 
       # 
       elsif ef.starts_with? "create"
+        create_calendar_event
         client.chat_postMessage(channel: event.channel, text: "Event created. Check Google Calendar!", as_user: true)
 
       elsif ef.starts_with? "details:"
