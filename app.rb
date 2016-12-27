@@ -140,7 +140,7 @@ get '/oauthcallback' do
   team_id = $response["team_id"]
   user_id = $response["user_id"]
 
-  team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
+  team = Team.find_by( user_id: user_id )
   team.calendar_code = params[:code]
   team.save
 
