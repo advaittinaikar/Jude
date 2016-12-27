@@ -67,7 +67,7 @@ module Sinatra
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client
 
-    # event_description = "Tes"
+    # event_description = "Test."
 
     # event = Google::Apis::CalendarV3::Event.new{
     #   summary : 'Google I/O 2015',
@@ -108,7 +108,10 @@ module Sinatra
     access_token = team["calendar_token"]
     access_code = team["calendar_code"]
 
-    client = Signet::OAuth2::Client.new(access_token: access_token)
+    client = Signet::OAuth2::Client.new( 
+      { access_token: access_token, 
+        token_credential_uri:  'https://accounts.google.com/o/oauth2/token'} 
+      )
 
     client.update!(
       :code => access_code,
