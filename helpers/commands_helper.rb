@@ -54,7 +54,10 @@ module Sinatra
 
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
 
-      #   
+      # 
+      elsif ef.starts_with? "create"
+        client.chat_postMessage(channel: event.channel, text: "Event created. Check Google Calendar!", as_user: true)
+
       elsif ef.starts_with? "details:"
         reset_error_counter
 

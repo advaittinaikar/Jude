@@ -19,7 +19,6 @@ module Sinatra
 		service.authorization = client
 
 		return service
-
 	end
 
   #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
@@ -35,7 +34,6 @@ module Sinatra
 	  	})
 
 		redirect to(client.authorization_uri.to_s)
-
 	end
 	
 	#METHOD: Gets a list of events from Google Calendar using Calendar List.
@@ -48,7 +46,6 @@ module Sinatra
 	  service.authorization = client
 
 	  @calendar_list = service.list_calendar_lists
-
 	end
 
 	#METHOD: Creates an event in Google Calendar. 
@@ -69,11 +66,11 @@ module Sinatra
     # service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     service.authorization = client
 
-    event_description = "Assignment for #{assignment['coursename']}: #{assignment['description']}"
+    # event_description = "Tes"
 
     event = Google::Apis::CalendarV3::Event.new(
     {
-      description: event_description,
+      description: "Test assignment!",
       start: {
         date_time: assignment['due_date'],
         # time_zone: 'America/New_York',
@@ -90,8 +87,7 @@ module Sinatra
 
     result = client.insert_event('primary', event)
 
-    return "Successfully added to your calendar!"
-
+    # return "Successfully added to your calendar!"
   end
 
   #METHOD: Gets next 10 events in a user's Google Calendar
@@ -126,14 +122,14 @@ module Sinatra
     return message   
   end
 
-    #METHOD: Hardcoded. Gets next few events in user's Google Calendar.
-    def show_next_events
+  #METHOD: Hardcoded. Gets next few events in user's Google Calendar.
+  def show_next_events
 	  message =  "Upcoming Events:
 	              1. Pay rent [2016-12-25]\n
 	              2. Travel for vacation [2016-12-29]\n
 	              3. New Year's Eve Party [2016-12-31]\n"
 	  return message
-	end
+  end
 
   end
 end
