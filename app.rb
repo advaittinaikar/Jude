@@ -142,8 +142,9 @@ get '/oauthcallback' do
 
   team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
   team.calendar_code = params[:code]
+  team.save
 
-  if $access_code
+  if team.calendar_code
     client = Signet::OAuth2::Client.new(
     {
 
