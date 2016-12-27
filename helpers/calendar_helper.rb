@@ -30,6 +30,7 @@ module Sinatra
 		    client_id: ENV['CALENDAR_CLIENT_ID'],
 		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
 		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
 		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
 	  	})
