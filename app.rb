@@ -117,14 +117,11 @@ get "/oauth" do
     team.bot_token = bot_access_token
     team.bot_user_id = bot_user_id
     team.save
-
-    user = User.find_or_create_by( team_id: team_id, user_id: user_id)
-    user.access_token
     
     # finally respond... 
     "Jude has been successfully installed. Go check her out!"
 
-    if $access_token.nil?
+    if team["calendar_token"].nil?
      auth_calendar
     else
       "Jude has been successfully installed.\nYour Calendar has been already been synced with Jude.\nPlease login to your Slack team to meet Jude!"
