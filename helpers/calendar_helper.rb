@@ -27,12 +27,12 @@ module Sinatra
 	  
 		client = Signet::OAuth2::Client.new({
  
-		    client_id: ENV['CALENDAR_CLIENT_ID'],
-		    client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-		    authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-        token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
-        scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-		    redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
+		    :client_id => ENV['CALENDAR_CLIENT_ID'],
+		    :client_secret => ENV['CALENDAR_CLIENT_SECRET'],
+		    :authorization_uri => 'https://accounts.google.com/o/oauth2/auth',
+        :token_credential_uri =>  'https://accounts.google.com/o/oauth2/token',
+        :scope => Google::Apis::CalendarV3::AUTH_CALENDAR,
+		    :redirect_uri => "https://agile-stream-68169.herokuapp.com/oauthcallback"
 	  	})
 
 		redirect to(client.authorization_uri.to_s)
@@ -109,7 +109,8 @@ module Sinatra
     access_token = team["calendar_token"]
     access_code = team["calendar_code"]
 
-    client = Signet::OAuth2::Client.new( access_token: access_token )
+    client = Signet::OAuth2::Client.new( 
+      :access_token => access_token)
 
     client.expires_in = Time.now + 1_000_000
     # client.update!(
