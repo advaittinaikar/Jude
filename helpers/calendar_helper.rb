@@ -53,12 +53,12 @@ module Sinatra
 
 	#METHOD: Creates an event in Google Calendar. 
 	#Returns a success message when done.
-  def create_calendar_event (assignment,team)
+  def create_calendar_event team
 
     access_token = team["calendar_token"]
     access_code = team["calendar_code"]
 
-    client = Signet::OAuth2::Client.new(access_token: $access_token)
+    client = Signet::OAuth2::Client.new(access_token: access_token)
 
     client.update!(
       :code => access_code,
@@ -71,35 +71,35 @@ module Sinatra
 
     # event_description = "Test."
 
-    # event = Google::Apis::CalendarV3::Event.new{
-    #   summary : 'Google I/O 2015',
-    #   location : '800 Howard St., San Francisco, CA 94103',
-    #   description : 'A chance to hear more about Google\'s developer products.',
-    #   start: {
-    #     date_time : '2016-12-28T09:00:00-07:00',
-    #     time_zone : 'America/Los_Angeles',
-    #   },
-    #   end: {
-    #     date_time : '2016-12-28T17:00:00-07:00',
-    #     time_zone : 'America/Los_Angeles',
-    #   },
-    #   recurrence : [
-    #     'RRULE:FREQ=DAILY;COUNT=2'
-    #   ],
-    #   attendees : [
-    #     {email : 'lpage@example.com'},
-    #     {email : 'sbrin@example.com'},
-    #   ],
-    #   reminders : {
-    #     use_default : false,
-    #     overrides : [
-    #       {method => 'email', 'minutes: 24 * 60'},
-    #       {method => 'popup', 'minutes: 10'},
-    #     ],
-    #   },
-    # }
+    event = Google::Apis::CalendarV3::Event.new({
+          summary : 'Google I/O 2015',
+          location : '800 Howard St., San Francisco, CA 94103',
+          description : 'A chance to hear more about Google\'s developer products.',
+          start: {
+            date_time : '2016-12-28T09:00:00-07:00',
+            time_zone : 'America/Los_Angeles',
+          },
+          end: {
+            date_time : '2016-12-28T17:00:00-07:00',
+            time_zone : 'America/Los_Angeles',
+          },
+          recurrence : [
+            'RRULE:FREQ=DAILY;COUNT=2'
+          ],
+          attendees : [
+            {email : 'lpage@example.com'},
+            {email : 'sbrin@example.com'},
+          ],
+          reminders : {
+            use_default : false,
+            overrides : [
+              {method => 'email', 'minutes: 24 * 60'},
+              {method => 'popup', 'minutes: 10'},
+            ],
+          },
+        })
 
-    # result = client.insert_event('primary', event)
+    result = client.insert_event('primary', event)
     puts "Event created: #{result.html_link}"
 
   end

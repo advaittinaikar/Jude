@@ -58,9 +58,9 @@ enable :sessions
 #
 get "/" do
   haml :index
-  # "Assignments table is: \n" + Assignment.all.to_json + "\n" +
-  # "Courses table is: \n" + Course.all.to_json + "\n" + 
-  # "Events table is: \n" + Event.all.to_json
+  # "Assignments table is: <br>" + Assignment.all.to_json + "<br>" +
+  # "Courses table is: <br>" + Course.all.to_json + "<br>" + 
+  # "Events table is: <br>" + Event.all.to_json
 end
 
 get "/privacy" do
@@ -166,7 +166,7 @@ get '/oauthcallback' do
     # finally respond...
     sign_up_greeting
   else
-    "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
+    "Something went wrong in setting up your calendar and slack.<br>We'd appreciate it if you could try again!" 
   end
 
 end
@@ -388,7 +388,7 @@ def respond_to_slack_event json
   
   client = team.get_client
   
-  event_to_action client, event
+  event_to_action client, event, team
   
 end
 

@@ -17,7 +17,7 @@ module Sinatra
     # =>   MAPS THE CURRENT EVENT TO AN ACTION
     # ------------------------------------------------------------------------
     
-    def event_to_action client, event
+    def event_to_action client, event, team
       
       ef = event.formatted_text
       puts "Formatted Text: #{ef}"
@@ -56,7 +56,8 @@ module Sinatra
 
       # 
       elsif ef.starts_with? "create"
-        create_calendar_event
+
+        create_calendar_event team
         client.chat_postMessage(channel: event.channel, text: "Event created. Check Google Calendar!", as_user: true)
 
       elsif ef.starts_with? "details:"
@@ -78,7 +79,7 @@ module Sinatra
 
         client.chat_postMessage(channel: event.channel, text: "So your assignment is #{$assignment_record}, due #{ef} ( #{due_date} )", attachments: interactive_confirmation_assignment ,as_user: true)
 
-        # message create_calendar_event $assignment_object, $service  
+        # message = create_calendar_event $assignment_object, $service  
         # client.chat_postMessage(channel: event.channel, text: message, as_user: true)
 
       elsif ef.starts_with? "course name: "
@@ -172,7 +173,7 @@ module Sinatra
 
     #METHOD: Returns the about me message for Jude
     def about_jude
-      message = "_Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to build something that would solve his problem and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events._" 
+      message = "Jude was created one dark fall morning by a bright young student in Mandark's Lab in Pittsburgh. \nWhile he realised that his assignments were going out of hand he decided to build something that would solve his problem and others. \nJude has been built to make it easier to add structure to google calendar events for assignments, as well as show upcoming events." 
       return message
     end
 
