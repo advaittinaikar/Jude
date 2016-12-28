@@ -105,9 +105,7 @@ get "/oauth" do
     bot_user_id = $response['bot']['bot_user_id']
     bot_access_token = $response['bot']['bot_access_token']
     
-    # wouldn't it be useful if we could store this? 
-    # we can... 
-    
+    # Storing user and team details into the database
     team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
   
     team.access_token = access_token
@@ -119,7 +117,7 @@ get "/oauth" do
     team.bot_user_id = bot_user_id
     team.save!
 
-    team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
+    # team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
 
     # if team.calendar_token.nil?
       auth_calendar

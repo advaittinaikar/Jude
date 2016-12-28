@@ -25,17 +25,18 @@ module Sinatra
   #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
 	def auth_calendar
 	  
-		client = Signet::OAuth2::Client.new({
- 
-		    :client_id => ENV['CALENDAR_CLIENT_ID'],
-		    :client_secret => ENV['CALENDAR_CLIENT_SECRET'],
-		    :authorization_uri => 'https://accounts.google.com/o/oauth2/auth',
-        :token_credential_uri =>  'https://accounts.google.com/o/oauth2/token',
-        :scope => Google::Apis::CalendarV3::AUTH_CALENDAR,
-		    :redirect_uri => "https://agile-stream-68169.herokuapp.com/oauthcallback"
-	  	})
+		client = Signet::OAuth2::Client.new(
+    {
+		   client_id: ENV['CALENDAR_CLIENT_ID'],
+		   client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+		   authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
+       scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+		   redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
+	  }
+      )
 
-		redirect to(client.authorization_uri.to_s)
+		redirect to client.authorization_uri.to_s
 	end
 	
 	#METHOD: Gets a list of events from Google Calendar using Calendar List.
