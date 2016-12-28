@@ -73,11 +73,11 @@ module Sinatra
     event = Google::Apis::CalendarV3::Event.new({
           description: $assignment_record,
           start:{
-            date_time: $assignment_object["due_date"],
+            date: $assignment_object["due_date"],
             time_zone: 'India',
           },
           end:{
-            date_time: $assignment_object["due_date"],
+            date: $assignment_object["due_date"],
             time_zone: 'India',
           },
           reminders:{
