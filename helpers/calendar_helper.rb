@@ -71,22 +71,18 @@ module Sinatra
     service.authorization = client
 
     event = Google::Apis::CalendarV3::Event.new({
-          description: $assignment_record
-          start: {
+          description: $assignment_record,
+          start:{
             date_time: $assignment_object["due_date"],
             time_zone: 'India',
           },
-          end: {
+          end:{
             date_time: $assignment_object["due_date"],
             time_zone: 'India',
           },
-          reminders: {
+          reminders:{
             use_default: false,
-            # overrides: [
-            #   {method => 'email', 'minutes: 24 * 60'},
-            #   {method => 'popup', 'minutes: 10'},
-            # ],
-          },
+            }
         })
 
     result = service.insert_event('primary', event)
