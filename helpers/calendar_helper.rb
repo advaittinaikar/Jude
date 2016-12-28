@@ -105,7 +105,7 @@ module Sinatra
   end
 
   #METHOD: Gets next 10 events in a user's Google Calendar
-  def get_upcoming_events team
+  def get_upcoming_events
 
     # access_token = team["calendar_token"]
     # access_code = team["calendar_code"]

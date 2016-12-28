@@ -265,8 +265,8 @@ post '/interactive-buttons' do
 
         elsif action_name == "show next"
 
-              # message = get_upcoming_events team
-              client.chat_postMessage(channel: channel, text: "#{Team.all.to_json}", as_user: true)
+              message = get_upcoming_events team
+              client.chat_postMessage(channel: channel, text: message, as_user: true)
               {  text: "You selected 'show next'" , replace_original: true }.to_json
 
         else
@@ -378,7 +378,7 @@ def respond_to_slack_event json
   event_channel = event['channel']
   event_ts = event['ts']
   
-  team = Team.find_by( team_id: team_id )
+  team = Team.find_by(team_id: team_id)
   
   # didn't find a match... this is junk! 
   return if team.nil?
@@ -387,7 +387,7 @@ def respond_to_slack_event json
   # if so we shoud ignore the event
   return if team.bot_user_id == event_user
   
-  event = Event.create(team_id: team_id,type_name: event_type,user_id: event_user,text: event_text,channel: event_channel ,timestamp: Time.at(event_ts.to_f) )
+  event = Event.create(team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel, timestamp: Time.at(event_ts.to_f) )
   event.team = team
   event.save!
   
