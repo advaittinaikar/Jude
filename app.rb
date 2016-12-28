@@ -145,7 +145,7 @@ get '/oauthcallback' do
   team.save!
   
   team = Team.find_by( user_id: user_id )
-  
+
   client = Signet::OAuth2::Client.new(
   {
 
@@ -161,13 +161,13 @@ get '/oauthcallback' do
 
   response = client.fetch_access_token!
 
-  if response
+  
     team.calendar_token = response['access_token']
     # finally respond...
     sign_up_greeting
-  else
-    "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
-  end
+  # else
+  #   "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
+  # end
 
 end
 
