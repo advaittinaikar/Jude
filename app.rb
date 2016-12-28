@@ -141,33 +141,28 @@ get '/oauthcallback' do
   team = Team.find_by( user_id: user_id )
   team.calendar_code = params[:code]
   team.save!
+  
+  client = Signet::OAuth2::Client.new(
+  {
 
-  if team
-    client = Signet::OAuth2::Client.new(
-    {
+      client_id: ENV['CALENDAR_CLIENT_ID'],
+      client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+      scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+      token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
+      redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+      code: team["calendar_code"]
 
-        client_id: ENV['CALENDAR_CLIENT_ID'],
-        client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-        scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-        token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
-        redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-        code: team["calendar_code"]
+    }
+      )
 
-      }
-        )
+  response = client.fetch_access_token!
 
-    response = client.fetch_access_token!
-
-    if response
-      team.calendar_token = response['access_token']
-      # finally respond...
-      sign_up_greeting
-    else
-      "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
-    end
-
+  if response
+    team.calendar_token = response['access_token']
+    # finally respond...
+    sign_up_greeting
   else
-    401
+    "Something went wrong in setting up your calendar and slack.\nWe'd appreciate it if you could try again!" 
   end
 
 end
