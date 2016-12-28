@@ -5,7 +5,7 @@ class Team < ActiveRecord::Base
   validates_presence_of :team_id
   validates_presence_of :user_id
   validates_presence_of :calendar_token
-  validates_presence_of :calendar_Code
+  validates_presence_of :calendar_code
   
   has_many :events
   
