@@ -141,7 +141,7 @@ get '/oauthcallback' do
   user_id = $response[:user_id]
 
   team = Team.find_by( user_id: user_id )
-  team[:calendar_code] = params[:code]
+  team.calendar_code = params[:code]
   team.save!
   
   team = Team.find_by( user_id: user_id )
@@ -154,14 +154,14 @@ get '/oauthcallback' do
       scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-      code: team[:calendar_code]
+      code: params[:code]
 
     }
       )
 
   response = client.fetch_access_token!
 
-    team[:calendar_token] = response['access_token']
+    team.calendar_token = response['access_token']
     # finally respond...
     sign_up_greeting
   # else
