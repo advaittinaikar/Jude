@@ -71,7 +71,7 @@ module Sinatra
     service.authorization = client
 
     event = Google::Apis::CalendarV3::Event.new({
-          description: $assignment_record,
+          summary: $assignment_record,
           start:{
             date: $assignment_object["due_date"],
             time_zone: 'Asia/Kolkata',
