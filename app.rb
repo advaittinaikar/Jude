@@ -142,7 +142,7 @@ get '/oauthcallback' do
   team.calendar_code = params[:code]
   team.save
 
-  if team["calendar_code"]
+  if team
     client = Signet::OAuth2::Client.new(
     {
 
@@ -159,7 +159,7 @@ get '/oauthcallback' do
     response = client.fetch_access_token!
 
     if response
-      team["calendar_token"] = response['access_token']
+      team.calendar_token = response['access_token']
       # finally respond...
       sign_up_greeting
     else
