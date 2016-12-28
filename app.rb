@@ -368,11 +368,11 @@ def respond_to_slack_event json
   team_id = json['team_id']
   api_app_id = json['api_app_id']
   event_desc = json['event']
-  event_type = event['type']
-  event_user = event['user']
-  event_text = event['text']
-  event_channel = event['channel']
-  event_ts = event['ts']
+  event_type = event_desc['type']
+  event_user = event_desc['user']
+  event_text = event_desc['text']
+  event_channel = event_desc['channel']
+  event_ts = event_desc['ts']
   
   team = Team.find_by( team_id: team_id )
   
