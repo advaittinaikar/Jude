@@ -6,7 +6,7 @@ module Sinatra
 		  course_name = object['course_name'].capitalize
 	   	  course_id = object['course_id']
 	      short_name = abbreviate course_name
-	      instructor =  object['instructor']
+	      instructor =  object['instructor'].capitalize
 
 	      course = Course.create(:course_name => course_name, :course_id => course_id, :instructor => instructor, :short_name => short_name)
 	      course.save!

@@ -308,9 +308,7 @@ post '/interactive-buttons' do
 
         if action_name == "confirm"
 
-          # create_calendar_event($assignment_object)
-
-          message = create_calendar_event($assignment_object, team)
+          create_calendar_event team
 
           client.chat_postMessage(channel: channel, text: message, as_user: true)
           {  text: "The assignment has been added to your Google Calendar." , replace_original: true }.to_json
