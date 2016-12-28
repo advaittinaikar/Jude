@@ -92,10 +92,10 @@ module Sinatra
           ],
           reminders: {
             use_default: false,
-            overrides: [
-              {method => 'email', 'minutes: 24 * 60'},
-              {method => 'popup', 'minutes: 10'},
-            ],
+            # overrides: [
+            #   {method => 'email', 'minutes: 24 * 60'},
+            #   {method => 'popup', 'minutes: 10'},
+            # ],
           },
         })
 
