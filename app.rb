@@ -310,7 +310,7 @@ post '/interactive-buttons' do
 
           create_calendar_event team
 
-          client.chat_postMessage(channel: channel, text: message, as_user: true)
+          client.chat_postMessage(channel: channel, text: "The assignment has been added to your Google Calendar.", as_user: true)
           {  text: "The assignment has been added to your Google Calendar." , replace_original: true }.to_json
           
         else
