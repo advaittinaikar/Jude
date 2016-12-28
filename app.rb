@@ -117,7 +117,9 @@ get "/oauth" do
     team.incoming_webhook = incoming_url
     team.bot_token = bot_access_token
     team.bot_user_id = bot_user_id
-    team.save
+    team.save!
+
+    team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
 
     if team.calendar_token.nil?
       auth_calendar
@@ -141,6 +143,8 @@ get '/oauthcallback' do
   team = Team.find_by( user_id: user_id )
   team.calendar_code = params[:code]
   team.save!
+  
+  team = Team.find_by( user_id: user_id )
   
   client = Signet::OAuth2::Client.new(
   {
@@ -367,12 +371,12 @@ def respond_to_slack_event json
   # find the team
   team_id = json['team_id']
   api_app_id = json['api_app_id']
-  event_desc = json['event']
-  event_type = event_desc['type']
-  event_user = event_desc['user']
-  event_text = event_desc['text']
-  event_channel = event_desc['channel']
-  event_ts = event_desc['ts']
+  event = json['event']
+  event_type = event['type']
+  event_user = event['user']
+  event_text = event['text']
+  event_channel = event['channel']
+  event_ts = event['ts']
   
   team = Team.find_by( team_id: team_id )
   
@@ -385,7 +389,7 @@ def respond_to_slack_event json
   
   event = Event.create( :team_id => team_id, :type_name => event_type, :user_id => event_user, :text => event_text, :channel => event_channel , :timestamp => Time.at(event_ts.to_f) )
   event.team = team
-  event.save
+  event.save!
   
   client = team.get_client
   
