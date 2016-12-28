@@ -90,20 +90,42 @@ module Sinatra
 
   end
 
+  def get_upcoming_assignments team
+
+    access_token = team["calendar_token"]
+    
+    client = Signet::OAuth2::Client.new(access_token: access_token)
+    client.expires_in = Time.now + 1_000_000
+    
+    service = Google::Apis::CalendarV3::CalendarService.new
+    service.authorization = client
+
+    response = service.list_events('primary',
+                             max_results: 20,
+                             single_events: true,
+                             order_by: 'startTime',
+                             time_min: Time.now.iso8601)
+
+    message= "Your upcoming assignments are:"
+
+    response.items.each do |event,ind|
+      if event.summary.include? "assignment"
+        message+="#{event.summary} , due on #{event.start.date}"
+      end
+    end
+
+    return message
+
+  end
+
   #METHOD: Gets next 10 events in a user's Google Calendar
   def get_upcoming_events team
 
     access_token = team["calendar_token"]
-    # access_code = team["calendar_code"]
 
     client = Signet::OAuth2::Client.new(access_token: access_token)
 
     client.expires_in = Time.now + 1_000_000
-    # client.update!(
-    #   :code => access_code,
-    #   :access_token => access_token,
-    #   :expires_in => 9000
-    # )
 
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client

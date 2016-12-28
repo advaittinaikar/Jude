@@ -277,7 +277,7 @@ post '/interactive-buttons' do
         else
           message = "You're adding an assignment for #{action_name}!"
           
-          $assignment_record = "For #{action_name}: "
+          $assignment_record = "Assignment for #{action_name}: "
           $assignment_object["course_name"] = action_name
           client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
         
