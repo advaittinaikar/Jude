@@ -121,11 +121,11 @@ get "/oauth" do
 
     team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
 
-    if team.calendar_token.nil?
+    # if team.calendar_token.nil?
       auth_calendar
-    else
-      sign_up_greeting
-    end
+    # else
+      # sign_up_greeting
+    # end
     
   else
     401
@@ -138,13 +138,13 @@ end
 get '/oauthcallback' do
 
   # team_id = $response["team_id"]
-  user_id = $response["user_id"]
+  # user_id = $response["user_id"]
 
-  team = Team.find_by( user_id: user_id )
-  team.calendar_code = params[:code]
-  team.save!
+  # team = Team.find_by( user_id: user_id )
+  # team.calendar_code = params[:code]
+  # team.save!
   
-  team = Team.find_by( user_id: user_id )
+  # team = Team.find_by( user_id: user_id )
 
   client = Signet::OAuth2::Client.new(
   {
@@ -159,9 +159,12 @@ get '/oauthcallback' do
     }
       )
 
-  response = client.fetch_access_token!
+  response_token = client.fetch_access_token!
 
-    team.calendar_token = response['access_token']
+    # team.calendar_token = response['access_token']
+    $access_token = response_token['access_token']
+
+    puts "The token for Google Calendar API is: #{response['access_token']}"
     # finally respond...
     sign_up_greeting
   # else
