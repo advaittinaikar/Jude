@@ -60,36 +60,26 @@ module Sinatra
 
     client = Signet::OAuth2::Client.new(access_token: access_token)
 
-    client.update!(
-      :code => access_code,
-      :access_token => access_token,
-      :expires_in => 9000
-      )
+    client.expires_in = Time.now + 1_000_000
+    # client.update!(
+    #   :code => access_code,
+    #   :access_token => access_token,
+    #   :expires_in => 9000
+    #   )
 
     service = Google::Apis::CalendarV3::CalendarService.new
     service.authorization = client
 
-    # event_description = "Test."
-
     event = Google::Apis::CalendarV3::Event.new({
-          summary: 'Google I/O 2015',
-          location: '800 Howard St., San Francisco, CA 94103',
-          description: 'A chance to hear more about Google\'s developer products.',
+          description: $assignment_record
           start: {
-            date_time: '2016-12-28T09:00:00-07:00',
-            time_zone: 'America/Los_Angeles',
+            date_time: $assignment_object["due_date"],
+            time_zone: 'India',
           },
           end: {
-            date_time: '2016-12-28T17:00:00-07:00',
-            time_zone: 'America/Los_Angeles',
+            date_time: $assignment_object["due_date"],
+            time_zone: 'India',
           },
-          recurrence: [
-            'RRULE:FREQ=DAILY;COUNT=2'
-          ],
-          attendees: [
-            {email: 'lpage@example.com'},
-            {email: 'sbrin@example.com'},
-          ],
           reminders: {
             use_default: false,
             # overrides: [
