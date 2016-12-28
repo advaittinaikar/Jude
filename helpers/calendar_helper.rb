@@ -74,11 +74,11 @@ module Sinatra
           description: $assignment_record,
           start:{
             date: $assignment_object["due_date"],
-            time_zone: 'India',
+            time_zone: 'Asia/Kolkata',
           },
           end:{
             date: $assignment_object["due_date"],
-            time_zone: 'India',
+            time_zone: 'Asia/Kolkata',
           },
           reminders:{
             use_default: false,
