@@ -135,14 +135,14 @@ end
 #Google Oauth redirects to this endpoint once user has authorised request.
 get '/oauthcallback' do
 
-  # team_id = $response["team_id"]
-  # user_id = $response["user_id"]
+  team_id = $response["team_id"]
+  user_id = $response["user_id"]
 
-  # team = Team.find_by( user_id: user_id )
-  # team.calendar_code = params[:code]
-  # team.save!
+  team = Team.find_by( user_id: user_id )
+  team.calendar_code = params[:code]
+  team.save!
   
-  # team = Team.find_by( user_id: user_id )
+  team = Team.find_by( user_id: user_id )
 
   client = Signet::OAuth2::Client.new(
   {
@@ -159,8 +159,9 @@ get '/oauthcallback' do
 
   response_token = client.fetch_access_token!
 
-    # team.calendar_token = response['access_token']
-    $access_token = response_token['access_token']
+    team.calendar_token = response['access_token']
+    team.save!
+    # $access_token = response_token['access_token']
 
     puts "The token for Google Calendar API is: #{response['access_token']}"
     # finally respond...
@@ -230,11 +231,6 @@ post '/interactive-buttons' do
   team_id = json_request['team']['id']
   user_id = json_request['user']['id']
   time_stamp = json_request['message_ts']
-  
-  # puts "Action: " + call_back.to_s
-  # puts "Call Back: " + action_name.to_s
-  # puts "team_id : " + team_id.to_s
-  # puts "channel : " + channel.to_s
   
   team = Team.find_by(user_id: user_id)
   puts team
