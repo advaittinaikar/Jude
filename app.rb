@@ -398,5 +398,5 @@ def respond_to_slack_event json
 end
 
 def sign_up_greeting
-  "#{Team.all.to_json}<br>#{$access}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
+  "#{Team.all.to_json}<br>#{$access_token}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
 end
