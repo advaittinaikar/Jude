@@ -119,7 +119,7 @@ get "/oauth" do
     team.bot_user_id = bot_user_id
     team.save
 
-    if team["calendar_token"].nil?
+    if team.calendar_token.nil?
       auth_calendar
     else
       sign_up_greeting
@@ -140,9 +140,9 @@ get '/oauthcallback' do
 
   team = Team.find_by( user_id: user_id )
   team.calendar_code = params[:code]
-  team.save
+  team.save!
 
-  if team.calendar_code
+  if team
     client = Signet::OAuth2::Client.new(
     {
 
