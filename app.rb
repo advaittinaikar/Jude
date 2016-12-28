@@ -142,7 +142,7 @@ get '/oauthcallback' do
   team.calendar_code = params[:code]
   team.save
 
-  if team
+  if team.calendar_code
     client = Signet::OAuth2::Client.new(
     {
 
@@ -372,7 +372,7 @@ def respond_to_slack_event json
   # find the team
   team_id = json['team_id']
   api_app_id = json['api_app_id']
-  event = json['event']
+  event_desc = json['event']
   event_type = event['type']
   event_user = event['user']
   event_text = event['text']

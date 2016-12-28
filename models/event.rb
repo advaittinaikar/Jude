@@ -8,8 +8,8 @@ class Event < ActiveRecord::Base
   validates_presence_of :team_id
 
   def formatted_text
-    text.downcase.strip
-  end    
+    text.to_s.downcase.strip
+  end
 
   
 end
