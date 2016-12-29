@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227071301) do
+ActiveRecord::Schema.define(version: 20161229064436) do
 
   create_table "assignments", force: :cascade do |t|
     t.string   "course_name"
@@ -48,9 +48,10 @@ ActiveRecord::Schema.define(version: 20161227071301) do
     t.string  "incoming_channel"
     t.string  "bot_token"
     t.string  "bot_user_id"
-    t.boolean "is_active",        default: true
+    t.boolean "is_active",              default: true
     t.string  "calendar_token"
     t.string  "calendar_code"
+    t.string  "calendar_refresh_token"
   end
 
   create_table "users", force: :cascade do |t|

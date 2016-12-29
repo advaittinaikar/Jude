@@ -159,11 +159,12 @@ get '/oauthcallback' do
 
   if response
     team.calendar_token = response['access_token']
+    team.calendar_refresh_token = response['refresh_token']
     team.save!
-    # $access_token = response_token['access_token']
 
     puts "The token for Google Calendar API is: #{response['access_token']}"
-    # finally respond...
+    
+    #Final response to user!
     sign_up_greeting
   else
     "Something went wrong in setting up your calendar and slack.<br>We'd appreciate it if you could try again!" 
@@ -175,7 +176,7 @@ end
 #     OUTGOING WEBHOOK FROM SLACK
 # ----------------------------------------------------------------------
 
-# ANY EVENT: Endpoint for an event subscription
+#ANY EVENT HANDLING: Endpoint for an event subscription
 
 post "/events" do
   request.body.rewind
@@ -201,7 +202,7 @@ post "/events" do
   200
 end
 
-# ANY EVENT: Endpoint for an interactive message interaction. Control center for all button interactions.
+#BUTTON INTERACTION HANDLING: Endpoint for an interactive message interaction. Control center for all button interactions.
 
 post '/interactive-buttons' do
 
@@ -217,10 +218,11 @@ post '/interactive-buttons' do
   puts "checking token"
 
   respond_to_slack_button json_request
-
 end
 
-#   METHODS
+# ----------------------------------------------------------------------
+#     METHODS
+# ----------------------------------------------------------------------
 
 private
 
@@ -395,7 +397,9 @@ def sign_up_greeting
   "#{Team.all.to_json}<br>#{$access_token}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
 end
 
+# ----------------------------------------------------------------------
 #     ERRORS
+# ----------------------------------------------------------------------
 
 error 401 do
   "Invalid response or malformed request"
