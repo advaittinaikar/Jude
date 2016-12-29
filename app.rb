@@ -216,7 +216,7 @@ post '/interactive-buttons' do
   # puts "JSON = " + json_request.to_s
   puts "checking token"
 
-  response_to_slack_button json_request
+  respond_to_slack_button json_request
 
 end
 
