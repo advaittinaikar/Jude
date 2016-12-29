@@ -216,20 +216,64 @@ post '/interactive-buttons' do
   # puts "JSON = " + json_request.to_s
   puts "checking token"
 
-  if json_request['token'] != ENV['SLACK_VERIFICATION_TOKEN']
+  response_to_slack_button json_request
+
+end
+
+#   METHODS
+
+private
+
+#METHOD: Responds to a slack event that is passed to the "/events" endpoint.
+# => Returns method event_to_action.
+def respond_to_slack_event json
+  
+  # find the team
+  team_id = json['team_id']
+  api_app_id = json['api_app_id']
+  event = json['event']
+  event_type = event['type']
+  event_user = event['user']
+  event_text = event['text']
+  event_channel = event['channel']
+  event_ts = event['ts']
+  
+  team = Team.find_by(team_id: team_id)
+  
+  # didn't find a match... this is junk! 
+  return if team.nil?
+  
+  # see if the event user is the bot user 
+  # if so we shoud ignore the event
+  return if team.bot_user_id == event_user
+  
+  event = Event.create(team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel, timestamp: Time.at(event_ts.to_f) )
+  event.team = team
+  event.save!
+  
+  client = team.get_client
+  
+  event_to_action client, event, team
+end
+
+#METHOD: Responds to a slack button click that is passed to the "/interactive-buttons" endpoint.
+# => Responds with message posts
+def respond_to_slack_button json
+
+  if json['token'] != ENV['SLACK_VERIFICATION_TOKEN']
       halt 403, 'Incorrect slack token'
   end
   
   puts "token valid"
 
-  call_back = json_request['callback_id']
-  action_name = json_request['actions'].first["name"]
-  action_text = json_request['actions'].first["text"]
-  action_value = json_request['actions'].first["value"]
-  channel = json_request['channel']['id']
-  team_id = json_request['team']['id']
-  user_id = json_request['user']['id']
-  time_stamp = json_request['message_ts']
+  call_back = json['callback_id']
+  action_name = json['actions'].first["name"]
+  action_text = json['actions'].first["text"]
+  action_value = json['actions'].first["value"]
+  channel = json['channel']['id']
+  team_id = json['team']['id']
+  user_id = json['user']['id']
+  time_stamp = json['message_ts']
   
   team = Team.find_by(user_id: user_id)
   puts team
@@ -242,6 +286,10 @@ post '/interactive-buttons' do
   puts "team found!"
   
   client = team.get_client
+
+  event = Event.create(team_id: team_id, type_name: "button_click", user_id: user_id, text: action_text, channel: channel, timestamp: Time.at(time_stamp.to_f) )
+  event.team = team
+  event.save!
   
   if call_back == "to-do"
         message = "Great! "
@@ -255,14 +303,15 @@ post '/interactive-buttons' do
 
         elsif action_name == "show assignments"
 
-              client.chat_postMessage(channel: channel, text: "The access token is #{$access_token}!", as_user: true) 
-              {  text: "You selected 'show today'" , replace_original: true }.to_json
+              message = get_upcoming_assignments team
+              client.chat_postMessage(channel: channel, text: message, as_user: true) 
+              {  text: "You selected 'show upcoming assignments'" , replace_original: true }.to_json
 
         elsif action_name == "show next"
 
               message = get_upcoming_events team
               client.chat_postMessage(channel: channel, text: message, as_user: true)
-              {  text: "You selected 'show next'" , replace_original: true }.to_json
+              {  text: "You selected 'show upcoming schedule'" , replace_original: true }.to_json
 
         else
               # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
@@ -341,56 +390,13 @@ post '/interactive-buttons' do
   end
 end
 
-# CALL AS FOLLOWS
-# curl -X POST http://127.0.0.1:9393/test_event -F token=9GCx7G3WrHix7EJsP818YOVB -F team_id=T2QJ6HA0Z -F event_type=message -F event_user=U2QHR0F7W -F event_channel=D37HZB04D -F event_ts=1480296595.000007 -F event_text='g ddf;gkl;d fkg;ldfkg df' 
+def sign_up_greeting
 
-post '/calendar_events' do
+  "#{Team.all.to_json}<br>#{$access_token}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
 end
 
 #     ERRORS
 
 error 401 do
   "Invalid response or malformed request"
-end
-
-#   METHODS
-
-private
-
-#METHOD: Responds to a slack event that is passed to the "/events" endpoint.
-# => Returns method event_to_action.
-
-def respond_to_slack_event json
-  
-  # find the team
-  team_id = json['team_id']
-  api_app_id = json['api_app_id']
-  event = json['event']
-  event_type = event['type']
-  event_user = event['user']
-  event_text = event['text']
-  event_channel = event['channel']
-  event_ts = event['ts']
-  
-  team = Team.find_by(team_id: team_id)
-  
-  # didn't find a match... this is junk! 
-  return if team.nil?
-  
-  # see if the event user is the bot user 
-  # if so we shoud ignore the event
-  return if team.bot_user_id == event_user
-  
-  event = Event.create(team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel, timestamp: Time.at(event_ts.to_f) )
-  event.team = team
-  event.save!
-  
-  client = team.get_client
-  
-  event_to_action client, event, team
-  
-end
-
-def sign_up_greeting
-  "#{Team.all.to_json}<br>#{$access_token}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
 end
