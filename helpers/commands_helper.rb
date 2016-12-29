@@ -177,12 +177,9 @@ module Sinatra
       return message
     end
 
-    def respond_to_slack_button
-
-    end
-
+    #METHOD: Resets the error counter
     def reset_error_counter
-      @error_counter = 0
+      @@error_counter = 0
     end
 
   end
