@@ -5,6 +5,26 @@ module Sinatra
 	#     METHODS
 	# ----------------------------------------------------------------------
 
+
+    #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
+    def auth_calendar
+      
+      client = Signet::OAuth2::Client.new(
+      {
+         client_id: ENV['CALENDAR_CLIENT_ID'],
+         client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+         authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+         token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
+         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+         access_type: "offline",
+         approval_prompt: "force"
+      }
+        )
+
+      redirect to client.authorization_uri.to_s
+    end
+
   	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
   	def create_calendar_service team
       access_token = team.access_token
@@ -28,25 +48,6 @@ module Sinatra
       end
 
   		return service
-  	end
-
-    #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
-  	def auth_calendar
-  	  
-  		client = Signet::OAuth2::Client.new(
-      {
-  		   client_id: ENV['CALENDAR_CLIENT_ID'],
-  		   client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-  		   authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
-         token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
-         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-  		   redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-         access_type: "offline",
-         approval_prompt: "force"
-  	  }
-        )
-
-  		redirect to client.authorization_uri.to_s
   	end
 
   	#METHOD: Creates an event in Google Calendar.
@@ -124,6 +125,7 @@ module Sinatra
       return message
     end
 
+    #METHOD: Refreshes and returns a new access token.
     def refreshing_token team
       client = Signet::OAuth2::Client.new(
       {
@@ -141,6 +143,7 @@ module Sinatra
       return access_token
     end
 
+    #METHOD: Checks if access token is valid.
     def access_token_valid access_token
       token_check_uri =  "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + access_token
       response = HTTParty.get token_check_uri

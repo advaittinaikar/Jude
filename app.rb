@@ -149,11 +149,15 @@ get '/oauthcallback' do
       scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+      grant_type: "authorization_code",
+      access_type: "offline",
       code: params[:code]
     }
       )
 
   response = client.fetch_access_token!
+
+  puts "The response after first authorization is #{response}"
 
   if response
     team.calendar_token = response['access_token']
@@ -290,35 +294,38 @@ def respond_to_slack_button json
   event = Event.create(team_id: team_id, type_name: "button_click", user_id: user_id, text: action_text, channel: channel, timestamp: Time.at(time_stamp.to_f) )
   event.team = team
   event.save!
+
+  case call_back
+    when 'to-do'
   
-  if call_back == "to-do"
         message = "Great! "
       
-        if action_name == "add"
+        case action_name 
+          when "add"
 
               $assignment_record = ""
               message += "Let's add an assignment!"
               client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
               {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
-        elsif action_name == "show assignments"
+          when "show assignments"
 
               message = get_upcoming_assignments team
               client.chat_postMessage(channel: channel, text: message, as_user: true) 
               {  text: "You selected 'show upcoming assignments'" , replace_original: true }.to_json
 
-        elsif action_name == "show next"
+          when "show next"
 
               message = get_upcoming_events team
               client.chat_postMessage(channel: channel, text: message, as_user: true)
               {  text: "You selected 'show upcoming schedule'" , replace_original: true }.to_json
 
-        else
+          else
               # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
               200
-        end
+          end
 
-  elsif call_back == "course_assignment"
+    when "course_assignment"
 
         if action_name == "add course"
           client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
@@ -333,7 +340,7 @@ def respond_to_slack_button json
           {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
         end  
   
-  elsif call_back == "add event"
+    when "add event"
 
         if action_name == "add assignment"
 
@@ -353,7 +360,7 @@ def respond_to_slack_button json
 
         end
 
-  elsif call_back == "confirm_assignment"
+    when "confirm_assignment"
 
         if action_name == "confirm"
 
@@ -369,7 +376,7 @@ def respond_to_slack_button json
 
         end
 
-  elsif call_back == "confirm_course"
+    when "confirm_course"
 
         if action_name == "confirm"
 
@@ -384,8 +391,8 @@ def respond_to_slack_button json
 
         end
 
-  else
-    200
+    else
+      200
     # do nothing... 
   end
 end
