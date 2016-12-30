@@ -144,16 +144,12 @@ get '/oauthcallback' do
 
   client = Signet::OAuth2::Client.new(
   {
-
       client_id: ENV['CALENDAR_CLIENT_ID'],
       client_secret: ENV['CALENDAR_CLIENT_SECRET'],
       scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-      access_type: "offline",
-      approval_prompt: "force",
       code: params[:code]
-
     }
       )
 

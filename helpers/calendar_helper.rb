@@ -41,7 +41,8 @@ module Sinatra
          token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
          scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
   		   redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-         access_type: "offline"
+         access_type: "offline",
+         approval_prompt: "force"
   	  }
         )
 
@@ -126,7 +127,6 @@ module Sinatra
     def refreshing_token team
       client = Signet::OAuth2::Client.new(
       {
-
           client_id: ENV['CALENDAR_CLIENT_ID'],
           client_secret: ENV['CALENDAR_CLIENT_SECRET'],
           grant_type: 'refresh_token',
