@@ -15,7 +15,7 @@ module Sinatra
 
       client.expires_in = Time.now + 1_000_000
 
-      if client
+      if client.expired?
     		service = Google::Apis::CalendarV3::CalendarService.new
     		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     		service.authorization = client
@@ -128,10 +128,7 @@ module Sinatra
 
           client_id: ENV['CALENDAR_CLIENT_ID'],
           client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-          scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-          token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
-          redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-          grant_type: refresh_token,
+          grant_type: 'refresh_token',
           refresh_token: team["calendar_refresh_token"]
         }
           )
