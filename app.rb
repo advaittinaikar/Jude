@@ -150,6 +150,8 @@ get '/oauthcallback' do
       scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+      access_type: "offline",
+      approval_prompt: "force",
       code: params[:code]
 
     }
@@ -393,7 +395,6 @@ def respond_to_slack_button json
 end
 
 def sign_up_greeting
-
   "#{Team.all.to_json}<br>Jude has been successfully installed.<br>Your Calendar has been already been synced with Jude.<br>Please login to your Slack team to meet Jude!"
 end
 

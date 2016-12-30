@@ -40,7 +40,8 @@ module Sinatra
   		   authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
          token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
          scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-  		   redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback"
+  		   redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+         access_type: "offline"
   	  }
         )
 
