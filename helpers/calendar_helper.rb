@@ -15,7 +15,7 @@ module Sinatra
 
       client.expires_in = Time.now + 1_000_000
 
-      if client.expired?
+      if access_token_valid(access_token)
     		service = Google::Apis::CalendarV3::CalendarService.new
     		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     		service.authorization = client
@@ -138,6 +138,16 @@ module Sinatra
       access_token = response['access_token']
 
       return access_token
+    end
+
+    def access_token_valid access_token
+      token_check_uri =  "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + access_token
+      response = HTTParty.get token_check_uri
+
+      if response.error
+        return false
+      else
+        return true
     end
 
   end
