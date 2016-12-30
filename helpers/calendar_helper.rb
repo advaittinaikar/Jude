@@ -135,6 +135,12 @@ module Sinatra
           refresh_token: team["calendar_refresh_token"]
         }
           )
+
+      response = client.fetch_access_token!
+
+      access_token = response['access_token']
+
+      return access_token
     end
 
   end
