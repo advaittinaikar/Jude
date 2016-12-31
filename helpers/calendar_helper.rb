@@ -26,7 +26,7 @@ module Sinatra
 
   	#METHOD: Creates and returns a calendar service to be used for accessing calendar.
   	def create_calendar_service team
-      access_token = team["access_token"]
+      access_token = team["calendar_token"]
 
   		client = Signet::OAuth2::Client.new(
         access_token: access_token
