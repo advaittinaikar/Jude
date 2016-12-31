@@ -131,7 +131,7 @@ module Sinatra
           client_secret: ENV['CALENDAR_CLIENT_SECRET'],
           token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
           redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-          grant_type: refresh_token,
+          grant_type: 'refresh_token'
         }
           )
 
