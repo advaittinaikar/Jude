@@ -26,7 +26,7 @@ module Sinatra
 
   	#METHOD: Creates and returns a calendar service to be used for accessing calendar.
   	def create_calendar_service team
-      access_token = team.access_token
+      access_token = team["access_token"]
 
   		client = Signet::OAuth2::Client.new(
         access_token: access_token
@@ -100,14 +100,7 @@ module Sinatra
     #METHOD: Returns the next 10 events in calendar.
     def get_upcoming_events team
 
-      access_token = team["calendar_token"]
-
-      client = Signet::OAuth2::Client.new(access_token: access_token)
-
-      client.expires_in = Time.now + 1_000_000
-
-      service = Google::Apis::CalendarV3::CalendarService.new
-      service.authorization = client
+      service = create_calendar_service team
 
       response = service.list_events('primary',
                                max_results: 10,
