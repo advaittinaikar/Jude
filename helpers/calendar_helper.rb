@@ -88,8 +88,8 @@ module Sinatra
 
       message= "Your upcoming assignments are:"
 
-      response.items.each do |event,ind|
-        if event.summary.include? "assignment"
+      response.items.each do |event|
+        if event["summary"].include? "assignment"
           message+="#{event.summary}, due on #{event.start.date}\n"
         end
       end
@@ -123,14 +123,14 @@ module Sinatra
       {
           client_id: ENV['CALENDAR_CLIENT_ID'],
           client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-          token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
+          token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
           redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
           grant_type: 'refresh_token',
           refresh_token: team["calendar_refresh_token"]
         }
           )
 
-      response = client.fetch_access_token!
+      response = client.update_token!
 
       access_token = response['access_token']
 
