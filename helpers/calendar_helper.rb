@@ -89,8 +89,8 @@ module Sinatra
       message= "Your upcoming assignments are:"
 
       response.items.each do |event,ind|
-        if event.summary.include? "assignment" or "due"
-          message+="#{event.summary} , due on #{event.start.date}"
+        if ["assignment","due"].any? {|e| event.summary.include? e}
+          message+="#{event.summary}, due on #{event.start.date}\n"
         end
       end
 
