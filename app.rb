@@ -119,11 +119,11 @@ get "/oauth" do
 
     # team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
 
-    # if team.calendar_token.nil?
+    if team["calendar_code"].nil?
       auth_calendar
-    # else
-      # sign_up_greeting
-    # end
+    else
+      sign_up_greeting
+    end
     
   else
     401
@@ -379,7 +379,7 @@ def respond_to_slack_button json
     when "confirm_course"
 
         if action_name == "confirm"
-
+s
           create_course $course_object
           client.chat_postMessage(channel: channel, text: "The course has been added to your list of courses.", as_user: true)
           {  text: "The course has been added to your list of courses." , replace_original: true }.to_json

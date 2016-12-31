@@ -5,7 +5,6 @@ module Sinatra
 	#     METHODS
 	# ----------------------------------------------------------------------
 
-
     #METHOD: Redirects user to Oauth page for the Calendar API authorisation. 
     def auth_calendar
       
@@ -25,12 +24,12 @@ module Sinatra
       redirect to client.authorization_uri.to_s
     end
 
-  	#METHOD: Create a signet client to be used for Oauth. Takes optional argument code, the oauth returned code
+  	#METHOD: Creates and returns a calendar service to be used for accessing calendar.
   	def create_calendar_service team
       access_token = team.access_token
 
   		client = Signet::OAuth2::Client.new(
-        access_token: access_token 
+        access_token: access_token
         )
 
       client.expires_in = Time.now + 1_000_000
@@ -76,7 +75,7 @@ module Sinatra
       puts "Event created: #{result.html_link}"
     end
 
-    #METHOD: Returns the next 20 assignments in calendar. 
+    #METHOD: Returns the next 10 assignments in calendar. 
     def get_upcoming_assignments team
 
       service = create_calendar_service team
@@ -98,7 +97,7 @@ module Sinatra
       return message
     end
 
-    #METHOD: Returns the next 20 event in calendar.
+    #METHOD: Returns the next 10 events in calendar.
     def get_upcoming_events team
 
       access_token = team["calendar_token"]
