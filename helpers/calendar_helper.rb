@@ -130,7 +130,7 @@ module Sinatra
         }
           )
 
-      response = client.update_token!
+      response = client.fetch_access_token!
 
       access_token = response['access_token']
 
