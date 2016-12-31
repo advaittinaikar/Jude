@@ -119,6 +119,13 @@ module Sinatra
 
     #METHOD: Refreshes and returns a new access token.
     def refreshing_token team
+
+      stored_user_credentials = {
+          refresh_token: team["calendar_refresh_token"],
+          access_token: team["calendar_token"],
+          expires_in: 3600
+      }
+
       client = Signet::OAuth2::Client.new(
       {
           client_id: ENV['CALENDAR_CLIENT_ID'],
@@ -130,6 +137,8 @@ module Sinatra
         }
           )
 
+      client.update_token!
+      
       response = client.fetch_access_token!
 
       access_token = response['access_token']
