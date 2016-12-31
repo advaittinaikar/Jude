@@ -140,7 +140,9 @@ module Sinatra
       token_check_uri =  "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + access_token
       response = HTTParty.get token_check_uri
 
-      if response.error
+      puts "The token validation object is #{response}"
+
+      if response["error"]
         return false
       else
         return true
