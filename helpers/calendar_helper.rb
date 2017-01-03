@@ -28,19 +28,13 @@ module Sinatra
   	def create_calendar_service team
       access_token = team["calendar_token"]
 
-  		client = Signet::OAuth2::Client.new(
-        access_token: access_token
-        )
-
-      client.expires_in = Time.now + 1_000_000
-
       if access_token_valid(access_token)
+        client = Signet::OAuth2::Client.new( access_token: access_token )
     		service = Google::Apis::CalendarV3::CalendarService.new
     		service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
     		service.authorization = client
       else
-        access_token = refreshing_token team
-        client = Signet::OAuth2::Client.new(access_token: access_token)
+        client = refreshing_token team
         service = Google::Apis::CalendarV3::CalendarService.new
         service.client_options.application_name = ENV['CALENDAR_APPLICATION_NAME']
         service.authorization = client
@@ -118,7 +112,7 @@ module Sinatra
     end
 
     #METHOD: Refreshes and returns a new access token.
-    def refreshing_token team
+    def refreshing_token team, client
 
       # client = Google::APIClient::ClientSecrets.new(
       #   {
@@ -138,27 +132,22 @@ module Sinatra
 
       client = Signet::OAuth2::Client.new(
       {
-          client_id: ENV['CALENDAR_CLIENT_ID'],
-          client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-          token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-          redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-          grant_type: 'refresh_token',
-          refresh_token: team["calendar_refresh_token"]
+         client_id: ENV['CALENDAR_CLIENT_ID'],
+         client_secret: ENV['CALENDAR_CLIENT_SECRET'],
+         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+         authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+         token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+         redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
+         grant_type: 'refresh_token',
+         refresh_token: team["calendar_refresh_token"]
         }
           )
 
-      stored_user_credentials = {
-          :refresh_token => team["calendar_refresh_token"],
-          :access_token => team["calendar_token"]
-      }
+      access_token = client.fetch_access_token!['access_token']
 
-      client.update_token!(stored_user_credentials)
+      client.update!(access_token: access_token)
 
-      # response = client.fetch_access_token!
-
-      access_token = client['access_token']
-
-      return access_token
+      client
     end
 
     #METHOD: Checks if access token is valid.
