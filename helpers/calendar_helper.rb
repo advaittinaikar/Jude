@@ -114,28 +114,12 @@ module Sinatra
     #METHOD: Refreshes and returns a new access token.
     def refreshing_token team
 
-      # client = Google::APIClient::ClientSecrets.new(
-      #   {
-      #     client_id: ENV['CALENDAR_CLIENT_ID'],
-      #     client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-      #     token_uri: 'https://accounts.google.com/o/oauth2/token',
-      #     redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
-      #     grant_type: 'refresh_token',
-      #     refresh_token: team["calendar_refresh_token"]
-      #   }
-      # )
-
-      # client.authorization
-
-      # response = client.authorization.fetch_access_token!
-      # # client.authorization
-
       client = Signet::OAuth2::Client.new(
       {
          client_id: ENV['CALENDAR_CLIENT_ID'],
          client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-         scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-         authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+         # scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
+         # authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
          token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
          redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
          grant_type: 'refresh_token',
