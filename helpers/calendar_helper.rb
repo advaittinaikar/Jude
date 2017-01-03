@@ -121,12 +121,12 @@ module Sinatra
     def refreshing_token team
 
       client = Google::APIClient.new
-      client.authorization.client_id = ENV['CALENDAR_CLIENT_ID']
-      client.authorization.client_secret = ENV['CALENDAR_CLIENT_SECRET']
-      client.authorization.grant_type = 'refresh_token'
-      client.authorization.refresh_token = team["calendar_refresh_token"]
+      client["authorization"]["client_id"] = ENV['CALENDAR_CLIENT_ID']
+      client["authorization"]["client_secret"] = ENV['CALENDAR_CLIENT_SECRET']
+      client["authorization"]["grant_type"] = 'refresh_token'
+      client["authorization"]["refresh_token"] = team["calendar_refresh_token"]
 
-      response = client.authorization.fetch_access_token!
+      response = client['authorization'].fetch_access_token!
       # client.authorization
 
       # stored_user_credentials = {
