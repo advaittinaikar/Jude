@@ -112,7 +112,7 @@ module Sinatra
     end
 
     #METHOD: Refreshes and returns a new access token.
-    def refreshing_token team, client
+    def refreshing_token team
 
       # client = Google::APIClient::ClientSecrets.new(
       #   {
