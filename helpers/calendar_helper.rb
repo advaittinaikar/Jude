@@ -83,7 +83,7 @@ module Sinatra
       message= "Your upcoming assignments are:"
 
       response.items.each do |event|
-        if event.summary.starts_with? "assignment"
+        if event.summary.to_s.include? "assignment"
           message+="#{event.summary}, due on #{event.start.date}\n"
         end
       end
@@ -104,11 +104,13 @@ module Sinatra
 
       message= "Your upcoming 10 events are:"
 
-      response.items.each do |event,ind|
-        message+="#{ind}. \n#{event.summary} on #{event.start.date}"
+      count = 1
+      response.items.each do |event|
+        message+="#{count}. #{event.summary} on #{event.originalStartTime.date}\n"
+        count += 1
       end
 
-      return message
+      message
     end
 
     #METHOD: Refreshes and returns a new access token.
