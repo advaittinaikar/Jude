@@ -154,9 +154,9 @@ module Sinatra
 
       client.update_token!(stored_user_credentials)
 
-      response = client.fetch_access_token!
+      # response = client.fetch_access_token!
 
-      access_token = response['access_token']
+      access_token = client['access_token']
 
       return access_token
     end
