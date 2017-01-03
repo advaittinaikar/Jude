@@ -150,7 +150,6 @@ get '/oauthcallback' do
       token_credential_uri:  'https://accounts.google.com/o/oauth2/token',
       redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
       grant_type: "authorization_code",
-      access_type: "offline",
       code: params[:code]
     }
       )
@@ -300,7 +299,7 @@ def respond_to_slack_button json
   
         message = "Great! "
       
-        case action_name 
+        case action_name
           when "add"
 
               $assignment_record = ""
@@ -379,7 +378,7 @@ def respond_to_slack_button json
     when "confirm_course"
 
         if action_name == "confirm"
-s
+
           create_course $course_object
           client.chat_postMessage(channel: channel, text: "The course has been added to your list of courses.", as_user: true)
           {  text: "The course has been added to your list of courses." , replace_original: true }.to_json

@@ -83,7 +83,7 @@ module Sinatra
       message= "Your upcoming assignments are:"
 
       response.items.each do |event|
-        if event.summary.include? "assignment"
+        if event.summary.starts_with? "assignment"
           message+="#{event.summary}, due on #{event.start.date}\n"
         end
       end
@@ -118,8 +118,6 @@ module Sinatra
       {
          client_id: ENV['CALENDAR_CLIENT_ID'],
          client_secret: ENV['CALENDAR_CLIENT_SECRET'],
-         # scope: Google::Apis::CalendarV3::AUTH_CALENDAR,
-         # authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
          token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
          redirect_uri: "https://agile-stream-68169.herokuapp.com/oauthcallback",
          grant_type: 'refresh_token',
