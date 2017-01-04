@@ -115,7 +115,7 @@ module Sinatra
       
       else
 
-          manage_errors
+          manage_errors event, client
 
       end      
     end
@@ -156,7 +156,7 @@ module Sinatra
     end
 
     #METHOD: Managing the error messages
-    def manage_errors
+    def manage_errors event, client
 
       puts "Error Counter #{ @@error_counter }"
         
