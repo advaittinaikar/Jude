@@ -96,13 +96,13 @@ module Sinatra
 
         client.chat_postMessage(channel: event.channel, text: show_courses, as_user: true)
 
-      elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment description"
+      elsif second_last_event.direction == "outgoing" && second_last_event.text == "add assignment description"
 
           $assignment.description = input
           client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
           add_outgoing_event team, "message", "add assignment due-date"
 
-      elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
+      elsif second_last_event.direction == "outgoing" && second_last_event.text == "add assignment due-date"
           
           due_date = Kronic.parse(input)
 

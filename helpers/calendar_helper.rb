@@ -107,7 +107,7 @@ module Sinatra
 
       count = 1
       response.items.each do |event|
-        message+="#{count}. #{event.summary} on #{event.originalStartTime.date}\n"
+        message+="#{count}. #{event.summary} on #{event.start.date}\n"
         count += 1
       end
 
