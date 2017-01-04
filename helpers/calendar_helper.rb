@@ -95,23 +95,24 @@ module Sinatra
     #METHOD: Returns the next 10 events in calendar.
     def get_upcoming_events team
 
-      service = create_calendar_service team
+      Event.all.to_json
+      # service = create_calendar_service team
 
-      response = service.list_events('primary',
-                               max_results: 10,
-                               single_events: true,
-                               order_by: 'startTime',
-                               time_min: Time.now.iso8601)
+      # response = service.list_events('primary',
+      #                          max_results: 10,
+      #                          single_events: true,
+      #                          order_by: 'startTime',
+      #                          time_min: Time.now.iso8601)
 
-      message= "Your upcoming 10 events are:"
+      # message= "Your upcoming 10 events are:"
 
-      count = 1
-      response.items.each do |event|
-        message+="#{count}. #{event.summary} on #{event.start.date}\n"
-        count += 1
-      end
+      # count = 1
+      # response.items.each do |event|
+      #   message+="#{count}. #{event.summary} on #{event.start.date}\n"
+      #   count += 1
+      # end
 
-      message
+      # message
     end
 
     #METHOD: Refreshes and returns a new access token.

@@ -25,10 +25,13 @@ module Sinatra
       return if ef.nil?
       
       is_admin = is_admin_or_owner client, event
+      user_id = team['user_id']
 
-      user_events = Event.find_by(user_id: team['user_id'])
+      user_events = Event.find_by(user_id: user_id)
       second_last_event = user_events[-2]
-        
+      
+      puts second_last_event
+
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
 
