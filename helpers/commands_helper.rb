@@ -27,7 +27,7 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
       user_id = team[:user_id]
 
-      user_events = Event.find(user_id: user_id)
+      user_events = Event.last(2)
       second_last_event = user_events[-2]
       
       puts "Event is #{second_last_event}, user_events is #{user_events} and user_id is #{user_id}"
