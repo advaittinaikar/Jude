@@ -28,7 +28,7 @@ module Sinatra
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
-        message = interactive_greeting
+        
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
         add_outgoing_event team, "interaction", "first greeting"
 
