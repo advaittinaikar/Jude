@@ -25,6 +25,9 @@ module Sinatra
       return if ef.nil?
       
       is_admin = is_admin_or_owner client, event
+
+      user_events = Event.find_by(user_id: team['user_id'])
+      second_last_event = user_events[-2]
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
@@ -93,29 +96,23 @@ module Sinatra
 
         client.chat_postMessage(channel: event.channel, text: show_courses, as_user: true)
 
-      elsif event.formatted_text == "add"
+      elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment description"
 
-        $assignment_record = ""
+          $assignment.description = input
+          client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
+          add_outgoing_event team, "message", "add assignment due-date"
 
-        add_event client, event.channel
+      elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
+          
+          due_date = Kronic.parse(input)
 
+          $assignment.due_date = due_date
+          message = "Your assignment is for #{$assignment['course_name']}: #{assignment['description']} due #{input}, #{assignment['due_date']}."
+          client.chat_postMessage(channel: second_last_event.channel, text: message, attachments: interactive_confirmation_assignment, as_user: true)
+      
       else
 
-        assignment_flow ef, team
-
-        # ERROR Commands
-        # not understood or an error
-        puts "Error Counter #{ @@error_counter }"
-        
-        @@error_counter += 1
-
-        if @@error_counter > 5
-          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. Why are you doing this? :unamused: Please be nice or type `help` to find my commands.", as_user: true)
-        elsif @@error_counter > 2 and @@error_counter <= 4
-          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today :thinking_face:. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
-        else
-          client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
-        end
+          manage_errors
 
       end      
     end
@@ -156,7 +153,19 @@ module Sinatra
     end
 
     #METHOD: Managing the error messages
-    def error_management
+    def manage_errors
+
+      puts "Error Counter #{ @@error_counter }"
+        
+      @@error_counter += 1
+
+      if @@error_counter > 5
+        client.chat_postMessage(channel: event.channel, text: "This is really fishy now. Why are you doing this? :unamused: Please be nice or type `help` to find my commands.", as_user: true)
+      elsif @@error_counter > 2 and @@error_counter <= 4
+        client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today :thinking_face:. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
+      else
+        client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
+      end
 
     end
 
@@ -183,7 +192,7 @@ module Sinatra
         break
 
       else
-        return
+        200
       end
 
     end
