@@ -101,26 +101,20 @@ module Sinatra
 
       else
 
-        if assignment_flow ef, team
+        assignment_flow ef, team
 
-          assignment_flow ef, team
+        # ERROR Commands
+        # not understood or an error
+        puts "Error Counter #{ @@error_counter }"
+        
+        @@error_counter += 1
 
+        if @@error_counter > 5
+          client.chat_postMessage(channel: event.channel, text: "This is really fishy now. Why are you doing this? :unamused: Please be nice or type `help` to find my commands.", as_user: true)
+        elsif @@error_counter > 2 and @@error_counter <= 4
+          client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today :thinking_face:. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
         else
-
-          # ERROR Commands
-          # not understood or an error
-          puts "Error Counter #{ @@error_counter }"
-          
-          @@error_counter += 1
-
-          if @@error_counter > 5
-            client.chat_postMessage(channel: event.channel, text: "This is really fishy now. Why are you doing this? :unamused: Please be nice or type `help` to find my commands.", as_user: true)
-          elsif @@error_counter > 2 and @@error_counter <= 4
-            client.chat_postMessage(channel: event.channel, text: "Hmmm, you seem to be different today :thinking_face:. Hope all is well. Anyways, type `help` to find my commands.", as_user: true)  
-          else
-            client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
-          end
-
+          client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
         end
 
       end      
@@ -177,7 +171,7 @@ module Sinatra
         $assignment.description = input
         client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
         add_outgoing_event team, "message", "add assignment due-date"
-        return true
+        break
 
       elsif second_last_event.direction == "outgoing" && second_last_event.text == "add assignment due-date"
           
@@ -186,11 +180,10 @@ module Sinatra
         $assignment.due_date = due_date
         message = "Your assignment is for #{$assignment['course_name']}: #{assignment['description']} due #{input}, #{assignment['due_date']}."
         client.chat_postMessage(channel: second_last_event.channel, text: message, attachments: interactive_confirmation_assignment, as_user: true)
-        return true
+        break
 
       else
-
-        return false  
+        return  
       end
 
     end
