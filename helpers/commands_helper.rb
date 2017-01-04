@@ -28,7 +28,8 @@ module Sinatra
         
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
-        
+
+        message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
         add_outgoing_event team, "interaction", "first greeting"
 
@@ -198,8 +199,10 @@ module Sinatra
       #Resetting error counter
       @@error_counter = 0
 
-      event = Event.create!(team_id: team["team_id"], user_id: team["user_id"], type_name: type, text: text, channel: team["channel"], direction: "outgoing")
+      event = Event.create(team_id: team["team_id"], user_id: team["user_id"], type_name: type, text: text, channel: team["channel"], direction: "outgoing", timestamp: Time.now)
+      event.team = team
       event.save!
+
     end
 
   end
