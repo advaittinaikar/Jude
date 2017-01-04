@@ -170,32 +170,32 @@ module Sinatra
     end
 
     #METHOD: Managing adding assignment flow
-    def assignment_flow input, team
+    # def assignment_flow input, team
 
-      user_events = Event.find_by(user_id: team['user_id'])
-      second_last_event = user_events[-2]
+    #   user_events = Event.find_by(user_id: team['user_id'])
+    #   second_last_event = user_events[-2]
 
-      if second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment description"
+    #   if second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment description"
 
-        $assignment.description = input
-        client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
-        add_outgoing_event team, "message", "add assignment due-date"
-        break
+    #     $assignment.description = input
+    #     client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
+    #     add_outgoing_event team, "message", "add assignment due-date"
+  
 
-      elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
+    #   elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
           
-        due_date = Kronic.parse(input)
+    #     due_date = Kronic.parse(input)
 
-        $assignment.due_date = due_date
-        message = "Your assignment is for #{$assignment['course_name']}: #{assignment['description']} due #{input}, #{assignment['due_date']}."
-        client.chat_postMessage(channel: second_last_event.channel, text: message, attachments: interactive_confirmation_assignment, as_user: true)
-        break
+    #     $assignment.due_date = due_date
+    #     message = "Your assignment is for #{$assignment['course_name']}: #{assignment['description']} due #{input}, #{assignment['due_date']}."
+    #     client.chat_postMessage(channel: second_last_event.channel, text: message, attachments: interactive_confirmation_assignment, as_user: true)
+  
 
-      else
-        200
-      end
+    #   else
+    #     200
+    #   end
 
-    end
+    # end
 
     def add_outgoing_event team , type , text
       #Resetting error counter
