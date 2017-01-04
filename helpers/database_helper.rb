@@ -19,7 +19,7 @@ module Sinatra
 	    	due_date = object['due_date']
 
 		    assignment = Assignment.create!(:course_name => course_name, :description => description, :due_date => due_date)
-		    assignment.save
+		    assignment.save!
 
 		    return "Assignment for #{course} regarding #{description}, due #{due_date} has been created!"
     	end

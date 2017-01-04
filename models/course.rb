@@ -10,11 +10,11 @@ class Course < ActiveRecord::Base
 
   def abbreviate
     words = course_name.split(" ")
-	short_name = ""
+  	short_name = ""
 
-	words.each do |word|
-		short_name += word.slice(0)
-	end
+  	words.each do |word|
+  		short_name += word.slice(0)
+  	end
   end
   
 end

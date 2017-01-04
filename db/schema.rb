@@ -10,14 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161229064436) do
+ActiveRecord::Schema.define(version: 20170104043620) do
 
   create_table "assignments", force: :cascade do |t|
     t.string   "course_name"
     t.string   "description"
     t.datetime "due_date"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "user_id"
+    t.string   "team_id"
+    t.integer  "hours_required"
+    t.integer  "reminder_days"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -36,6 +40,7 @@ ActiveRecord::Schema.define(version: 20161229064436) do
     t.text     "text"
     t.string   "channel"
     t.datetime "timestamp"
+    t.string   "direction"
   end
 
   create_table "teams", force: :cascade do |t|

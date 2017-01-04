@@ -44,15 +44,16 @@ module Sinatra
   	end
 
   	#METHOD: Creates an event in Google Calendar.
-    def create_calendar_event team
+    def create_calendar_event team, assignment
 
       service = create_calendar_service team
+      assignment_record = "Assignment for #{assignment["course_name"]}: #{assignment["description"]}"
 
       event = Google::Apis::CalendarV3::Event.new(
       {
-            summary: $assignment_record,
+            summary: assignment_record,
             start:{
-              date: $assignment_object["due_date"],
+              date: assignment["due_date"],
               time_zone: 'Asia/Kolkata',
             },
             end:{
@@ -85,7 +86,7 @@ module Sinatra
       response.items.each do |event|
         if event.summary.to_s.include? "assignment"
           message+="#{event.summary}, due on #{event.start.date}\n"
-        end
+        end 
       end
 
       return message

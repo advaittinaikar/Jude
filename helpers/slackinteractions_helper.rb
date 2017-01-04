@@ -17,7 +17,7 @@ module Sinatra
 	          "attachment_type": "default",
 	          "actions": [
 	            {
-	              "name":  "add",
+	              "name":  "add assignment",
 	              "text":  "Add assignment",
 	              "type":  "button"
 	              },

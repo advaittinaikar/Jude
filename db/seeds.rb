@@ -2,6 +2,8 @@ require 'active_support/all'
 
 Course.delete_all
 Team.delete_all
+Event.delete_all
+Assignment.delete_all
 
 Course.create!([{ course_name: "Design for the Environment", course_id: "49-100", short_name: "DFE", instructor: "Steve Leonard" },
 				{ course_name: "Programming for Online Prototypes", course_id: "49-101", short_name: "POP", instructor: "Daragh Bryne"},

@@ -42,7 +42,6 @@ helpers Sinatra::SlackInteractionsHelper
 #global variables to be used in app
 @@jude_link = "http://agile-stream-68169.herokuapp.com/"
 $assignment_record = ""
-$assignment_object = {}
 $course_object = {}
 $access_token = nil
 $access_code = ""
@@ -52,10 +51,9 @@ $response
 enable :sessions
 
 # ----------------------------------------------------------------------
-#     ROUTES, END POINTS AND ACTIONS
+#     ROUTES AND END POINTS
 # ----------------------------------------------------------------------
 
-#
 get "/" do
   haml :index
   # "Assignments table is: <br>" + Assignment.all.to_json + "<br>" +
@@ -75,10 +73,7 @@ end
 #     OAUTH
 # ----------------------------------------------------------------------
 
-# This will handle the OAuth stuff for adding our app to Slack
-# https://99designs.com/tech-blog/blog/2015/08/26/add-to-slack-button/
-# check it out here. 
-
+#ENDPOINT: The redirect_url entered in Slack. Slack redirects to this endpoint once user has authorised request.
 get "/oauth" do
   
   code = params[ :code ]
@@ -127,12 +122,10 @@ get "/oauth" do
     
   else
     401
-  end
-  
+  end  
 end
 
-#ENDPOINT: The redirect_url entered in Google Console. 
-#Google Oauth redirects to this endpoint once user has authorised request.
+#ENDPOINT: The redirect_url entered in Google Console. Google Oauth redirects to this endpoint once user has authorised request.
 get '/oauthcallback' do
 
   team_id = $response["team_id"]
@@ -170,7 +163,6 @@ get '/oauthcallback' do
   else
     "Something went wrong in setting up your calendar and slack.<br>We'd appreciate it if you could try again!" 
   end
-
 end
 
 # ----------------------------------------------------------------------
@@ -178,7 +170,6 @@ end
 # ----------------------------------------------------------------------
 
 #ANY EVENT HANDLING: Endpoint for an event subscription
-
 post "/events" do
   request.body.rewind
   raw_body = request.body.read
@@ -204,7 +195,6 @@ post "/events" do
 end
 
 #BUTTON INTERACTION HANDLING: Endpoint for an interactive message interaction. Control center for all button interactions.
-
 post '/interactive-buttons' do
 
   content_type :json
@@ -228,7 +218,6 @@ end
 private
 
 #METHOD: Responds to a slack event that is passed to the "/events" endpoint.
-# => Returns method event_to_action.
 def respond_to_slack_event json
   
   # find the team
@@ -250,7 +239,7 @@ def respond_to_slack_event json
   # if so we shoud ignore the event
   return if team.bot_user_id == event_user
   
-  event = Event.create(team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel, timestamp: Time.at(event_ts.to_f) )
+  event = Event.create(team_id: team_id, type_name: event_type, user_id: event_user, text: event_text, channel: event_channel, direction: "incoming", timestamp: Time.at(event_ts.to_f) )
   event.team = team
   event.save!
   
@@ -260,10 +249,9 @@ def respond_to_slack_event json
 end
 
 #METHOD: Responds to a slack button click that is passed to the "/interactive-buttons" endpoint.
-# => Responds with message posts
 def respond_to_slack_button json
 
-  if json['token'] != ENV['SLACK_VERIFICATION_TOKEN']
+  if json['token'] != ENV['SLACK_VERIFICATION_TOKEN']    
       halt 403, 'Incorrect slack token'
   end
   
@@ -290,37 +278,40 @@ def respond_to_slack_button json
   
   client = team.get_client
 
-  event = Event.create(team_id: team_id, type_name: "button_click", user_id: user_id, text: action_text, channel: channel, timestamp: Time.at(time_stamp.to_f) )
+  event = Event.create(team_id: team_id, type_name: "button_click", user_id: user_id, text: call_back, channel: channel, direction: "incoming", timestamp: Time.at(time_stamp.to_f) )
   event.team = team
   event.save!
 
   case call_back
     when 'to-do'
-  
-        message = "Great! "
-      
+        
         case action_name
-          when "add"
+          when "add assignment"
 
-              $assignment_record = ""
-              message += "Let's add an assignment!"
+              $assignment = Assignment.create
+              message = "Great! Let's add an assignment!"
               client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
+              add_outgoing_event team, "interaction", "add assignment course"
+
               {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
           when "show assignments"
 
               message = get_upcoming_assignments team
-              client.chat_postMessage(channel: channel, text: message, as_user: true) 
+              client.chat_postMessage(channel: channel, text: message, as_user: true)
+              add_outgoing_event team, "message", "upcoming assignments"
+
               {  text: "You selected 'show upcoming assignments'" , replace_original: true }.to_json
 
           when "show next"
 
               message = get_upcoming_events team
               client.chat_postMessage(channel: channel, text: message, as_user: true)
+              add_outgoing_event team, "message", "upcoming events"
+
               {  text: "You selected 'show upcoming schedule'" , replace_original: true }.to_json
 
           else
-              # client.chat_postMessage(channel: channel, text: replace_message, as_user: true)
               200
           end
 
@@ -328,16 +319,21 @@ def respond_to_slack_button json
 
         if action_name == "add course"
           client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
+          add_outgoing_event team, "message", "upcoming assignments"
+
           {  text: "You selected 'add a course'" , replace_original: true }.to_json
         else
           message = "You're adding an assignment for #{action_name}!"
           
           $assignment_record = "Assignment for #{action_name}: "
-          $assignment_object["course_name"] = action_name
+          $assignment.course_name = action_name
+          $assignment.user_id = user_id
+          $assignment.team_id = team_id
           client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
-        
+          add_outgoing_event team, "message", "add assignment description"
+
           {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
-        end  
+        end
   
     when "add event"
 
@@ -363,9 +359,10 @@ def respond_to_slack_button json
 
         if action_name == "confirm"
 
-          create_calendar_event team
+          $assignment.save!
+          create_calendar_event team, $assignment
 
-          client.chat_postMessage(channel: channel, text: "The assignment has been added to your Google Calendar.", as_user: true)
+          client.chat_postMessage(channel: channel, as_user: true)
           {  text: "The assignment has been added to your Google Calendar." , replace_original: true }.to_json
           
         else
