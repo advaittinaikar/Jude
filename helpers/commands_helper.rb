@@ -103,7 +103,7 @@ module Sinatra
 
         if assignment_flow ef, team
 
-          { text: "Assignment addition in progress", replace_original: true }.to_json
+          assignment_flow ef, team
 
         else
 
