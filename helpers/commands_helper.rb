@@ -27,10 +27,9 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
       user_id = team['user_id']
 
-      user_events = Event.last(2)
-      second_last_event = user_events.first
+      second_last_event = Event.last(2).first
       
-      puts "Event is #{second_last_event}, user_events is #{user_events} and user_id is #{user_id}"
+      puts "Event is #{second_last_event} and user_id is #{user_id}"
 
       # Hi Commands
       if ["hi","hello","hey","heyy"].any? { |w| ef.starts_with? w }
@@ -169,7 +168,6 @@ module Sinatra
       else
         client.chat_postMessage(channel: event.channel, text: "I didn't get that but that's alright. If you're stuck, type `help` to find my commands.", as_user: true)
       end
-
     end
 
     #METHOD: Managing adding assignment flow
