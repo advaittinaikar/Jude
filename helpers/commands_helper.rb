@@ -27,7 +27,7 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
       user_id = team['user_id']
 
-      second_last_event = Event.last(2).first
+      second_last_event = Event.last(2).first.to_json
       
       puts "Event is #{second_last_event} and user_id is #{user_id}"
 
