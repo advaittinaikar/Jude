@@ -27,7 +27,7 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
       user_id = team["user_id"]
 
-      user_events = Event.find(:all, :conditions => {:user_id => user_id}).to_json
+      user_events = Event.where(:user_id => user_id).to_json
       second_last_event = user_events[-2]
       
       puts "Event is #{second_last_event} and user_id is #{user_id}"
@@ -206,7 +206,6 @@ module Sinatra
       event = Event.create(team_id: event["team_id"], user_id: event["user_id"], type_name: type, text: text, channel: event["channel"], direction: "outgoing", timestamp: Time.now)
       event.team = team
       event.save!
-
     end
 
   end
