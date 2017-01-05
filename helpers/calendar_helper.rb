@@ -95,7 +95,7 @@ module Sinatra
     #METHOD: Returns the next 10 events in calendar.
     def get_upcoming_events team
 
-      Event.last(5).to_json
+      Event.last(10).to_json
       # service = create_calendar_service team
 
       # response = service.list_events('primary',
