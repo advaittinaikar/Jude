@@ -27,8 +27,8 @@ module Sinatra
       is_admin = is_admin_or_owner client, event
       user_id = team["user_id"]
 
-      user_events = Event.find(:all, :conditions => {:user_id => user_id})
-      second_last_event = user_events[-2].to_json
+      user_events = Event.find(:all, :conditions => {:user_id => user_id}).to_json
+      second_last_event = user_events[-2]
       
       puts "Event is #{second_last_event} and user_id is #{user_id}"
 
@@ -37,24 +37,24 @@ module Sinatra
 
         message = interactive_greeting
         client.chat_postMessage(channel: event.channel, text: "Hello there. I'm Jude. Let's get something done for you today.", attachments: message, as_user:true)
-        add_outgoing_event team, "interaction", "first greeting"
+        add_outgoing_event event, team, "interaction", "first greeting"
 
       elsif ef.starts_with? "about"
         
         client.chat_postMessage(channel: event.channel, text: "_#{about_jude}_", attachments: message, as_user:true)
-        add_outgoing_event team, "message", "about command"
+        add_outgoing_event event, team, "message", "about command"
             
       # Handle the Help commands
       elsif ef.include? "help"
 
         client.chat_postMessage(channel: event.channel, text: get_commands_message( is_admin ), as_user: true)
-        add_outgoing_event team, "message", "help command"
+        add_outgoing_event event, team, "message", "help command"
 
       # Respond to thanks message
       elsif ef.starts_with? "thank"
 
         client.chat_postMessage(channel: event.channel, text: "That's mighty nice of you. You're welcome and thank you for having me!", as_user: true)
-        add_outgoing_event team, "message", "thanks command"
+        add_outgoing_event event, team, "message", "thanks command"
 
       elsif ef.starts_with? "details:"
 
@@ -103,7 +103,7 @@ module Sinatra
 
           $assignment.description = input
           client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
-          add_outgoing_event team, "message", "add assignment due-date"
+          add_outgoing_event event, team, "message", "add assignment due-date"
 
       elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
           
@@ -181,7 +181,7 @@ module Sinatra
 
     #     $assignment.description = input
     #     client.chat_postMessage(channel: second_last_event.channel, text: "So when is this assignment due?", as_user: true)
-    #     add_outgoing_event team, "message", "add assignment due-date"
+    #     add_outgoing_event event, team, "message", "add assignment due-date"
   
 
     #   elsif second_last_event["direction"] == "outgoing" && second_last_event["text"] == "add assignment due-date"
@@ -199,11 +199,11 @@ module Sinatra
 
     # end
 
-    def add_outgoing_event team , type , text
+    def add_outgoing_event event , team , type , text
       #Resetting error counter
       @@error_counter = 0
 
-      event = Event.create(team_id: team["team_id"], user_id: team["user_id"], type_name: type, text: text, channel: team["channel"], direction: "outgoing", timestamp: Time.now)
+      event = Event.create(team_id: event["team_id"], user_id: event["user_id"], type_name: type, text: text, channel: event["channel"], direction: "outgoing", timestamp: Time.now)
       event.team = team
       event.save!
 

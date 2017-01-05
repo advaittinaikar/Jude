@@ -289,7 +289,7 @@ def respond_to_slack_button json
               $assignment = Assignment.create
               message = "Great! Let's add an assignment!"
               client.chat_postMessage(channel: channel, text: message, attachments: interactive_assignment_course, as_user: true)
-              add_outgoing_event team, "interaction", "add assignment course"
+              add_outgoing_event event, team, "interaction", "add assignment course"
 
               {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
 
@@ -297,7 +297,7 @@ def respond_to_slack_button json
 
               message = get_upcoming_assignments team
               client.chat_postMessage(channel: channel, text: message, as_user: true)
-              add_outgoing_event team, "message", "upcoming assignments"
+              add_outgoing_event event, team, "message", "upcoming assignments"
 
               {  text: "You selected 'show upcoming assignments'" , replace_original: true }.to_json
 
@@ -305,7 +305,7 @@ def respond_to_slack_button json
 
               message = get_upcoming_events team
               client.chat_postMessage(channel: channel, text: message, as_user: true)
-              add_outgoing_event team, "message", "upcoming events"
+              add_outgoing_event event, team, "message", "upcoming events"
 
               {  text: "You selected 'show upcoming schedule'" , replace_original: true }.to_json
 
@@ -317,7 +317,7 @@ def respond_to_slack_button json
 
         if action_name == "add course"
           client.chat_postMessage(channel: channel, text: "Enter Course Name starting with *course name: *", as_user: true)
-          add_outgoing_event team, "message", "upcoming assignments"
+          add_outgoing_event event, team, "message", "upcoming assignments"
 
           {  text: "You selected 'add a course'" , replace_original: true }.to_json
         else
@@ -328,7 +328,7 @@ def respond_to_slack_button json
           $assignment.user_id = user_id
           $assignment.team_id = team_id
           client.chat_postMessage(channel: channel, text: message, attachments: [{"text": "Please type your assignment details in <= 140 chars", "callback_id": "assignment_text"}].to_json, as_user: true)
-          add_outgoing_event team, "message", "add assignment description"
+          add_outgoing_event event, team, "message", "add assignment description"
 
           {  text: "You selected 'add an assignment'" , replace_original: true }.to_json
         end
