@@ -112,8 +112,6 @@ get "/oauth" do
     team.bot_user_id = bot_user_id
     team.save!
 
-    # team = Team.find_or_create_by( team_id: team_id, user_id: user_id )
-
     if team["calendar_code"].nil?
       auth_calendar
     else

@@ -25,9 +25,10 @@ module Sinatra
       return if ef.nil?
       
       is_admin = is_admin_or_owner client, event
-      user_id = team['user_id']
+      user_id = team["user_id"]
 
-      second_last_event = Event.last(2).first.to_json
+      user_events = Event.find(:all, :conditions => {:user_id => user_id})
+      second_last_event = user_events[-2].to_json
       
       puts "Event is #{second_last_event} and user_id is #{user_id}"
 
