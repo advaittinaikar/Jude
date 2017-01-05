@@ -28,7 +28,7 @@ module Sinatra
       user_id = team[:user_id]
 
       user_events = Event.where(:user_id => user_id).to_json
-      second_last_event = user_events[-2]
+      second_last_event = user_events[-4]
       
       puts "Event is #{second_last_event} and user_id is #{user_id}"
 
